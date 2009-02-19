@@ -24,7 +24,7 @@ sub analyze_dependencies {
     my ( $self, $module ) = @_;
     return if $self->is_added($module) || $self->is_core($module);
 
-    ( my $tgz, my $src, my $version ) = $self->downloder->download($module);
+    my ($tgz, $src, $version ) = $self->downloder->download($module);
     my @depends = $self->get_dependencies($src);
     $self->modules->{$module} = {
         module  => $module,

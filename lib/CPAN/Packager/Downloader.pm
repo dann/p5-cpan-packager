@@ -13,6 +13,7 @@ has 'fetcher' => (
 
 sub download {
     my ( $self, $module ) = @_;
+    $self->log(info => "Downloading $module ...");
     my $dist = $self->fetcher->parse_module( module => $module );
     return unless $dist;
     my ( $archive, $where );
@@ -20,11 +21,15 @@ sub download {
         $archive = $dist->fetch( force   => 1 ) or next;
         $where   = $dist->extract( force => 1 ) or next;
     };
-    $archive =~ /([^\/]+)\-([^-]+)\.t(ar\.)?gz$/;
-    my $name    = $1;
-    my $version = $2;
 
-    ( $archive, $where, $version );
+    return () unless $archive;
+
+    $archive =~ /([^\/]+)\-([^-]+)\.t(ar\.)?gz$/;
+    my $package_name = $1;
+    my $version      = $2;
+
+    $self->log(info => "Downloaded $module !");
+    ( $archive, $where, $package_name, $version );
 }
 
 __PACKAGE__->meta->make_immutable;

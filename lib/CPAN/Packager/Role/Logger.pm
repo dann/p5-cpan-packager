@@ -1,9 +1,9 @@
 package CPAN::Packager::Role::Logger;
 use Mouse::Role;
 
-sub info {
-    my ($self, $message) = @_;
-    warn $message; 
+sub log {
+    my ($self, $level, $message) = @_;
+    warn "[$level] $message"; 
 }
 
 1;
