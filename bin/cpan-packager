@@ -16,15 +16,18 @@ cpan-packager - yet another cpan module packagine tool
 
 =head1 SYNOPSIS
 
-  cpan-packager.pl --module Test::Simple --builder Deb 
+  cpan-packager --module Test::Simple --builder Deb 
 
-  cpan-packager.pl --module Test::Simple --builder RPM 
+  cpan-packager --module Test::Simple --builder RPM 
 
 Packages are generated at /tmp/cpanpackager/{deb or rpm}
 
 =head1 DESCRIPTION
 
-cpan-packager will create the files required to build a debian or redhat source package out of a perl package. This works for most simple packages and is also useful for getting started with packaging perl modules. Given a perl package name, it can also automatically download it from CPAN. 
+cpan-packager will create the files required to build a debian or redhat source 
+package out of a perl package. This works for most simple packages and is also 
+useful for getting started with packaging perl modules. Given a perl package name, 
+it can also automatically download it from CPAN. 
 
 =head1 AUTHOR
 
