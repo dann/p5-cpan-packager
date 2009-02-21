@@ -36,8 +36,7 @@ sub _check_cpanflute2_exist_in_path {
 sub build {
     my ( $self, $module ) = @_;
 
-    my $module_name       = $self->resolve_module( $module->{module} );
-    my $package_name = $self->package_name($module_name);
+    my $package_name = $self->package_name($module->{module});
     my @depends      = qw(perl);
     my $depends      = join ',', @depends;
 

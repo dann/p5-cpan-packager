@@ -3,7 +3,6 @@ use Mouse;
 use Carp;
 use IPC::System::Simple qw(system);
 use Path::Class;
-use LWP::UserAgent;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
@@ -12,13 +11,6 @@ has 'package_output_dir' => (
         my $self = shift;
         dir( '/', 'tmp', 'cpanpackager', 'deb' );
     },
-);
-
-has 'resolved' => (
-    is      => 'rw',
-    default => sub {
-        +{};
-    }
 );
 
 sub BUILD {
@@ -36,8 +28,7 @@ sub build {
 
 sub _build_package_with_dh_make_perl {
     my ( $self, $module ) = @_;
-    my $module_name  = $self->resolve_module_name( $module->{module} );
-    my $pkg     = $self->package_name($module_name);
+    my $pkg     = $self->package_name( $module->{module} );
     my @depends = qw(perl);
 
     my $depends = join ',', @depends;
@@ -57,7 +48,7 @@ sub _build_package_with_dh_make_perl {
 }
 
 sub package_name {
-    my ($self,$module_name) = @_;
+    my ( $self, $module_name ) = @_;
     return $module_name if $module_name eq 'libwww-perl';
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
