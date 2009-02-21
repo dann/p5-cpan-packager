@@ -14,7 +14,6 @@ has 'help' => (
 has 'module' => (
     is => 'rw',
     isa => 'Str',
-    required => 1,
 );
 
 has 'builder' => (
@@ -33,6 +32,7 @@ sub run {
     if ( $self->help ) {
         pod2usage(2);
     }
+    die 'module is required param' unless($self->module);
     my $packager = CPAN::Packager->new( builder => $self->builder, conf=> $self->conf );
     $packager->make($self->module);
 }
