@@ -2,12 +2,13 @@
 use strict;
 use warnings;
 use FindBin::libs;
-use CPAN::Packager::DependencyAnalyzer;
-use Data::Dumper;
+use CPAN::Packager::Script;
 
-my $analyzer = CPAN::Packager::DependencyAnalyzer->new;
-$analyzer->analyze_dependencies('HTTP::Engine');
+my $script = CPAN::Packager::Script->new_with_options;
+$script->run;
 
-my $all_modules = $analyzer->modules;
-
-warn Dumper $all_modules;
+#my $analyzer = CPAN::Packager::DependencyAnalyzer->new;
+#$analyzer->analyze_dependencies('HTTP::Engine');
+#
+#my $all_modules = $analyzer->modules;
+#warn Dumper $all_modules;

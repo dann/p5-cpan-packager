@@ -1,9 +1,53 @@
 package CPAN::Packager;
-
-use strict;
-use warnings;
+use Mouse;
 our $VERSION = '0.01';
+use CPAN::Packager::DependencyAnalyzer;
+use CPAN::Packager::BuilderFactory;
+use Perl6::Say;
+*uniq = \&CPAN::Packager::DependencyAnalyzer::uniq;
 
+has 'builder' => (
+    is      => 'rw',
+    default => 'Deb',
+);
+
+sub make {
+    my ( $self, $module ) = @_;
+    die 'module must be passed' unless $module;
+    my $modules = $self->analyze_module_dependencies($module);
+    $self->build_modules($modules);
+}
+
+sub build_modules {
+    my ( $self, $modules ) = @_;
+    say("making pkgs...");
+
+    my $builder = CPAN::Packager::BuilderFactory->create( $self->builder );
+    $builder->print_installed_packages;
+    for my $module ( values %{$modules} ) {
+        next
+            if $module->{module} =~ /^Plagger/
+                || $module->{module} =~ /^Task::Catalyst/;
+        next if $builder->is_installed( $module->{module} );
+        if ( my $package = $builder->build($module) ) {
+            say("$module->{module} created ($package)");
+        }
+        else {
+            say("$module->{module} failed");
+        }
+    }
+
+}
+
+sub analyze_module_dependencies {
+    my ( $self, $module ) = @_;
+    my $analyzer = CPAN::Packager::DependencyAnalyzer->new;
+    $analyzer->analyze_dependencies($module);
+    $analyzer->modules;
+}
+
+no Mouse;
+__PACKAGE__->meta->make_immutable;
 1;
 __END__
 
