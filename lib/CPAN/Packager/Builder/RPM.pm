@@ -25,7 +25,7 @@ has 'build_dir' => (
     is      => 'rw',
     default => sub {
         #my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
-        my $tmpdir = tempdir(  DIR => '/tmp' );
+        my $tmpdir = tempdir( DIR => '/tmp' );
         dir($tmpdir);
     }
 );
@@ -45,9 +45,8 @@ sub check_cpanflute2_exist_in_path {
 sub build {
     my ( $self, $module ) = @_;
 
-    my $spec_content
-        = $self->build_with_cpanflute( $module->{tgz} );
-    my $package_name = $self->package_name( $module->{module} );
+    my $spec_content   = $self->build_with_cpanflute( $module->{tgz} );
+    my $package_name   = $self->package_name( $module->{module} );
     my $spec_file_name = "$package_name.spec";
     $self->generate_spec_file( $spec_file_name, $spec_content );
     $self->generate_filter_macro_if_necessary;
@@ -60,7 +59,7 @@ sub build {
 
 sub build_with_cpanflute {
     my ( $self, $tgz ) = @_;
-    $self->log(info => 'build package with cpanflute');
+    $self->log( info => 'build package with cpanflute' );
     my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
@@ -82,6 +81,7 @@ sub generate_spec_file {
 
 sub generate_filter_macro_if_necessary {
     my ( $self, $spec ) = @_;
+
     #  TODO
 }
 
@@ -93,9 +93,9 @@ sub get_default_build_arch {
 
 sub is_installed {
     my ( $self, $module ) = @_;
-    my $package      = $self->package_name($module);
-   
-    my $return_value =  capture(EXIT_ANY, "LANG=C rpm -q $package");
+    my $package = $self->package_name($module);
+
+    my $return_value = capture( EXIT_ANY, "LANG=C rpm -q $package" );
     $self->log( info => "$package is "
             . ( $return_value =~ /not installed/ ? 'not ' : '' )
             . "installed" );
@@ -103,11 +103,11 @@ sub is_installed {
 }
 
 sub generate_macro {
-    my $self = shift;
+    my $self       = shift;
     my $macro_file = file( $self->build_dir, 'macros' );
-    my $fh = $macro_file->openw or die "Can't create $macro_file: $!";
+    my $fh         = $macro_file->openw or die "Can't create $macro_file: $!";
     my $package_output_dir = $self->package_output_dir;
-    my $build_dir = $self->build_dir;
+    my $build_dir          = $self->build_dir;
 
     print $fh qq{
 %_topdir $build_dir
@@ -140,9 +140,10 @@ macrofiles: $macrofiles:$build_dir/macros
 }
 
 sub build_rpm_package {
-    my ( $self, $spec_file_name) = @_;
+    my ( $self, $spec_file_name ) = @_;
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
+
 #    my $retval
 #        = system(
 #        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
@@ -177,9 +178,9 @@ sub install {
 }
 
 sub copy_module_sources_to_build_dir {
-    my ($self, $module) = @_;
+    my ( $self, $module ) = @_;
     my $module_tarball = $module->{tgz};
-    my $build_dir = $self->build_dir;
+    my $build_dir      = $self->build_dir;
 
     my $module_name = $module->{module};
     $module_name =~ s{::}{-}g;
@@ -198,8 +199,9 @@ sub package_name {
 
 sub installed_packages {
     my @installed_pkg;
-    my $return_value =  capture(EXIT_ANY, "LANG=C yum list installed|grep perl|awk '{print \$1}'");
-    for my $package (split /¥r¥n/, $return_value) {
+    my $return_value = capture( EXIT_ANY,
+        "LANG=C yum list installed|grep perl|awk '{print \$1}'" );
+    for my $package ( split /¥r¥n/, $return_value ) {
         push @installed_pkg, $package;
     }
     @installed_pkg;
