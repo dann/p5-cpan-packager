@@ -11,7 +11,7 @@ with 'CPAN::Package::Role::Logger';
 
 has 'release' => (
     is      => 'rw',
-    default => '1.rpmize',
+    default => '1.cpanpackager',
 );
 
 has 'package_output_dir' => (
@@ -21,14 +21,22 @@ has 'package_output_dir' => (
     },
 );
 
+has 'build_dir' => (
+    is      => 'rw',
+    default => sub {
+        my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
+        dir($tmpdir);
+    }
+);
+
 sub BUILD {
     my $self = shift;
-    $self->_check_cpanflute2_exist_in_path;
+    $self->check_cpanflute2_exist_in_path;
     $self->package_output_dir->mkpath;
     $self;
 }
 
-sub _check_cpanflute2_exist_in_path {
+sub check_cpanflute2_exist_in_path {
     system "which cpanflute2 > /dev/null"
         and Carp::croak "cpanflute2 is not found in PATH";
 }
@@ -36,20 +44,18 @@ sub _check_cpanflute2_exist_in_path {
 sub build {
     my ( $self, $module ) = @_;
 
-    my $package_name = $self->package_name($module->{module});
-    my @depends      = qw(perl);
-    my $depends      = join ',', @depends;
-
-    # TODO looks ugly ... refactor
-
-    my $spec = $self->_build_with_cpanflute( $module->{tgz}, $package_name );
-    $self->_write_spec_file( "perl-$package_name.spec", $spec );
-
-    # $self->_filter_macro;
-    # $self->_build_rpm_package;
+    my $package_name = $self->package_name( $module->{module} );
+    my $spec_content
+        = $self->build_with_cpanflute( $module->{tgz}, $package_name );
+    my $spec_file_name = "$package_name.spec";
+    $self->generate_spec_file( $spec_file_name, $spec_content );
+    $self->generate_filter_macro_if_necessary;
+    $self->generate_macro;
+    $self->generate_rpmrc;
+    $self->build_rpm_package($spec_file_name);
 }
 
-sub _build_with_cpanflute {
+sub build_with_cpanflute {
     my ( $self, $tgz, $package_name ) = @_;
     my $build_arch = $self->_get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
@@ -58,22 +64,24 @@ sub _build_with_cpanflute {
     $spec;
 }
 
-sub _write_spec_file {
-    my ( $self, $spec_file_path, $spec ) = @_;
-    $spec =~ s/^Requires: perl\(perl\).*$//m;
-    $spec
+sub generate_spec_file {
+    my ( $self, $spec_file_name, $spec_content ) = @_;
+    $spec_content =~ s/^Requires: perl\(perl\).*$//m;
+    $spec_content
         =~ s/^make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT$/make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT\nif [ -d \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT ]; then mv \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT\/* \$RPM_BUILD_ROOT; fi/m;
 
+    my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $fh = file($spec_file_path)->openw;
-    print $fh, $spec;
+    print $fh, $spec_content;
     $fh->close;
 }
 
-sub _filter_macro {
+sub generate_filter_macro_if_necessary {
     my ( $self, $spec ) = @_;
+    #  TODO
 }
 
-sub _get_default_build_arch {
+sub get_default_build_arch {
     my $build_arch = qx(rpm --eval %{_build_arch});
     chomp $build_arch;
     $build_arch;
@@ -89,13 +97,50 @@ sub is_installed {
     return $return_value =~ /not installed/ ? 0 : 1;
 }
 
-sub _build_rpm_package {
-    my ( $self, $spec_file_path, $build_opt ) = @_;
+sub generate_macro {
+    my ( $self, $output_dir ) = @_;
+    my $macro_file = file( $output_dir, 'macros' );
+    my $fh = $macro_file->openw or die "Can't create $macro_file: $!";
 
-    my $package_output_dir = $self->package_output_dir;
+    my $rpm_dir     = $self->rpm_dir;
+    my $src_rpm_dir = $self->src_rpm_dir;
+
+    print $fh qq{
+%_topdir $output_dir
+%_builddir %{_topdir}
+%_rpmdir $rpm_dir
+%_sourcedir %{_topdir}
+%_specdir %{_topdir}
+%_srcrpmdir $src_rpm_dir
+%_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+};
+
+    close $fh;
+}
+
+sub generate_rpmrc {
+    my ( $self, $build_dir ) = @_;
+
+    my $rpmrc_file = file( $build_dir, 'rpmrc' );
+    my $fh = $rpmrc_file->openw
+        or die "Can't create $rpmrc_file: $!";
+    my $macrofiles = qx(rpm --showrc | grep ^macrofiles | cut -f2- -d:);
+    chomp $macrofiles;
+    print $fh qq{
+include: /usr/lib/rpm/rpmrc
+macrofiles: $macrofiles:$build_dir/macros
+};
+    close $fh;
+}
+
+sub build_rpm_package {
+    my ( $self, $spec_file_name, $build_opt ) = @_;
+
+    my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
+    my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $retval
         = system(
-        "env PERL_MM_USE_DEFAULT=1 rpmbuild --rcfile $package_output_dir/rpmrc -b${build_opt} --rmsource --rmspec --clean $spec_file_path"
+        "env PERL_MM_USE_DEFAULT=1 rpmbuild --rcfile $rpmrc_file -b${build_opt} --rmsource --rmspec --clean $spec_file_path"
         );
 
     $retval = $? >> 8;
@@ -121,14 +166,11 @@ sub install {
     }
 }
 
-# TODO Refactor. use downloader
 sub package_name {
-    my ( $self, $module ) = @_;
-    my $content = get("http://search.cpan.org/search?query=$module")
-        || return;
-    my ($package) = ( $content =~ m!href="/~[^/]+/([^/]+)/"! );
-    $package =~ s/-[^-]+$//;
-    return "perl-$package";
+    my ( $self, $module_name ) = @_;
+    $module_name =~ s{::}{-}g;
+    $module_name =~ s{_}{-}g;
+    'perl' . lc($module_name);
 }
 
 sub print_installed_packages {
