@@ -13,41 +13,42 @@ has 'builder' => (
 );
 
 has 'dependency_config_merger' => (
-    is => 'rw',
+    is      => 'rw',
     default => sub {
         CPAN::Packager::DependencyConfigMerger->new;
     }
 );
 
 has 'config_loader' => (
-    is => 'rw',
+    is      => 'rw',
     default => sub {
         CPAN::Packager::ConfigLoader->new;
     }
 );
 
 has 'dependency_analyzer' => (
-    is => 'rw',
+    is      => 'rw',
     default => sub {
         CPAN::Packager::DependencyAnalyzer->new;
     }
 );
 
-has 'conf' => (
-    is => 'rw',
-);
+has 'conf' => ( is => 'rw', );
 
 sub make {
     my ( $self, $module ) = @_;
     die 'module must be passed' unless $module;
     my $modules = $self->analyze_module_dependencies($module);
-    $modules = $self->merge_config($modules, $self->config_loader->load($self->conf)) if $self->conf;
+    $modules
+        = $self->merge_config( $modules,
+        $self->config_loader->load( $self->conf ) )
+        if $self->conf;
     $self->build_modules($modules);
 }
 
 sub merge_config {
-    my ($self, $modules, $config) = @_;
-    $self->dependency_config_merger->merge_module_config($modules, $config);
+    my ( $self, $modules, $config ) = @_;
+    $self->dependency_config_merger->merge_module_config( $modules, $config );
 }
 
 sub build_modules {
