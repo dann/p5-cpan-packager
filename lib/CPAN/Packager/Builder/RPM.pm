@@ -1,6 +1,6 @@
 package CPAN::Packager::Builder::RPM;
 use Mouse;
-use Carp;
+use Carp ();
 use Path::Class qw(file dir);
 use RPM::Specfile;
 use IPC::System::Simple qw(system capturex);
@@ -30,39 +30,42 @@ sub BUILD {
 
 sub _check_cpanflute2_exist_in_path {
     system "which cpanflute2 > /dev/null"
-        and croak "cpanflute2 is not found in PATH";
+        and Carp::croak "cpanflute2 is not found in PATH";
 }
 
 sub build {
-    my ( $self, $info ) = @_;
+    my ( $self, $module ) = @_;
 
-    my $module  = $self->resolve_module( $info->{module} );
-    my $package_name     = $self->package_name($module);
-    my @depends = qw(perl);
-    my $depends = join ',', @depends;
+    my $module_name       = $self->resolve_module( $module->{module} );
+    my $package_name = $self->package_name($module_name);
+    my @depends      = qw(perl);
+    my $depends      = join ',', @depends;
 
-    my $spec = $self->_build_with_cpanflute( $info->{tgz}, $package_name );
+    # TODO looks ugly ... refactor
+
+    my $spec = $self->_build_with_cpanflute( $module->{tgz}, $package_name );
     $self->_write_spec_file( "perl-$package_name.spec", $spec );
+
+    # $self->_filter_macro;
+    # $self->_build_rpm_package;
 }
-
-
 
 sub _build_with_cpanflute {
     my ( $self, $tgz, $package_name ) = @_;
     my $build_arch = $self->_get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
-    my $spec = system( 'cpanflute2 $opts, $tgz ');
+    my $spec = system("cpanflute2 $opts $tgz");
     $spec;
 }
 
 sub _write_spec_file {
-    my ( $self, $spec_file_name, $spec ) = @_;
+    my ( $self, $spec_file_path, $spec ) = @_;
     $spec =~ s/^Requires: perl\(perl\).*$//m;
     $spec
         =~ s/^make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT$/make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT\nif [ -d \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT ]; then mv \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT\/* \$RPM_BUILD_ROOT; fi/m;
 
-    my $fh = file($spec_file_name)->openw;
+    my $fh = file($spec_file_path)->openw;
     print $fh, $spec;
     $fh->close;
 }
@@ -79,12 +82,27 @@ sub _get_default_build_arch {
 
 sub is_installed {
     my ( $self, $module ) = @_;
-    my $package = $self->package_name($module);
-    my $return_value = capture( "rpm -q $package" );
+    my $package      = $self->package_name($module);
+    my $return_value = capture("rpm -q $package");
     $self->log( info => "$package is "
             . ( $return_value =~ /not installed/ ? 'not ' : '' )
             . "installed" );
     return $return_value =~ /not installed/ ? 0 : 1;
+}
+
+sub _build_rpm_package {
+    my ( $self, $spec_file_path, $build_opt ) = @_;
+
+    my $package_output_dir = $self->package_output_dir;
+    my $retval
+        = system(
+        "env PERL_MM_USE_DEFAULT=1 rpmbuild --rcfile $package_output_dir/rpmrc -b${build_opt} --rmsource --rmspec --clean $spec_file_path"
+        );
+
+    $retval = $? >> 8;
+    if ( $retval != 0 ) {
+        Carp::croak "RPM building failed!\n";
+    }
 }
 
 # This method should be moved to another class
@@ -96,17 +114,17 @@ sub install {
     }
 
     my $package = $self->package_name($module);
-    my @rpms = glob("$package*.rpm");
+    my @rpms    = glob("$package*.rpm");
     for my $rpm (@rpms) {
         next if $rpm =~ /src\.rpm/;
-        my $retval = system( "sudo rpm -Uvh $rpm" );
+        my $retval = system("sudo rpm -Uvh $rpm");
         $self->log( debug => $retval );
     }
 }
 
 # TODO Refactor. use downloader
 sub package_name {
-    my ($self, $module ) = @_;
+    my ( $self, $module ) = @_;
     my $content = get("http://search.cpan.org/search?query=$module")
         || return;
     my ($package) = ( $content =~ m!href="/~[^/]+/([^/]+)/"! );

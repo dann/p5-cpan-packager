@@ -30,25 +30,25 @@ sub BUILD {
 }
 
 sub build {
-    my ( $self, $info ) = @_;
-    $self->_build_package_with_dh_make_perl($info);
+    my ( $self, $module ) = @_;
+    $self->_build_package_with_dh_make_perl($module);
 }
 
 sub _build_package_with_dh_make_perl {
-    my ( $self, $info ) = @_;
-    my $module  = $self->resolve_module_name( $info->{module} );
-    my $pkg     = $self->package_name($module);
+    my ( $self, $module ) = @_;
+    my $module_name  = $self->resolve_module_name( $module->{module} );
+    my $pkg     = $self->package_name($module_name);
     my @depends = qw(perl);
 
     my $depends = join ',', @depends;
     my $package_output_dir = $self->package_output_dir;
 
     eval {
-        system("sudo rm -rf $info->{src}/debian");
+        system("sudo rm -rf $module->{src}/debian");
         system(
-            "sudo dh-make-perl --build --notest --depends '$depends' $info->{src}"
+            "sudo dh-make-perl --build --notest --depends '$depends' $module->{src}"
         );
-        system("sudo mv $info->{src}/../$pkg*.deb $package_output_dir");
+        system("sudo mv $module->{src}/../$pkg*.deb $package_output_dir");
     };
     if ($@) {
         $self->log( info => $@ );
@@ -57,11 +57,11 @@ sub _build_package_with_dh_make_perl {
 }
 
 sub package_name {
-    my ($self,$module) = @_;
-    return $module if $module eq 'libwww-perl';
-    $module =~ s{::}{-}g;
-    $module =~ s{_}{-}g;
-    'lib' . lc($module) . '-perl';
+    my ($self,$module_name) = @_;
+    return $module_name if $module_name eq 'libwww-perl';
+    $module_name =~ s{::}{-}g;
+    $module_name =~ s{_}{-}g;
+    'lib' . lc($module_name) . '-perl';
 }
 
 sub installed_packages {
