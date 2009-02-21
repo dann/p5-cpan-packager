@@ -1,0 +1,40 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use FindBin::libs;
+use CPAN::Packager::Script;
+
+my $script = CPAN::Packager::Script->new_with_options;
+$script->run;
+
+
+__END__
+
+=head1 NAME
+
+cpan-packager - yet another cpan module packagine tool 
+
+=head1 SYNOPSIS
+
+  cpan-packager.pl --module Test::Simple --builder Deb 
+
+  cpan-packager.pl --module Test::Simple --builder RPM 
+
+Packages are generated at /tmp/cpanpackager/{deb or rpm}
+
+=head1 DESCRIPTION
+
+cpan-packager will create the files required to build a debian or redhat source package out of a perl package. This works for most simple packages and is also useful for getting started with packaging perl modules. Given a perl package name, it can also automatically download it from CPAN. 
+
+=head1 AUTHOR
+
+Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
