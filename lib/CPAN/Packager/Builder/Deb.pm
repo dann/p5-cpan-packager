@@ -39,7 +39,7 @@ sub _build_package_with_dh_make_perl {
         system(
             "sudo dh-make-perl --build --notest --depends '$depends' $module->{src}"
         );
-        system("sudo mv $module->{src}/../$package*.deb $package_output_dir");
+        system("sudo cp $module->{src}/../$package*.deb $package_output_dir");
     };
     if ($@) {
         $self->log( info => $@ );
