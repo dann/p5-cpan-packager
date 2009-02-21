@@ -1,0 +1,2 @@
+#!/bin/sh
+perl -MTest::Continuous -e runtests t/*.t 

@@ -1,0 +1,8 @@
+#!/bin/zsh
+rm -rf cover_db
+perl Makefile.PL
+HARNESS_PERL_SWITCHES=-MDevel::Cover=+ignore,inc,-coverage,statement,branch,condition,path,subroutine make test
+cover
+rm -rf cover_db_view
+mv cover_db cover_db_view
+open cover_db_view/coverage.html

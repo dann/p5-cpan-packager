@@ -3,11 +3,11 @@ use Mouse;
 use Carp ();
 use Path::Class qw(file dir);
 use RPM::Specfile;
-use IPC::System::Simple qw(system capturex);
+use IPC::System::Simple qw(system capture EXIT_ANY);
 use File::Temp qw(tempdir);
 use LWP::Simple;
 with 'CPAN::Packager::Builder::Role';
-with 'CPAN::Package::Role::Logger';
+with 'CPAN::Packager::Role::Logger';
 
 has 'release' => (
     is      => 'rw',
@@ -24,7 +24,8 @@ has 'package_output_dir' => (
 has 'build_dir' => (
     is      => 'rw',
     default => sub {
-        my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
+        #my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
+        my $tmpdir = tempdir(  DIR => '/tmp' );
         dir($tmpdir);
     }
 );
@@ -44,6 +45,8 @@ sub check_cpanflute2_exist_in_path {
 sub build {
     my ( $self, $module ) = @_;
 
+    use Data::Dumper;
+    warn Dumper $module; 
     my $package_name = $self->package_name( $module->{module} );
     my $spec_content
         = $self->build_with_cpanflute( $module->{tgz}, $package_name );
@@ -57,10 +60,11 @@ sub build {
 
 sub build_with_cpanflute {
     my ( $self, $tgz, $package_name ) = @_;
-    my $build_arch = $self->_get_default_build_arch();
+    $self->log(info => 'build package with cpanflute');
+    my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
-    my $spec = system("cpanflute2 $opts $tgz");
+    my $spec = system("LANG=C cpanflute2 $opts $tgz");
     $spec;
 }
 
@@ -90,7 +94,8 @@ sub get_default_build_arch {
 sub is_installed {
     my ( $self, $module ) = @_;
     my $package      = $self->package_name($module);
-    my $return_value = capture("rpm -q $package");
+   
+    my $return_value =  capture(EXIT_ANY, "LANG=C rpm -q $package");
     $self->log( info => "$package is "
             . ( $return_value =~ /not installed/ ? 'not ' : '' )
             . "installed" );
@@ -98,20 +103,19 @@ sub is_installed {
 }
 
 sub generate_macro {
-    my ( $self, $output_dir ) = @_;
-    my $macro_file = file( $output_dir, 'macros' );
+    my ( $self,  ) = @_;
+    my $macro_file = file( $self->build_dir, 'macros' );
     my $fh = $macro_file->openw or die "Can't create $macro_file: $!";
-
-    my $rpm_dir     = $self->rpm_dir;
-    my $src_rpm_dir = $self->src_rpm_dir;
+    my $package_output_dir = $self->package_output_dir;
+    my $output_dir = './';
 
     print $fh qq{
 %_topdir $output_dir
 %_builddir %{_topdir}
-%_rpmdir $rpm_dir
+%_rpmdir $package_output_dir 
 %_sourcedir %{_topdir}
 %_specdir %{_topdir}
-%_srcrpmdir $src_rpm_dir
+%_srcrpmdir $package_output_dir 
 %_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
 };
 
@@ -119,13 +123,15 @@ sub generate_macro {
 }
 
 sub generate_rpmrc {
-    my ( $self, $build_dir ) = @_;
+    my $self = shift;
 
-    my $rpmrc_file = file( $build_dir, 'rpmrc' );
+    my $rpmrc_file = file( $self->build_dir, 'rpmrc' );
     my $fh = $rpmrc_file->openw
         or die "Can't create $rpmrc_file: $!";
+    warn $fh;
     my $macrofiles = qx(rpm --showrc | grep ^macrofiles | cut -f2- -d:);
     chomp $macrofiles;
+    my $build_dir = $self->build_dir;
     print $fh qq{
 include: /usr/lib/rpm/rpmrc
 macrofiles: $macrofiles:$build_dir/macros
@@ -134,13 +140,12 @@ macrofiles: $macrofiles:$build_dir/macros
 }
 
 sub build_rpm_package {
-    my ( $self, $spec_file_name, $build_opt ) = @_;
-
+    my ( $self, $spec_file_name) = @_;
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $retval
         = system(
-        "env PERL_MM_USE_DEFAULT=1 rpmbuild --rcfile $rpmrc_file -b${build_opt} --rmsource --rmspec --clean $spec_file_path"
+        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
         );
 
     $retval = $? >> 8;

@@ -3,7 +3,7 @@ use Mouse::Role;
 
 sub log {
     my ($self, $level, $message) = @_;
-    warn "[$level] $message"; 
+    print "[$level] $message\n"; 
 }
 
 1;

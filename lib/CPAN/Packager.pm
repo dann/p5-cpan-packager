@@ -26,10 +26,12 @@ sub build_modules {
 
     my $builder = CPAN::Packager::BuilderFactory->create( $builder_name );
     $builder->print_installed_packages;
+
     for my $module ( values %{$modules} ) {
         next
             if $module->{module} =~ /^Plagger/
                 || $module->{module} =~ /^Task::Catalyst/;
+
         next if $builder->is_installed( $module->{module} );
         if ( my $package = $builder->build($module) ) {
             $self->log( info => "$module->{module} created ($package)" );
