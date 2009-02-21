@@ -18,7 +18,7 @@ has 'package_output_dir' => (
     is      => 'rw',
     default => sub {
         my $self = shift;
-        dir( '/', 'tmp', 'cpanpackager', 'deb' );
+        dir( '/', 'tmp', 'cpanpackager', 'rpm' );
     },
 );
 
@@ -88,6 +88,7 @@ sub is_installed {
     return $return_value =~ /not installed/ ? 0 : 1;
 }
 
+# This method should be moved to another class
 sub install {
     my ( $self, $module ) = @_;
     if ( $self->is_installed($module) ) {
