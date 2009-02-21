@@ -15,8 +15,7 @@ has 'release' => (
 );
 
 has 'package_output_dir' => (
-    is      => 'rw',
-    default => sub {
+    +default => sub {
         my $self = shift;
         dir( '/', 'tmp', 'cpanpackager', 'rpm' );
     },

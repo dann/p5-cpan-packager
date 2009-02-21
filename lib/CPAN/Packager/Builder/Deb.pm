@@ -8,8 +8,7 @@ with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
 has 'package_output_dir' => (
-    is      => 'rw',
-    default => sub {
+    +default => sub {
         my $self = shift;
         dir( '/', 'tmp', 'cpanpackager', 'deb' );
     },

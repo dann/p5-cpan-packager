@@ -14,6 +14,10 @@ has 'ua' => (
     }
 );
 
+has 'package_output_dir' => (
+    is      => 'rw',
+);
+
 no Mouse::Role;
 
 sub resolve_module_name {
