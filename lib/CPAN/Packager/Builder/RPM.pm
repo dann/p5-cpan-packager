@@ -45,21 +45,21 @@ sub check_cpanflute2_exist_in_path {
 sub build {
     my ( $self, $module ) = @_;
 
-    use Data::Dumper;
-    warn Dumper $module; 
-    my $package_name = $self->package_name( $module->{module} );
     my $spec_content
-        = $self->build_with_cpanflute( $module->{tgz}, $package_name );
+        = $self->build_with_cpanflute( $module->{tgz} );
+    my $package_name = $self->package_name( $module->{module} );
     my $spec_file_name = "$package_name.spec";
     $self->generate_spec_file( $spec_file_name, $spec_content );
     $self->generate_filter_macro_if_necessary;
     $self->generate_macro;
     $self->generate_rpmrc;
+    $self->copy_module_sources_to_build_dir($module);
     $self->build_rpm_package($spec_file_name);
+    $package_name;
 }
 
 sub build_with_cpanflute {
-    my ( $self, $tgz, $package_name ) = @_;
+    my ( $self, $tgz ) = @_;
     $self->log(info => 'build package with cpanflute');
     my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
@@ -107,10 +107,10 @@ sub generate_macro {
     my $macro_file = file( $self->build_dir, 'macros' );
     my $fh = $macro_file->openw or die "Can't create $macro_file: $!";
     my $package_output_dir = $self->package_output_dir;
-    my $output_dir = './';
+    my $build_dir = $self->build_dir;
 
     print $fh qq{
-%_topdir $output_dir
+%_topdir $build_dir
 %_builddir %{_topdir}
 %_rpmdir $package_output_dir 
 %_sourcedir %{_topdir}
@@ -173,6 +173,20 @@ sub install {
         my $retval = system("sudo rpm -Uvh $rpm");
         $self->log( debug => $retval );
     }
+
+}
+
+sub copy_module_sources_to_build_dir {
+    my ($self, $module) = @_;
+    my $module_tarball = $module->{tgz};
+    my $build_dir = $self->build_dir;
+
+    my $module_name = $module->{module};
+    $module_name =~ s{::}{-}g;
+    my $version = $module->{version};
+
+    system("cp $module_tarball $build_dir/$module_name-$version.tar.gz");
+    system("cp $module_tarball $build_dir/$module_name-$version.tgz");
 }
 
 sub package_name {

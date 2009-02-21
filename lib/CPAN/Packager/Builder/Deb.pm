@@ -28,7 +28,7 @@ sub build {
 
 sub _build_package_with_dh_make_perl {
     my ( $self, $module ) = @_;
-    my $pkg     = $self->package_name( $module->{module} );
+    my $package     = $self->package_name( $module->{module} );
     my @depends = qw(perl);
 
     my $depends = join ',', @depends;
@@ -39,12 +39,12 @@ sub _build_package_with_dh_make_perl {
         system(
             "sudo dh-make-perl --build --notest --depends '$depends' $module->{src}"
         );
-        system("sudo mv $module->{src}/../$pkg*.deb $package_output_dir");
+        system("sudo mv $module->{src}/../$package*.deb $package_output_dir");
     };
     if ($@) {
         $self->log( info => $@ );
     }
-    $pkg;
+    $package;
 }
 
 sub package_name {

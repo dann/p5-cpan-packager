@@ -29,7 +29,7 @@ sub download {
     my $version      = $2;
 
     $self->log(info => "Downloaded $module !");
-    ( $archive, $where, $package_name, $version );
+    ( $archive, $where, $version );
 }
 
 __PACKAGE__->meta->make_immutable;
