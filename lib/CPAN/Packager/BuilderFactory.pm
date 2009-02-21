@@ -7,7 +7,6 @@ sub create {
     my ( $class, $builder ) = @_;
     my $builder_class = join '::',
         ( 'CPAN', 'Packager', 'Builder', $builder );
-    warn $builder_class;
     $builder_class->require or die "Can't load module $@";
     $builder_class->new;
 }

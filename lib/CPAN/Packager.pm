@@ -3,7 +3,8 @@ use Mouse;
 our $VERSION = '0.01';
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
-use Perl6::Say;
+with 'CPAN::Packager::Role::Logger';
+
 *uniq = \&CPAN::Packager::DependencyAnalyzer::uniq;
 
 has 'builder' => (
@@ -20,9 +21,10 @@ sub make {
 
 sub build_modules {
     my ( $self, $modules ) = @_;
-    say("making pkgs...");
+    my $builder_name = $self->builder;
+    $self->log( info => "making packages for $builder_name ..." );
 
-    my $builder = CPAN::Packager::BuilderFactory->create( $self->builder );
+    my $builder = CPAN::Packager::BuilderFactory->create( $builder_name );
     $builder->print_installed_packages;
     for my $module ( values %{$modules} ) {
         next
@@ -30,10 +32,10 @@ sub build_modules {
                 || $module->{module} =~ /^Task::Catalyst/;
         next if $builder->is_installed( $module->{module} );
         if ( my $package = $builder->build($module) ) {
-            say("$module->{module} created ($package)");
+            $self->log( info => "$module->{module} created ($package)" );
         }
         else {
-            say("$module->{module} failed");
+            $self->log( info => "$module->{module} failed" );
         }
     }
 
@@ -41,6 +43,7 @@ sub build_modules {
 
 sub analyze_module_dependencies {
     my ( $self, $module ) = @_;
+    $self->log( info => "Analyzing dependencies for $module ..." );
     my $analyzer = CPAN::Packager::DependencyAnalyzer->new;
     $analyzer->analyze_dependencies($module);
     $analyzer->modules;
