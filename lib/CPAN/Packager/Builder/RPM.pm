@@ -64,7 +64,7 @@ sub build_with_cpanflute {
     my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
-    my $spec = system("LANG=C cpanflute2 $opts $tgz");
+    my $spec = capture("LANG=C cpanflute2 $opts $tgz");
     $spec;
 }
 
@@ -76,7 +76,7 @@ sub generate_spec_file {
 
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $fh = file($spec_file_path)->openw;
-    print $fh, $spec_content;
+    print $fh $spec_content;
     $fh->close;
 }
 
@@ -103,7 +103,7 @@ sub is_installed {
 }
 
 sub generate_macro {
-    my ( $self,  ) = @_;
+    my $self = shift;
     my $macro_file = file( $self->build_dir, 'macros' );
     my $fh = $macro_file->openw or die "Can't create $macro_file: $!";
     my $package_output_dir = $self->package_output_dir;
@@ -119,7 +119,7 @@ sub generate_macro {
 %_build_name_fmt %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
 };
 
-    close $fh;
+    $fh->close;
 }
 
 sub generate_rpmrc {
@@ -136,16 +136,20 @@ sub generate_rpmrc {
 include: /usr/lib/rpm/rpmrc
 macrofiles: $macrofiles:$build_dir/macros
 };
-    close $fh;
+    $fh->close;
 }
 
 sub build_rpm_package {
     my ( $self, $spec_file_name) = @_;
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
+#    my $retval
+#        = system(
+#        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
+#        );
     my $retval
         = system(
-        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
+        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec $spec_file_path"
         );
 
     $retval = $? >> 8;

@@ -1,2 +1,2 @@
 #!/bin/sh
-perl bin/cpan-packager.pl --module Test::Simple --builder Deb 
+perl bin/cpan-packager.pl --module Test::Simple --builder RPM 
