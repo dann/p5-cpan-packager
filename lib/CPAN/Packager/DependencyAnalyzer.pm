@@ -3,7 +3,7 @@ use Mouse;
 use Module::Depends;
 use Module::CoreList;
 use CPAN::Packager::Downloader;
-use LWP::UserAgent;
+use CPAN::Packager::ModuleNameResolver;
 with 'CPAN::Packager::Role::Logger';
 
 has 'downloder' => (
@@ -13,20 +13,18 @@ has 'downloder' => (
     }
 );
 
+has 'module_name_resolver' => (
+    is      => 'rw',
+    default => sub {
+        CPAN::Packager::ModuleNameResolver->new;
+    }
+);
+
 has 'modules' => (
     is      => 'rw',
     isa     => 'HashRef',
     default => sub {
         +{},;
-    }
-);
-
-has 'ua' => (
-    is      => 'rw',
-    default => sub {
-        my $ua = LWP::UserAgent->new;
-        $ua->env_proxy;
-        $ua;
     }
 );
 
@@ -82,21 +80,9 @@ sub get_dependencies {
 sub resolve_module_name {
     my ( $self, $module ) = @_;
     return $self->resolved->{$module} if $self->resolved->{$module};
-    my $res = $self->get_or_retry(
-        "http://search.cpan.org/search?query=$module&mode=module");
-    return unless $res->is_success;
-    my ($resolved_module)
-        = $res->content =~ m{<a href="/~[^/]+/([-\w]+?)-\d[.\w]+/">};
-
-    return unless $resolved_module;
-    $resolved_module =~ s/-/::/g unless $resolved_module eq 'libwww-perl';
-    $self->resolved->{$module} = $resolved_module;
-}
-
-sub get_or_retry {
-    my ( $self, $url ) = @_;
-    my $res = $self->ua->get($url);
-    $res->is_success ? $res : $self->ua->get($url);
+    my $resolved_module_name = $self->module_name_resolver->resolve($module);
+    return $module unless $resolved_module_name;
+    $self->resolved->{$module} = $resolved_module_name;
 }
 
 sub uniq {
