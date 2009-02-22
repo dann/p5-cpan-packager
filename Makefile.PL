@@ -11,9 +11,9 @@ requires(
     'Mouse'               => 0,
     'Path::Class'         => 0,
     'RPM::Specfile'       => 0,
-    'String::CamelCase'   => 0,
     'UNIVERSAL::require'  => 0,
     'File::Copy'          => 0,
+    'Hash::Merge'         => 0,
 );
 test_requires(
     'Test::More'                   => 0,

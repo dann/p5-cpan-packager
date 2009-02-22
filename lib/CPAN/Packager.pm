@@ -1,22 +1,53 @@
 package CPAN::Packager;
-use Mouse;
 our $VERSION = '0.01';
+use Mouse;
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
+use CPAN::Packager::DependencyConfigMerger;
+use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
-
-*uniq = \&CPAN::Packager::DependencyAnalyzer::uniq;
 
 has 'builder' => (
     is      => 'rw',
     default => 'Deb',
 );
 
+has 'dependency_config_merger' => (
+    is => 'rw',
+    default => sub {
+        CPAN::Packager::DependencyConfigMerger->new;
+    }
+);
+
+has 'config_loader' => (
+    is => 'rw',
+    default => sub {
+        CPAN::Packager::ConfigLoader->new;
+    }
+);
+
+has 'dependency_analyzer' => (
+    is => 'rw',
+    default => sub {
+        CPAN::Packager::DependencyAnalyzer->new;
+    }
+);
+
+has 'conf' => (
+    is => 'rw',
+);
+
 sub make {
     my ( $self, $module ) = @_;
     die 'module must be passed' unless $module;
     my $modules = $self->analyze_module_dependencies($module);
+    $modules = $self->merge_config($modules, $self->config_loader->load($self->conf)) if $self->conf;
     $self->build_modules($modules);
+}
+
+sub merge_config {
+    my ($self, $modules, $config) = @_;
+    $self->dependency_config_merger->merge_module_config($modules, $config);
 }
 
 sub build_modules {
@@ -28,6 +59,7 @@ sub build_modules {
     $builder->print_installed_packages;
 
     for my $module ( values %{$modules} ) {
+        next if $module->{build_skip} && $module->{build_skip} > 1;
         next
             if $module->{module} =~ /^Plagger/
                 || $module->{module} =~ /^Task::Catalyst/;
@@ -46,10 +78,12 @@ sub build_modules {
 sub analyze_module_dependencies {
     my ( $self, $module ) = @_;
     $self->log( info => "Analyzing dependencies for $module ..." );
-    my $analyzer = CPAN::Packager::DependencyAnalyzer->new;
+    my $analyzer = $self->dependency_analyzer;
     $analyzer->analyze_dependencies($module);
     $analyzer->modules;
 }
+
+*uniq = \&CPAN::Packager::DependencyAnalyzer::uniq;
 
 no Mouse;
 __PACKAGE__->meta->make_immutable;

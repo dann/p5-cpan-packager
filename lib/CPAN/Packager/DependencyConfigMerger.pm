@@ -1,15 +1,13 @@
 package CPAN::Packager::DependencyConfigMerger;
 use Mouse;
+use YAML;
+use CPAN::Packager::ConfigLoader;
+use Hash::Merge qw(merge);
+Hash::Merge::set_behavior( 'RIGHT_PRECEDENT' );
 
-sub merge {
-    my ($self, $modules) = @_;
-    my $config = $self->load_config;
-    # TODO
-}
-
-sub load_config {
-    # TODO
-
+sub merge_module_config {
+    my ($self, $modules, $config) = @_;
+    return merge($modules, $config);
 }
 
 no Mouse;

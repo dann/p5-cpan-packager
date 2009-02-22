@@ -35,7 +35,7 @@ sub _build_package_with_dh_make_perl {
     my $package_output_dir = $self->package_output_dir;
 
     eval {
-        system("sudo rm -rf $module->{src}/debian");
+        system("sudo rm -f $module->{src}/debian/*.deb");
         system(
             "sudo dh-make-perl --build --notest --depends '$depends' $module->{src}"
         );
