@@ -9,13 +9,14 @@ requires(
     'LWP::Simple'         => 0,
     'LWP::UserAgent'      => 0,
     'Module::Depends'     => 0,
-    'Mouse'               => 0,
+    'Module::CoreList'    => 0,
+    'Mouse'               => '0.17',
     'Path::Class'         => 0,
     'RPM::Specfile'       => 0,
     'UNIVERSAL::require'  => 0,
     'File::Copy'          => 0,
     'Hash::Merge'         => 0,
-    'Module::CoreList'    => 0,
+    'List::MoreUtils'     => 0,
     'YAML'                => 0,
 );
 

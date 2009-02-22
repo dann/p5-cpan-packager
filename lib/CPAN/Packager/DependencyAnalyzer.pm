@@ -4,6 +4,7 @@ use Module::Depends;
 use Module::CoreList;
 use CPAN::Packager::Downloader;
 use CPAN::Packager::ModuleNameResolver;
+use List::MoreUtils qw(uniq);
 with 'CPAN::Packager::Role::Logger';
 
 has 'downloder' => (
@@ -83,13 +84,6 @@ sub resolve_module_name {
     my $resolved_module_name = $self->module_name_resolver->resolve($module);
     return $module unless $resolved_module_name;
     $self->resolved->{$module} = $resolved_module_name;
-}
-
-sub uniq {
-    my (@modules) = @_;
-    my %hash;
-    $hash{$_} = 1 for @modules;
-    keys %hash;
 }
 
 __PACKAGE__->meta->make_immutable;
