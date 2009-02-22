@@ -25,8 +25,9 @@ has 'package_output_dir' => (
 has 'build_dir' => (
     is      => 'rw',
     default => sub {
-        #my $tmpdir = tempdir( DIR => '/tmp' );
-        my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
+        my %opt = (CLEANUP =>1, DIR=> '/tmp');
+        %opt = (DIR => '/tmp') if &CPAN::Packager::DEBUG;
+        my $tmpdir = tempdir( %opt );
         dir($tmpdir);
     }
 );
@@ -81,7 +82,8 @@ sub generate_spec_file {
     print $fh $spec_content;
     $fh->close;
 
-    copy($spec_file_path, file($self->package_output_dir, $spec_file_name));
+    copy( $spec_file_path,
+        file( $self->package_output_dir, $spec_file_name ) );
 }
 
 sub generate_filter_macro_if_necessary {
@@ -148,15 +150,13 @@ sub build_rpm_package {
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
 
+    my $build_opt
+        = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path";
+    $build_opt
+        = "--rcfile $rpmrc_file -ba --rmsource --rmspec $spec_file_path"
+        if &CPAN::Packager::DEBUG;
     my $retval
-        = system(
-        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
-        );
-        # for debug
-#    my $retval
-#        = system(
-#        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec $spec_file_path"
-#        );
+        = system( "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
 
     $retval = $? >> 8;
     if ( $retval != 0 ) {
@@ -173,8 +173,9 @@ sub copy_module_sources_to_build_dir {
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
 
-    copy($module_tarball, file($build_dir, "$module_name-$version.tar.gz"));
-    copy($module_tarball, file($build_dir, "$module_name-$version.tgz"));
+    copy( $module_tarball,
+        file( $build_dir, "$module_name-$version.tar.gz" ) );
+    copy( $module_tarball, file( $build_dir, "$module_name-$version.tgz" ) );
 }
 
 sub package_name {
@@ -189,7 +190,7 @@ sub installed_packages {
     my $return_value = capture( EXIT_ANY,
         "LANG=C yum list installed|grep '^perl\-*' |awk '{print \$1}'" );
     my @packages = split /[\r\n]+/, $return_value;
-    for my $package ( @packages ) {
+    for my $package (@packages) {
         push @installed_pkg, $package;
     }
     @installed_pkg;
@@ -206,3 +207,30 @@ sub print_installed_packages {
 no Mouse;
 __PACKAGE__->meta->make_immutable;
 1;
+
+__END__
+
+=head1 NAME
+
+CPAN::Packager -
+
+=head1 SYNOPSIS
+
+  use CPAN::Packager;
+
+=head1 DESCRIPTION
+
+CPAN::Packager is
+
+=head1 AUTHOR
+
+Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

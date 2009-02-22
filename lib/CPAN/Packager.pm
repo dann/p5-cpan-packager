@@ -7,10 +7,23 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
+BEGIN {
+    if ( !defined &DEBUG ) {
+        if ( $ENV{CPAN_PACKAGER_DEBUG} ) {
+            *DEBUG = sub () {1};
+        }
+        else {
+            *DEBUG = sub () {0};
+        }
+    }
+}
+
 has 'builder' => (
     is      => 'rw',
     default => 'Deb',
 );
+
+has 'conf' => ( is => 'rw', );
 
 has 'dependency_config_merger' => (
     is      => 'rw',
@@ -32,8 +45,6 @@ has 'dependency_analyzer' => (
         CPAN::Packager::DependencyAnalyzer->new;
     }
 );
-
-has 'conf' => ( is => 'rw', );
 
 sub make {
     my ( $self, $module ) = @_;
@@ -83,8 +94,6 @@ sub analyze_module_dependencies {
     $analyzer->analyze_dependencies($module);
     $analyzer->modules;
 }
-
-*uniq = \&CPAN::Packager::DependencyAnalyzer::uniq;
 
 no Mouse;
 __PACKAGE__->meta->make_immutable;
