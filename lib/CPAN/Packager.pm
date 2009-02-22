@@ -73,10 +73,6 @@ sub build_modules {
 
     for my $module ( values %{$modules} ) {
         next if $module->{build_skip} && $module->{build_skip} > 1;
-        next
-            if $module->{module} =~ /^Plagger/
-                || $module->{module} =~ /^Task::Catalyst/;
-
         next if $builder->is_installed( $module->{module} );
         if ( my $package = $builder->build($module) ) {
             $self->log( info => "$module->{module} created ($package)" );
