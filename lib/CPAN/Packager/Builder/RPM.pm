@@ -162,24 +162,6 @@ sub build_rpm_package {
     }
 }
 
-# This method should be moved to another class
-sub install {
-    my ( $self, $module ) = @_;
-    if ( $self->is_installed($module) ) {
-        $self->log( info => "install skip $module\n" );
-        return;
-    }
-
-    my $package = $self->package_name($module);
-    my @rpms    = glob("$package*.rpm");
-    for my $rpm (@rpms) {
-        next if $rpm =~ /src\.rpm/;
-        my $retval = system("sudo rpm -Uvh $rpm");
-        $self->log( debug => $retval );
-    }
-
-}
-
 sub copy_module_sources_to_build_dir {
     my ( $self, $module ) = @_;
     my $module_tarball = $module->{tgz};
