@@ -1,5 +1,5 @@
 package CPAN::Packager;
-our $VERSION = '0.01';
+use 5.00800;
 use Mouse;
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
@@ -7,6 +7,7 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
+our $VERSION = '0.01';
 BEGIN {
     if ( !defined &DEBUG ) {
         if ( $ENV{CPAN_PACKAGER_DEBUG} ) {
