@@ -6,7 +6,6 @@ use Path::Class;
 
 sub load {
     my ($self,$filename) = @_;
-    warn $filename;
     YAML::LoadFile($filename);
 }
 

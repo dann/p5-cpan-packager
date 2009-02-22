@@ -67,7 +67,7 @@ sub build_modules {
     my $builder_name = $self->builder;
     $self->log( info => "making packages for $builder_name ..." );
 
-    my $builder = CPAN::Packager::BuilderFactory->create($builder_name);
+    my $builder = CPAN::Packager::BuilderFactory->create($builder_name, $modules);
     $builder->print_installed_packages;
 
     for my $module ( values %{$modules} ) {

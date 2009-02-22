@@ -46,12 +46,14 @@ sub check_cpanflute2_exist_in_path {
 
 sub build {
     my ( $self, $module ) = @_;
+    die "$module->{module} does't have tarball. we can't find $module->{module} in CPAN "
+        unless $module->{tgz};
 
     my $spec_content   = $self->build_with_cpanflute( $module->{tgz} );
     my $package_name   = $self->package_name( $module->{module} );
     my $spec_file_name = "$package_name.spec";
-    $self->generate_spec_file( $spec_file_name, $spec_content );
-    $self->generate_filter_macro_if_necessary;
+    $self->generate_spec_file( $spec_file_name, $spec_content,
+        $module->{module} );
     $self->generate_macro;
     $self->generate_rpmrc;
     $self->copy_module_sources_to_build_dir($module);
@@ -72,10 +74,27 @@ sub build_with_cpanflute {
 }
 
 sub generate_spec_file {
-    my ( $self, $spec_file_name, $spec_content ) = @_;
+    my ( $self, $spec_file_name, $spec_content, $module_name ) = @_;
     $spec_content =~ s/^Requires: perl\(perl\).*$//m;
     $spec_content
         =~ s/^make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT$/make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT\nif [ -d \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT ]; then mv \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT\/* \$RPM_BUILD_ROOT; fi/m;
+
+    if (   $self->config($module_name)
+        && $self->config($module_name)->{no_depends} )
+    {
+        for my $no_depend_module (
+            @{ $self->config($module_name)->{no_depends} } )
+        {
+            $self->_filter_requires( $spec_content, $no_depend_module );
+        }
+
+        # generate macro which is used in spec file
+        $spec_content
+            = "Source2: filter_macro\n"
+            . '%define __perl_requires %{SOURCE2}' . "\n"
+            . $spec_content;
+        $self->generate_filter_macro($module_name);
+    }
 
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $fh = file($spec_file_path)->openw;
@@ -86,10 +105,29 @@ sub generate_spec_file {
         file( $self->package_output_dir, $spec_file_name ) );
 }
 
-sub generate_filter_macro_if_necessary {
-    my ( $self, $spec ) = @_;
+sub _filter_requires {
+    my ( $self, $spec_content, $no_depend_module ) = @_;
+    $spec_content =~ s/^Requires: perl\($no_depend_module\).+$//m;
+    $spec_content =~ s/^BuildRequires: perl\($no_depend_module\).+$//m;
+    $spec_content;
+}
 
-    #  TODO
+sub generate_filter_macro {
+    my ( $self, $module_name ) = @_;
+
+    my $filter_macro_file = file( $self->build_dir, 'filter_macro' );
+    my $fh = $filter_macro_file->openw
+        or die "Can't create $filter_macro_file: $!";
+    print $fh qq{#!/bin/sh
+ 
+/usr/lib/rpm/perl.req \$\* |\\
+sed };
+    for my $mod ( @{ $self->config($module_name)->{no_depends} } ) {
+        print $fh "-e '/perl($mod)/d' ";
+    }
+    print $fh "\n";
+    $fh->close;
+    system("chmod 755 $filter_macro_file");
 }
 
 sub get_default_build_arch {
