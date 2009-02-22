@@ -61,6 +61,8 @@ sub build {
 sub build_with_cpanflute {
     my ( $self, $tgz ) = @_;
     $self->log( info => 'build package with cpanflute' );
+
+    # TODO Should we specify build_arch in spec file?
     my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
