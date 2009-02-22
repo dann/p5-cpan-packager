@@ -25,9 +25,9 @@ has 'package_output_dir' => (
 has 'build_dir' => (
     is      => 'rw',
     default => sub {
-        my %opt = (CLEANUP =>1, DIR=> '/tmp');
-        %opt = (DIR => '/tmp') if &CPAN::Packager::DEBUG;
-        my $tmpdir = tempdir( %opt );
+        my %opt = ( CLEANUP => 1, DIR => '/tmp' );
+        %opt = ( DIR => '/tmp' ) if &CPAN::Packager::DEBUG;
+        my $tmpdir = tempdir(%opt);
         dir($tmpdir);
     }
 );
@@ -152,11 +152,10 @@ sub build_rpm_package {
 
     my $build_opt
         = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path";
-    $build_opt
-        = "--rcfile $rpmrc_file -ba --rmsource --rmspec $spec_file_path"
+    $build_opt = "--rcfile $rpmrc_file -ba $spec_file_path"
         if &CPAN::Packager::DEBUG;
     my $retval
-        = system( "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
+        = system("env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt");
 
     $retval = $? >> 8;
     if ( $retval != 0 ) {

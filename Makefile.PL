@@ -21,6 +21,7 @@ requires(
 
 test_requires(
     'Test::More'                   => 0,
+    'Module::Pluggable::Object'    => 0,
     'Module::Install::AuthorTests' => 0,
 );
 
