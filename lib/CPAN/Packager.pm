@@ -103,7 +103,7 @@ __END__
 
 =head1 NAME
 
-CPAN::Packager -
+CPAN::Packager - Create packages(rpm, deb) from perl modules
 
 =head1 SYNOPSIS
 
@@ -111,7 +111,8 @@ CPAN::Packager -
 
 =head1 DESCRIPTION
 
-CPAN::Packager is
+CPAN::Packager is a tool to help you make packages from perl modules on CPAN.
+This makes it so easy to make a perl module into a Redhat/Debian package
 
 =head1 AUTHOR
 
