@@ -6,6 +6,7 @@ use RPM::Specfile;
 use IPC::System::Simple qw(system capture EXIT_ANY);
 use File::Temp qw(tempdir);
 use LWP::Simple;
+use File::Copy;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
@@ -24,8 +25,8 @@ has 'package_output_dir' => (
 has 'build_dir' => (
     is      => 'rw',
     default => sub {
-        #my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
-        my $tmpdir = tempdir( DIR => '/tmp' );
+        #my $tmpdir = tempdir( DIR => '/tmp' );
+        my $tmpdir = tempdir( CLEANUP => 1, DIR => '/tmp' );
         dir($tmpdir);
     }
 );
@@ -77,6 +78,8 @@ sub generate_spec_file {
     my $fh = file($spec_file_path)->openw;
     print $fh $spec_content;
     $fh->close;
+
+    copy($spec_file_path, file($self->package_output_dir, $spec_file_name));
 }
 
 sub generate_filter_macro_if_necessary {
@@ -128,7 +131,6 @@ sub generate_rpmrc {
     my $rpmrc_file = file( $self->build_dir, 'rpmrc' );
     my $fh = $rpmrc_file->openw
         or die "Can't create $rpmrc_file: $!";
-    warn $fh;
     my $macrofiles = qx(rpm --showrc | grep ^macrofiles | cut -f2- -d:);
     chomp $macrofiles;
     my $build_dir = $self->build_dir;
@@ -144,14 +146,15 @@ sub build_rpm_package {
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
 
-#    my $retval
-#        = system(
-#        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
-#        );
     my $retval
         = system(
-        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec $spec_file_path"
+        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path"
         );
+        # for debug
+#    my $retval
+#        = system(
+#        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild --rcfile $rpmrc_file -ba --rmsource --rmspec $spec_file_path"
+#        );
 
     $retval = $? >> 8;
     if ( $retval != 0 ) {
@@ -186,15 +189,15 @@ sub copy_module_sources_to_build_dir {
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
 
-    system("cp $module_tarball $build_dir/$module_name-$version.tar.gz");
-    system("cp $module_tarball $build_dir/$module_name-$version.tgz");
+    copy($module_tarball, file($build_dir, "$module_name-$version.tar.gz"));
+    copy($module_tarball, file($build_dir, "$module_name-$version.tgz"));
 }
 
 sub package_name {
     my ( $self, $module_name ) = @_;
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
-    'perl' . lc($module_name);
+    'perl-' . $module_name;
 }
 
 sub installed_packages {

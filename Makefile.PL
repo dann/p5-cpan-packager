@@ -13,14 +13,12 @@ requires(
     'RPM::Specfile'       => 0,
     'String::CamelCase'   => 0,
     'UNIVERSAL::require'  => 0,
+    'File::Copy'          => 0,
 );
 test_requires(
     'Test::More'                   => 0,
     'Test::Differences'            => 0,
     'Test::Deep'                   => 0,
-    'Test::Exception'              => 0,
-    'Test::MockObject'             => 0,
-    'Test::Class'                  => 0,
     'Module::Install::AuthorTests' => 0,
 );
 
