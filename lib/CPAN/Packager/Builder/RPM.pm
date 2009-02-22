@@ -185,8 +185,9 @@ sub package_name {
 sub installed_packages {
     my @installed_pkg;
     my $return_value = capture( EXIT_ANY,
-        "LANG=C yum list installed|grep perl|awk '{print \$1}'" );
-    for my $package ( split /¥r¥n/, $return_value ) {
+        "LANG=C yum list installed|grep '^perl\-*' |awk '{print \$1}'" );
+    my @packages = split /[\r\n]+/, $return_value;
+    for my $package ( @packages ) {
         push @installed_pkg, $package;
     }
     @installed_pkg;
@@ -196,7 +197,7 @@ sub print_installed_packages {
     my ($self) = @_;
     my $installed_file = file( $self->package_output_dir, 'installed' );
     my $fh = $installed_file->openw;
-    print $fh "yum -y install $_¥n" for $self->installed_packages;
+    print $fh "yum -y install $_\n" for $self->installed_packages;
     close $fh;
 }
 
