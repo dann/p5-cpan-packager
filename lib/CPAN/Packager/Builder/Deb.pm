@@ -15,10 +15,15 @@ has 'package_output_dir' => (
 
 sub BUILD {
     my $self = shift;
-    system("which dh-make-perl");
-    system("which dpkg");
+    $self->check_executables_exist_in_path;
     $self->package_output_dir->mkpath;
     $self;
+}
+
+
+sub check_executables_exist_in_path {
+    system("which dh-make-perl");
+    system("which dpkg");
 }
 
 sub build {
