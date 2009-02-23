@@ -3,6 +3,7 @@ use Mouse;
 use Carp;
 use IPC::System::Simple qw(system);
 use Path::Class;
+use List::MoreUtils qw(any);
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
@@ -20,7 +21,6 @@ sub BUILD {
     $self;
 }
 
-
 sub check_executables_exist_in_path {
     system("which dh-make-perl");
     system("which dpkg");
@@ -33,12 +33,13 @@ sub build {
 
 sub _build_package_with_dh_make_perl {
     my ( $self, $module ) = @_;
-    my $package     = $self->package_name( $module->{module} );
-    my @depends = qw(perl);
+    die "module param must have module name" unless $module->{module};
+    my $package = $self->package_name( $module->{module} );
 
+    my @depends = $self->depends($module);
     my $depends = join ',', @depends;
+    $self->log( debug => "depends: $depends" );
     my $package_output_dir = $self->package_output_dir;
-
     eval {
         system("sudo rm -rf $module->{src}/debian");
         system(
@@ -52,12 +53,50 @@ sub _build_package_with_dh_make_perl {
     $package;
 }
 
+sub depends {
+    my ( $self, $module ) = @_;
+    my @depends = ();
+
+    push @depends, map { $self->package_name($_) } @{ $module->{depends} }
+        if $module->{depends};
+    my $module_name = $module->{module};
+    if (   $self->config($module_name)
+        && $self->config($module_name)->{no_depends} )
+    {
+        my @no_depends = ();
+        push @no_depends,
+            map { $self->package_name($_) } @{ $module->{no_depends} };
+        @depends = $self->_filter_requires( \@depends, \@no_depends );
+    }
+    push @depends, 'perl';
+    wantarray ? @depends : \@depends;
+}
+
+sub _filter_requires {
+    my ( $self, $depends, $no_depends ) = @_;
+    my @filtered = ();
+    foreach my $depend ( @{$depends} ) {
+        my $is_no_depend = any { $_ eq $depend } @{$no_depends};
+        push @filtered, $depend unless $is_no_depend;
+    }
+    wantarray ? @filtered : \@filtered;
+
+}
+
 sub package_name {
     my ( $self, $module_name ) = @_;
+    die "module_name is required" unless $module_name;
     return $module_name if $module_name eq 'libwww-perl';
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
     'lib' . lc($module_name) . '-perl';
+}
+
+sub is_installed {
+    my ( $self, $module ) = @_;
+    die 'module is required' unless $module;
+    my $pkg = $self->package_name($module);
+    grep { $_ =~ /^$pkg/ } $self->installed_packages;
 }
 
 sub installed_packages {
@@ -86,7 +125,6 @@ sub print_installed_packages {
 no Mouse;
 __PACKAGE__->meta->make_immutable;
 1;
-
 
 __END__
 

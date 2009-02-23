@@ -4,5 +4,6 @@ Linux::Smaps:
     - Test::Simple
   no_depends:
     - Class::Member
+
 Acme::Bleach:
   build_skip: 1

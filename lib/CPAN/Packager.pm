@@ -72,7 +72,8 @@ sub build_modules {
     $builder->print_installed_packages;
 
     for my $module ( values %{$modules} ) {
-        next if $module->{build_skip} && $module->{build_skip} > 1;
+        next if $module->{build_skip} && $module->{build_skip} == 1;
+        next unless $module->{module};
         next if $builder->is_installed( $module->{module} );
         if ( my $package = $builder->build($module) ) {
             $self->log( info => "$module->{module} created ($package)" );
