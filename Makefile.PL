@@ -18,6 +18,7 @@ requires(
     'Hash::Merge'         => 0,
     'List::MoreUtils'     => 0,
     'YAML'                => 0,
+    'MouseX::Getopt'      => 0,
 );
 
 test_requires(

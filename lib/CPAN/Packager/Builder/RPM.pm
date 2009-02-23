@@ -238,7 +238,7 @@ sub print_installed_packages {
     my $installed_file = file( $self->package_output_dir, 'installed' );
     my $fh = $installed_file->openw;
     print $fh "yum -y install $_\n" for $self->installed_packages;
-    close $fh;
+    $fh->close;
 }
 
 no Mouse;

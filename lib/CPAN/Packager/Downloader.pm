@@ -1,7 +1,6 @@
 package CPAN::Packager::Downloader;
 use Mouse;
 use CPANPLUS::Backend;
-use Module::Depends;
 with 'CPAN::Packager::Role::Logger';
 
 has 'fetcher' => (
