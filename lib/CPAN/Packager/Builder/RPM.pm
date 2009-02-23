@@ -34,19 +34,21 @@ has 'build_dir' => (
 
 sub BUILD {
     my $self = shift;
-    $self->check_cpanflute2_exist_in_path;
+    $self->check_executables_exist_in_path;
     $self->package_output_dir->mkpath;
     $self;
 }
 
-sub check_cpanflute2_exist_in_path {
-    system "which cpanflute2 > /dev/null"
-        and Carp::croak "cpanflute2 is not found in PATH";
+sub check_executables_exist_in_path {
+    system("which cpanflute2");
+    system("which yum");
+    system("which rpm");
 }
 
 sub build {
     my ( $self, $module ) = @_;
-    die "$module->{module} does't have tarball. we can't find $module->{module} in CPAN "
+    die
+        "$module->{module} does't have tarball. we can't find $module->{module} in CPAN "
         unless $module->{tgz};
 
     my $spec_content   = $self->build_with_cpanflute( $module->{tgz} );

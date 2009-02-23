@@ -15,8 +15,8 @@ has 'package_output_dir' => (
 
 sub BUILD {
     my $self = shift;
-    system("which dh-make-perl > /dev/null")
-        and croak "dh-make-perl is not found in PATH";
+    system("which dh-make-perl");
+    system("which dpkg");
     $self->package_output_dir->mkpath;
     $self;
 }
