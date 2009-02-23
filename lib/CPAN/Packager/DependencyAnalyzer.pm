@@ -38,6 +38,7 @@ has 'resolved' => (
 
 sub analyze_dependencies {
     my ( $self, $module ) = @_;
+    $module = $self->resolve_module_name($module);
     return if $self->is_added($module) || $self->is_core($module);
 
     my ( $tgz, $src, $version ) = $self->downloder->download($module);
