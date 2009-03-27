@@ -13,6 +13,8 @@ has 'ua' => (
 
 sub resolve {
     my ($self, $module) = @_;
+    return if $module eq 'perl';
+
     my $res = $self->get_or_retry(
         "http://search.cpan.org/search?query=$module&mode=module");
     return unless $res->is_success;
