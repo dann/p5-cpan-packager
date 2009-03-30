@@ -87,7 +87,7 @@ sub generate_spec_file {
         for my $no_depend_module (
             @{ $self->config($module_name)->{no_depends} } )
         {
-            $self->_filter_requires( $spec_content, $no_depend_module );
+            $spec_content = $self->_filter_requires( $spec_content, $no_depend_module );
         }
 
         # generate macro which is used in spec file

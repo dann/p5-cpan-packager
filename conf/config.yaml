@@ -4,6 +4,8 @@ Linux::Smaps:
     - Test::Simple
   no_depends:
     - Class::Member
-
+Test::Exception:
+  no_depends:
+    - Test::Builder::Tester
 Acme::Bleach:
   build_skip: 1
