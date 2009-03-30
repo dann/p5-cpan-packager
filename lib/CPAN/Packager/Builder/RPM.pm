@@ -87,7 +87,8 @@ sub generate_spec_file {
         for my $no_depend_module (
             @{ $self->config($module_name)->{no_depends} } )
         {
-            $spec_content = $self->_filter_requires( $spec_content, $no_depend_module );
+            $spec_content
+                = $self->_filter_requires( $spec_content, $no_depend_module );
         }
 
         # generate macro which is used in spec file
@@ -123,7 +124,7 @@ sub generate_filter_macro {
     print $fh qq{#!/bin/sh
  
 /usr/lib/rpm/perl.req \$\* |\\
-sed };
+    sed };
     for my $mod ( @{ $self->config($module_name)->{no_depends} } ) {
         print $fh "-e '/perl($mod)/d' ";
     }
@@ -197,6 +198,7 @@ sub build_rpm_package {
     my $retval
         = system("env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt");
 
+    # FIXME fix later
     $retval = $? >> 8;
     if ( $retval != 0 ) {
         Carp::croak "RPM building failed!\n";
@@ -241,6 +243,26 @@ sub print_installed_packages {
     my $fh = $installed_file->openw;
     print $fh "yum -y install $_\n" for $self->installed_packages;
     $fh->close;
+}
+
+sub install {
+    my ( $self, $module ) = @_;
+    if ( $self->is_installed( $module->{module} ) ) {
+        print "install skip $module\n";
+        return;
+    }
+    my $rpm_name = $self->_rpm_name($module);
+    my $rpm_path = file( $self->package_output_dir, $rpm_name );
+    system("sudo rpm -Uvh ${rpm_path}");
+}
+
+sub _rpm_name {
+    my ( $self, $module ) = @_;
+    my $package_name = $self->package_name( $module->{module} );
+    my $rpm_name
+        = join( '-', ( $package_name, $module->{version}, $self->release ) );
+    $rpm_name .= '.noarch.rpm';
+    $rpm_name;
 }
 
 no Mouse;

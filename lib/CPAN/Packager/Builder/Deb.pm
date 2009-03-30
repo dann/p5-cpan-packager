@@ -118,8 +118,30 @@ sub print_installed_packages {
     my ($self) = @_;
     my $installed_file = file( $self->package_output_dir, 'installed' );
     my $fh = $installed_file->openw;
-    print $fh "aptitude -y install $_¥n" for $self->installed_packages;
+    print $fh "aptitude -y install $_\n" for $self->installed_packages;
     close $fh;
+}
+
+sub install {
+    my ( $self, $module ) = @_;
+    if ( $self->is_installed( $module->{module} ) ) {
+        print "install skip $module\n";
+        return;
+    }
+    my $deb_name = $self->_deb_name($module);
+    my $deb_path = file( $self->package_output_dir, $deb_name );
+
+    # TODO Should we install build time?
+    system("sudo dpkg -i ${deb_path}");
+}
+
+sub _deb_name {
+    my ( $self, $module ) = @_;
+    my $package_name = $self->package_name( $module->{module} );
+    my $deb_name
+        = join( '-', ( $package_name, $module->{version}, $self->release ) );
+    $deb_name .= '.deb';
+    $deb_name;
 }
 
 no Mouse;
