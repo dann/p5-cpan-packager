@@ -17,7 +17,7 @@ cpan-packager -  create redhat/debian packages from perl modules
 
 Packages are generated at /tmp/cpanpackager/{deb or rpm}
 
-  cpan-packager --module Test::Simple --builder Deb --config conf/config.yaml 
+  cpan-packager --module Test::Exception --builder Deb --config conf/config.yaml 
 
     --module   module name (required option)
     --builder  Deb or RPM (optional. default is Deb)
