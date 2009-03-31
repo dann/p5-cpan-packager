@@ -37,12 +37,17 @@ has 'resolved' => (
 );
 
 sub analyze_dependencies {
-    my ( $self, $module ) = @_;
+    my ( $self, $module, $conf ) = @_;
     $module = $self->resolve_module_name($module);
-    return if $self->is_added($module) || $self->is_core($module);
+    return if $self->is_added($module) || $self->is_core($module) || $module eq 'perl' || $module eq 'PerlInterp';
 
     my ( $tgz, $src, $version ) = $self->downloder->download($module);
     my @depends = $self->get_dependencies($src);
+
+    if ( $conf->{$module} && $conf->{$module}->{no_depends} ) {
+        @depends = $self->_filter_depends(\@depends, $conf->{$module}->{no_depends});
+    }
+
     $self->modules->{$module} = {
         module  => $module,
         version => $version,
@@ -50,9 +55,21 @@ sub analyze_dependencies {
         src     => $src,
         depends => \@depends,
     };
+
     for my $depend_module (@depends) {
         $self->analyze_dependencies($depend_module);
     }
+}
+
+sub _filter_depends {
+    my ( $self, $depends, $no_depends ) = @_;
+    my @new_depends = ();
+    for my $depend (@$depends) {
+        for my $no_depend (@$no_depends) {
+            push @new_depends, $depend unless $depend eq $no_depend;
+        }
+    }
+    wantarray ? @new_depends : \@new_depends;
 }
 
 sub is_added {
@@ -74,7 +91,7 @@ sub get_dependencies {
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
         map     { $self->resolve_module_name($_) } uniq(
-        keys %{ $deps->requires       || {} },
+        keys %{ $deps->requires || {} },
         keys %{ $deps->build_requires || {} }
         );
 }

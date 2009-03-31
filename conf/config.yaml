@@ -6,3 +6,21 @@ Test::Exception:
     - Test::Builder::Tester
 Acme::Bleach:
   build_skip: 1
+
+HTTP::Engine:
+  depends:
+    - IO::Stringy
+  no_depends:
+    - IO::stringy
+
+Class::Accessor:
+  depends:
+    - Class::Classgen::Attribute
+  no_depends:
+    - Class::Classgen::classgen
+
+PathTools:
+  build_skip: 1
+
+Class::Classgen::classgen:
+  build_skip: 1

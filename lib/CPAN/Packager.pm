@@ -8,6 +8,7 @@ use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
 our $VERSION = '0.01';
+
 BEGIN {
     if ( !defined &DEBUG ) {
         if ( $ENV{CPAN_PACKAGER_DEBUG} ) {
@@ -50,12 +51,21 @@ has 'dependency_analyzer' => (
 sub make {
     my ( $self, $module ) = @_;
     die 'module must be passed' unless $module;
-    my $modules = $self->analyze_module_dependencies($module);
-    $modules
-        = $self->merge_config( $modules,
-        $self->config_loader->load( $self->conf ) )
+
+    my $config = $self->config_loader->load( $self->conf );
+    my $modules = $self->analyze_module_dependencies( $module, $config );
+    $modules = $self->merge_config( $modules, $config )
         if $self->conf;
+    $self->_dump_modules($modules);
     $self->build_modules($modules);
+}
+
+sub _dump_modules {
+    my ( $self, $modules ) = @_;
+    if (DEBUG) {
+        require Data::Dumper;
+        $self->log( debug => Data::Dumper::Dumper $modules );
+    }
 }
 
 sub merge_config {
@@ -68,7 +78,8 @@ sub build_modules {
     my $builder_name = $self->builder;
     $self->log( info => "making packages for $builder_name ..." );
 
-    my $builder = CPAN::Packager::BuilderFactory->create($builder_name, $modules);
+    my $builder
+        = CPAN::Packager::BuilderFactory->create( $builder_name, $modules );
     $builder->print_installed_packages;
 
     for my $module ( values %{$modules} ) {
@@ -76,6 +87,7 @@ sub build_modules {
         next unless $module->{module};
         next if $builder->is_installed( $module->{module} );
         if ( my $package = $builder->build($module) ) {
+
             # FIXME what timing should we install module?
             # $builder->install($module);
             $self->log( info => "$module->{module} created ($package)" );
@@ -88,10 +100,10 @@ sub build_modules {
 }
 
 sub analyze_module_dependencies {
-    my ( $self, $module ) = @_;
+    my ( $self, $module, $config ) = @_;
     $self->log( info => "Analyzing dependencies for $module ..." );
     my $analyzer = $self->dependency_analyzer;
-    $analyzer->analyze_dependencies($module);
+    $analyzer->analyze_dependencies( $module, $config );
     $analyzer->modules;
 }
 

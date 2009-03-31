@@ -65,7 +65,7 @@ sub build {
 
 sub build_with_cpanflute {
     my ( $self, $tgz ) = @_;
-    $self->log( info => 'build package with cpanflute' );
+    $self->log( info => '>>> generate specfile with cpanflute2' );
 
     # TODO Should we specify build_arch in spec file?
     my $build_arch = $self->get_default_build_arch();
@@ -144,7 +144,7 @@ sub is_installed {
     my $package = $self->package_name($module);
 
     my $return_value = capture( EXIT_ANY, "LANG=C rpm -q $package" );
-    $self->log( info => "$package is "
+    $self->log( info => ">>> $package is "
             . ( $return_value =~ /not installed/ ? 'not ' : '' )
             . "installed" );
     return $return_value =~ /not installed/ ? 0 : 1;
@@ -188,15 +188,19 @@ macrofiles: $macrofiles:$build_dir/macros
 
 sub build_rpm_package {
     my ( $self, $spec_file_name ) = @_;
+    $self->log( info => '>>> build rpm package with rpmbuild' );
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
 
+#    my $build_opt
+#        = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path";
     my $build_opt
-        = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path";
+        = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path --nodeps";
+
     $build_opt = "--rcfile $rpmrc_file -ba $spec_file_path"
         if &CPAN::Packager::DEBUG;
     my $result = capture(EXIT_ANY, "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt");
-    warn $result if &CPAN::Packager::DEBUG;
+    $self->log( debug => $result )  if &CPAN::Packager::DEBUG;
     $result;
 }
 
@@ -256,6 +260,7 @@ sub _rpm_name {
     my $package_name = $self->package_name( $module->{module} );
     my $rpm_name
         = join( '-', ( $package_name, $module->{version}, $self->release ) );
+    # FIXME fix architecture
     $rpm_name .= '.noarch.rpm';
     $rpm_name;
 }
