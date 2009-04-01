@@ -100,7 +100,7 @@ sub generate_spec_file {
     }
     $spec_content
             = "Source3: filter_macro_for_special_modules\n"
-            . '%define __perl_requires %{SOURCE3}' . "\n";
+            . '%define __perl_requires %{SOURCE3}' . "\n" . $spec_content;
     $self->generate_filter_macro_for_special_modules($module_name);
 
     $spec_content = $self->_filter_pathtools_related_module_requires($spec_content);
@@ -161,14 +161,13 @@ sub generate_filter_macro_for_no_depends {
         #print $fh "-e '/\$line{\$module}=\$_\;/d ";
     }
     print $fh "\n";
-    #$fh->close;
     system("chmod 755 $filter_macro_file");
 }
 
 sub generate_filter_macro_for_special_modules {
     my ( $self, $module_name ) = @_;
 
-    my $filter_macro_file = file( $self->build_dir, 'filter_macro' );
+    my $filter_macro_file = file( $self->build_dir, 'filter_macro_for_special_modules' );
     my @special_modules = ('PathTools','Scalar::List::Utils');
     my $fh = $filter_macro_file->openw
         or die "Can't create $filter_macro_file: $!";
@@ -180,7 +179,6 @@ sub generate_filter_macro_for_special_modules {
         print $fh "-e '/perl($mod)/d' ";
     }
     print $fh "\n";
-    #$fh->close;
     system("chmod 755 $filter_macro_file");
 }
 
@@ -260,9 +258,11 @@ sub copy_module_sources_to_build_dir {
     my $module_tarball = $module->{tgz};
     my $build_dir      = $self->build_dir;
 
+
     my $module_name = $module->{module};
     $module_name = 'PathTools' if $module_name  =~ m/File::Spec/;
     $module_name = 'Scalar::List::Utils' if $module_name eq 'Scalar::Util';
+    $module_name = 'Template::Toolkit' if $module_name eq 'Template';
 
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
