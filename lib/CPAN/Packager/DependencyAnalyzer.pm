@@ -54,6 +54,10 @@ sub analyze_dependencies {
             $conf->{$module}->{no_depends} );
     }
 
+    @depends = grep {$_ ne 'Scalar::Util'} @depends;
+    @depends = grep {$_ ne 'Scalar::List::Utils'} @depends;
+    @depends = grep {$_ ne 'PathTools'} @depends;
+
     $self->modules->{$module} = {
         module  => $module,
         version => $version,
