@@ -99,6 +99,8 @@ sub generate_spec_file {
         $self->generate_filter_macro($module_name);
     }
 
+    $spec_content = $self->_filter_pathtools_related_module_requires($spec_content);
+
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $fh = file($spec_file_path)->openw;
     print $fh $spec_content;
@@ -115,6 +117,27 @@ sub _filter_requires {
     $spec_content;
 }
 
+sub _filter_pathtools_related_module_requires {
+    my ( $self, $spec_content  ) = @_;
+    $spec_content =~ s/^Requires: perl\(PathTools\).+$//m;
+    $spec_content =~ s/^Requires: perl\(File::Spec::Unix\).+$//m;
+    $spec_content =~ s/^Requires: perl\(File::Spec::OS2\).+$//m;
+    $spec_content =~ s/^Requires: perl\(File::Spec::Win32\).+$//m;
+    $spec_content =~ s/^Requires: perl\(File::Spec::Mac\).+$//m;
+    $spec_content =~ s/^Requires: perl\(File::Spec::Epoc\).+$//m;
+    $spec_content =~ s/^Requires: perl\(File::Spec::Functions\).+$//m;
+    $spec_content =~ s/^BuildRequires: perl\(File::Spec::Unix\).+$//m;
+    $spec_content =~ s/^BuildRequires: perl\(File::Spec::Mac\).+$//m;
+    $spec_content
+}
+
+sub _filter_scalarutil_requires {
+    my ( $self, $spec_content  ) = @_;
+    $spec_content =~ s/^Requires: perl\(Scalar::Util\).+$//m;
+    $spec_content =~ s/^BuildRequires: perl\(Scalar::Util\).+$//m;
+    $spec_content
+}
+
 sub generate_filter_macro {
     my ( $self, $module_name ) = @_;
 
@@ -127,6 +150,8 @@ sub generate_filter_macro {
     sed };
     for my $mod ( @{ $self->config($module_name)->{no_depends} } ) {
         print $fh "-e '/perl($mod)/d' ";
+        print $fh "-e '/\$require{\$module}=\$version\;/d ";
+        print $fh "-e '/\$line{\$module}=\$_\;/d ";
     }
     print $fh "\n";
     $fh->close;
@@ -210,6 +235,9 @@ sub copy_module_sources_to_build_dir {
     my $build_dir      = $self->build_dir;
 
     my $module_name = $module->{module};
+    $module_name = 'PathTools' if $module_name  =~ m/File::Spec/;
+    $module_name = 'Scalar::List::Utils' if $module_name eq 'Scalar::Util';
+
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
 
@@ -242,27 +270,6 @@ sub print_installed_packages {
     my $fh = $installed_file->openw;
     print $fh "yum -y install $_\n" for $self->installed_packages;
     $fh->close;
-}
-
-sub install {
-    my ( $self, $module ) = @_;
-    if ( $self->is_installed( $module->{module} ) ) {
-        print "install skip $module\n";
-        return;
-    }
-    my $rpm_name = $self->_rpm_name($module);
-    my $rpm_path = file( $self->package_output_dir, $rpm_name );
-    system("sudo rpm -Uvh ${rpm_path}");
-}
-
-sub _rpm_name {
-    my ( $self, $module ) = @_;
-    my $package_name = $self->package_name( $module->{module} );
-    my $rpm_name
-        = join( '-', ( $package_name, $module->{version}, $self->release ) );
-    # FIXME fix architecture
-    $rpm_name .= '.noarch.rpm';
-    $rpm_name;
 }
 
 no Mouse;

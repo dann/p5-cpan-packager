@@ -10,6 +10,11 @@ HTTP::Engine:
     - IO::Stringy
   no_depends:
     - IO::stringy
+    - URI
+    - File::Spec::Unix
+    - PathTools
+    - Scalar::List::Utils 
+    - Scalar::Util 
 
 Class::Accessor:
   depends:
@@ -33,6 +38,9 @@ IO::stringy:
   build_skip: 1
 
 Class::Classgen::classgen:
+  build_skip: 1
+
+Scalar::List::Utils:
   build_skip: 1
 
 kurila:

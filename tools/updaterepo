@@ -1,0 +1,3 @@
+#!/bin/sh
+sudo cp /tmp/cpanpackager/rpm/*.rpm /share/CentOS/5/local/i386/RPMS
+sudo createrepo -v /share/CentOS/5/local/i386/RPMS

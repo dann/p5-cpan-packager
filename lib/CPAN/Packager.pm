@@ -87,9 +87,6 @@ sub build_modules {
         next unless $module->{module};
         next if $builder->is_installed( $module->{module} );
         if ( my $package = $builder->build($module) ) {
-
-            # FIXME what timing should we install module?
-            # $builder->install($module);
             $self->log( info => "$module->{module} created ($package)" );
         }
         else {
