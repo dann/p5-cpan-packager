@@ -4,8 +4,6 @@ Test::Exception:
     - Test::Simple
   no_depends:
     - Test::Builder::Tester
-Acme::Bleach:
-  build_skip: 1
 
 HTTP::Engine:
   depends:
@@ -19,8 +17,23 @@ Class::Accessor:
   no_depends:
     - Class::Classgen::classgen
 
+Class::Trigger:
+  depends:
+    - IO::Stringy
+  no_depends:
+    - IO::stringy
+
 PathTools:
   build_skip: 1
 
+namespace::clean:
+  no_depends:
+    - kurila
+IO::stringy:
+  build_skip: 1
+
 Class::Classgen::classgen:
+  build_skip: 1
+
+kurila:
   build_skip: 1

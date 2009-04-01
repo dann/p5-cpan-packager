@@ -15,6 +15,7 @@ has 'ua' => (
 sub resolve {
     my ( $self, $module ) = @_;
     return if $module eq 'perl';
+    return if $module eq 'Template';
 
     my $res = $self->get_or_retry(
         "http://search.cpan.org/search?query=$module&mode=module");
@@ -26,7 +27,7 @@ sub resolve {
     $resolved_module =~ s/-/::/g unless $resolved_module eq 'libwww-perl';
     $self->log( debug =>
             ">>> resolved module name is ${resolved_module} and original module name is ${module}"
-    ) if &CPAN::Packager::DEBUG;
+    );
     return $resolved_module;
 }
 

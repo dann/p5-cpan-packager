@@ -2,6 +2,7 @@ package CPAN::Packager::DependencyConfigMerger;
 use Mouse;
 use YAML;
 use CPAN::Packager::ConfigLoader;
+use List::Compare;
 use Hash::Merge qw(merge);
 Hash::Merge::set_behavior('RIGHT_PRECEDENT');
 
@@ -14,14 +15,9 @@ sub merge_module_config {
 
 sub _filter_depends {
     my ($self, $modules) = @_;
-    my @new_depends =();
    for my $module ( values %{$modules} ) {
         next unless $module->{module} && $module->{depends} && $module->{no_depends};
-        for my $depend (@{$module->{depends}}) {
-            for my $no_depend (@{$module->{no_depends}}) { 
-                push @new_depends, $depend unless $depend eq $no_depend;
-            }
-        }
+        my @new_depends = List::Compare->new( $module->{depends}, $module->{no_depends} )->get_unique;
         $module->{depends} = \@new_depends;
     }
 }

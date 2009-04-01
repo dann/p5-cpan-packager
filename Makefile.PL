@@ -20,6 +20,7 @@ requires(
     'YAML'                => 0,
     'MouseX::Getopt'      => '0.04',
     'List::MoreUtils'     => 0,
+    'List::Compare'       => 0,
 );
 
 test_requires(

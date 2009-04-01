@@ -4,6 +4,7 @@ use Module::Depends;
 use Module::CoreList;
 use CPAN::Packager::Downloader;
 use CPAN::Packager::ModuleNameResolver;
+use List::Compare;
 use List::MoreUtils qw(uniq);
 with 'CPAN::Packager::Role::Logger';
 
@@ -39,13 +40,18 @@ has 'resolved' => (
 sub analyze_dependencies {
     my ( $self, $module, $conf ) = @_;
     $module = $self->resolve_module_name($module);
-    return if $self->is_added($module) || $self->is_core($module) || $module eq 'perl' || $module eq 'PerlInterp';
+    return
+        if $self->is_added($module)
+            || $self->is_core($module)
+            || $module eq 'perl'
+            || $module eq 'PerlInterp';
 
     my ( $tgz, $src, $version ) = $self->downloder->download($module);
     my @depends = $self->get_dependencies($src);
 
     if ( $conf->{$module} && $conf->{$module}->{no_depends} ) {
-        @depends = $self->_filter_depends(\@depends, $conf->{$module}->{no_depends});
+        @depends = $self->_filter_depends( \@depends,
+            $conf->{$module}->{no_depends} );
     }
 
     $self->modules->{$module} = {
@@ -63,12 +69,7 @@ sub analyze_dependencies {
 
 sub _filter_depends {
     my ( $self, $depends, $no_depends ) = @_;
-    my @new_depends = ();
-    for my $depend (@$depends) {
-        for my $no_depend (@$no_depends) {
-            push @new_depends, $depend unless $depend eq $no_depend;
-        }
-    }
+    my @new_depends = List::Compare->new( $depends, $no_depends )->get_unique;
     wantarray ? @new_depends : \@new_depends;
 }
 

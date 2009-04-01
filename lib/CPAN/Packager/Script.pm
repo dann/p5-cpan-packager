@@ -35,7 +35,7 @@ sub run {
     die 'module is required param' unless ( $self->module );
     my $packager = CPAN::Packager->new(
         builder => $self->builder,
-        conf    => $self->conf
+        conf    => $self->conf,
     );
     $packager->make( $self->module );
 }
