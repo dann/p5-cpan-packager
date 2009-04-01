@@ -142,6 +142,8 @@ sub _filter_scalarutil_requires {
     $spec_content =~ s/^Requires: perl\(Scalar::List::Utils\).+$//m;
     $spec_content =~ s/^BuildRequires: perl\(Scalar::Util\).+$//m;
     $spec_content =~ s/^BuildRequires: perl\(Scalar::List::Utils\).+$//m;
+    $spec_content =~ s/^Requires: perl\(List::Util\).+$//m;
+    $spec_content =~ s/^BuildRequires: perl\(List::Util\).+$//m;
     $spec_content
 }
 
@@ -168,7 +170,7 @@ sub generate_filter_macro_for_special_modules {
     my ( $self, $module_name ) = @_;
 
     my $filter_macro_file = file( $self->build_dir, 'filter_macro_for_special_modules' );
-    my @special_modules = ('PathTools','Scalar::List::Utils');
+    my @special_modules = ('PathTools','Scalar::List::Utils', 'List::Util', 'Scalar::Util');
     my $fh = $filter_macro_file->openw
         or die "Can't create $filter_macro_file: $!";
     print $fh qq{#!/bin/sh

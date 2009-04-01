@@ -57,6 +57,7 @@ sub analyze_dependencies {
     @depends = grep {$_ ne 'Scalar::Util'} @depends;
     @depends = grep {$_ ne 'Scalar::List::Utils'} @depends;
     @depends = grep {$_ ne 'PathTools'} @depends;
+    @depends = grep {$_ ne 'List::Util'} @depends;
 
     $self->modules->{$module} = {
         module  => $module,
