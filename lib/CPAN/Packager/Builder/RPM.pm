@@ -288,9 +288,6 @@ sub copy_module_sources_to_build_dir {
     my $build_dir      = $self->build_dir;
 
     my $module_name = $module->{module};
-#    $module_name = 'PathTools' if $module_name =~ m/File::Spec/;
-#    $module_name = 'Scalar::List::Utils' if $module_name eq 'Scalar::Util';
-#    $module_name = 'Template::Toolkit'   if $module_name eq 'Template';
 
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};

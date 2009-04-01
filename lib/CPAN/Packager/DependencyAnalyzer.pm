@@ -112,8 +112,8 @@ sub resolve_module_name {
     my ( $self, $module, $dependency_config ) = @_;
     return $self->resolved->{$module} if $self->resolved->{$module};
 
-    my $skip_name_resolve_modules = $dependency_config->{global}->{skip_name_resolve_modules};
-    my $resolved_module_name = $self->module_name_resolver->resolve($module, $skip_name_resolve_modules);
+    #my $skip_name_resolve_modules = $dependency_config->{global}->{skip_name_resolve_modules};
+    my $resolved_module_name = $self->module_name_resolver->resolve($module);
     return $module unless $resolved_module_name;
     $self->resolved->{$module} = $resolved_module_name;
 }

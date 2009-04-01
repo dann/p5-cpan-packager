@@ -14,10 +14,8 @@ has 'ua' => (
 );
 
 sub resolve {
-    my ( $self, $module, $ignore_reslovement_modules ) = @_;
-    return $module if $module eq 'perl';
-    return $module if $module eq 'PerlInterp';
-    # return if any { $module eq $_ } @{ $ignore_reslovement_modules || [] };
+    my ( $self, $module  ) = @_;
+    return $module if any { $module eq $_} ('perl', 'PerlInterp');
 
     my $res = $self->get_or_retry(
         "http://search.cpan.org/search?query=$module&mode=module");
