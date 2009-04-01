@@ -21,7 +21,8 @@ Packages are generated at /tmp/cpanpackager/{deb or rpm}
 
     --module   module name (required option)
     --builder  Deb or RPM (optional. default is Deb)
-    --config   configuration file path (optional)
+    --config   configuration file path (required)
+    --always_build   always build cpan modules if module is aready installed (optional)
 
   config.yaml is located at github repo
   See http://github.com/dann/cpan-packager/tree/master

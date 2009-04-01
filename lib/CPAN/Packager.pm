@@ -48,6 +48,12 @@ has 'dependency_analyzer' => (
     }
 );
 
+has 'always_build' => (
+    is => 'rw',
+    isa => 'Int',
+    default => 0,
+);
+
 sub make {
     my ( $self, $module ) = @_;
     die 'module must be passed' unless $module;
@@ -85,7 +91,7 @@ sub build_modules {
     for my $module ( values %{$modules} ) {
         next if $module->{build_skip} && $module->{build_skip} == 1;
         next unless $module->{module};
-        next if $builder->is_installed( $module->{module} );
+        next if $builder->is_installed( $module->{module} ) && $self->always_build;
         if ( my $package = $builder->build($module) ) {
             $self->log( info => "$module->{module} created ($package)" );
         }

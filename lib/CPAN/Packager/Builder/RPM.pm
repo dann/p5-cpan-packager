@@ -333,7 +333,7 @@ __END__
 
 =head1 NAME
 
-CPAN::Package::Builder::RPMr - RPM package builder
+CPAN::Package::Builder::RPM - RPM package builder
 
 =head1 SYNOPSIS
 

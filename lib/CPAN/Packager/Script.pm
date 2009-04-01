@@ -27,15 +27,23 @@ has 'conf' => (
     isa => 'Str',
 );
 
+has 'always_build' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
+);
+
 sub run {
     my $self = shift;
     if ( $self->help ) {
         pod2usage(2);
     }
-    die 'module is required param' unless ( $self->module );
+    die 'module is required param' unless $self->module;
+    die 'conf is required param'   unless $self->conf;
     my $packager = CPAN::Packager->new(
-        builder => $self->builder,
-        conf    => $self->conf,
+        builder      => $self->builder,
+        conf         => $self->conf,
+        always_build => $self->always_build,
     );
     $packager->make( $self->module );
 }

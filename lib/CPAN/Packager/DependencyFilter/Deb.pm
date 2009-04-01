@@ -1,4 +1,4 @@
-package CPAN::Packager::DependencyFilter::RPM;
+package CPAN::Packager::DependencyFilter::Deb;
 use Mouse;
 with 'CPAN::Packager::DependencyFilter::Role';
 
