@@ -100,6 +100,7 @@ sub generate_spec_file {
     }
 
     $spec_content = $self->_filter_pathtools_related_module_requires($spec_content);
+    $spec_content = $self->_filter_scalarutil_requires($spec_content);
 
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
     my $fh = file($spec_file_path)->openw;
@@ -134,7 +135,9 @@ sub _filter_pathtools_related_module_requires {
 sub _filter_scalarutil_requires {
     my ( $self, $spec_content  ) = @_;
     $spec_content =~ s/^Requires: perl\(Scalar::Util\).+$//m;
+    $spec_content =~ s/^Requires: perl\(Scalar::List::Utils\).+$//m;
     $spec_content =~ s/^BuildRequires: perl\(Scalar::Util\).+$//m;
+    $spec_content =~ s/^BuildRequires: perl\(Scalar::List::Utils\).+$//m;
     $spec_content
 }
 

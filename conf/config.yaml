@@ -34,6 +34,7 @@ PathTools:
 namespace::clean:
   no_depends:
     - kurila
+
 IO::stringy:
   build_skip: 1
 
