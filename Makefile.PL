@@ -25,7 +25,7 @@ requires(
 
 test_requires(
     'Test::More'                   => 0,
-    'Test::LoadAllModules'         => 0,
+    'Test::LoadAllModules'         => '0.02',
     'Module::Install::AuthorTests' => 0,
 );
 

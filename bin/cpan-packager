@@ -23,6 +23,9 @@ Packages are generated at /tmp/cpanpackager/{deb or rpm}
     --builder  Deb or RPM (optional. default is Deb)
     --config   configuration file path (optional)
 
+  config.yaml is located at github repo
+  See http://github.com/dann/cpan-packager/tree/master
+
 =head1 DESCRIPTION
 
 cpan-packager will create the files required to build a debian or redhat source 
