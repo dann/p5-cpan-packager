@@ -62,10 +62,10 @@ sub make {
 
 sub _dump_modules {
     my ( $self, $modules ) = @_;
-    if (DEBUG) {
+#    if (DEBUG) {
         require Data::Dumper;
         $self->log( debug => Data::Dumper::Dumper $modules );
-    }
+#    }
 }
 
 sub merge_config {

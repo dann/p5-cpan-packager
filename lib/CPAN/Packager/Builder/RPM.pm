@@ -96,8 +96,12 @@ sub generate_spec_file {
             = "Source2: filter_macro\n"
             . '%define __perl_requires %{SOURCE2}' . "\n"
             . $spec_content;
-        $self->generate_filter_macro($module_name);
+        $self->generate_filter_macro_for_no_depends($module_name);
     }
+    $spec_content
+            = "Source3: filter_macro_for_special_modules\n"
+            . '%define __perl_requires %{SOURCE3}' . "\n";
+    $self->generate_filter_macro_for_special_modules($module_name);
 
     $spec_content = $self->_filter_pathtools_related_module_requires($spec_content);
     $spec_content = $self->_filter_scalarutil_requires($spec_content);
@@ -141,7 +145,7 @@ sub _filter_scalarutil_requires {
     $spec_content
 }
 
-sub generate_filter_macro {
+sub generate_filter_macro_for_no_depends {
     my ( $self, $module_name ) = @_;
 
     my $filter_macro_file = file( $self->build_dir, 'filter_macro' );
@@ -153,11 +157,30 @@ sub generate_filter_macro {
     sed };
     for my $mod ( @{ $self->config($module_name)->{no_depends} } ) {
         print $fh "-e '/perl($mod)/d' ";
-        print $fh "-e '/\$require{\$module}=\$version\;/d ";
-        print $fh "-e '/\$line{\$module}=\$_\;/d ";
+        #print $fh "-e '/\$require{\$module}=\$version\;/d ";
+        #print $fh "-e '/\$line{\$module}=\$_\;/d ";
     }
     print $fh "\n";
-    $fh->close;
+    #$fh->close;
+    system("chmod 755 $filter_macro_file");
+}
+
+sub generate_filter_macro_for_special_modules {
+    my ( $self, $module_name ) = @_;
+
+    my $filter_macro_file = file( $self->build_dir, 'filter_macro' );
+    my @special_modules = ('PathTools','Scalar::List::Utils');
+    my $fh = $filter_macro_file->openw
+        or die "Can't create $filter_macro_file: $!";
+    print $fh qq{#!/bin/sh
+ 
+/usr/lib/rpm/perl.req \$\* |\\
+    sed };
+    for my $mod ( @special_modules) {
+        print $fh "-e '/perl($mod)/d' ";
+    }
+    print $fh "\n";
+    #$fh->close;
     system("chmod 755 $filter_macro_file");
 }
 
