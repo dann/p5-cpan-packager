@@ -11,10 +11,6 @@ HTTP::Engine:
   no_depends:
     - IO::stringy
     - URI
-    - File::Spec::Unix
-    - PathTools
-    - Scalar::List::Utils 
-    - Scalar::Util 
 
 Class::Accessor:
   depends:
