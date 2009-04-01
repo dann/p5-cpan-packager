@@ -1,4 +1,7 @@
 Revision history for Perl extension CPAN::Packager
 
-0.01 Thu Feb 19 14:11:46 2009
+0.011 Thu Apr 2 23:11:46 2009
+        * filter List::Util from spec file
+
+0.01 Thu Apr 1 14:11:46 2009
 	* original version
