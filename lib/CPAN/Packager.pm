@@ -91,8 +91,6 @@ sub merge_config {
 sub build_modules {
     my ( $self, $modules, $config ) = @_;
     my $builder_name = $self->builder;
-    $self->log(
-        info => "Building ${builder} packages for $builder_name ..." );
 
     my $builder
         = CPAN::Packager::BuilderFactory->create( $builder_name, $config );
