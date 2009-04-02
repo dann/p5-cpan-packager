@@ -8,9 +8,10 @@ Hash::Merge::set_behavior('RIGHT_PRECEDENT');
 
 sub merge_module_config {
     my ( $self, $modules, $config ) = @_;
-    my $merged_modules = merge( $modules, $config );
+    my $merged_modules = merge( $modules, $config->{modules} );
     $self->_filter_depends($merged_modules);
-    $merged_modules;
+    $config->{modules} = $merged_modules;
+    $config;
 }
 
 sub _filter_depends {

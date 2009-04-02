@@ -51,19 +51,25 @@ sub build {
         "$module->{module} does't have tarball. we can't find $module->{module} in CPAN "
         unless $module->{tgz};
 
-    my $spec_content   = $self->build_with_cpanflute( $module->{tgz} );
-    my $package_name   = $self->package_name( $module->{module} );
-    my $spec_file_name = "$package_name.spec";
-    $self->generate_spec_file( $spec_file_name, $spec_content,
-        $module->{module} );
+    my ( $spec_file_name, $spec_content )  = $self->generate_spec_file($module);
     $self->generate_macro;
     $self->generate_rpmrc;
     $self->copy_module_sources_to_build_dir($module);
     $self->build_rpm_package($spec_file_name);
-    $package_name;
+
+    return $self->package_name( $module->{module} );
 }
 
-sub build_with_cpanflute {
+sub generate_spec_file {
+    my ( $self, $module ) = @_;
+    my $spec_content = $self->generate_spec_with_cpanflute( $module->{tgz} );
+    my $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
+    $self->filter_spec_file( $spec_content, $module->{module} );
+    $self->create_spec_file( $spec_content, $spec_file_name );
+    ( $spec_file_name, $spec_content );
+}
+
+sub generate_spec_with_cpanflute {
     my ( $self, $tgz ) = @_;
     $self->log( info => '>>> generate specfile with cpanflute2' );
 
@@ -75,44 +81,89 @@ sub build_with_cpanflute {
     $spec;
 }
 
-sub generate_spec_file {
-    my ( $self, $spec_file_name, $spec_content, $module_name ) = @_;
+sub filter_spec_file {
+    my ( $self, $spec_content, $module_name ) = @_;
     $spec_content =~ s/^Requires: perl\(perl\).*$//m;
     $spec_content
         =~ s/^make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT$/make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT\nif [ -d \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT ]; then mv \$RPM_BUILD_ROOT\$RPM_BUILD_ROOT\/* \$RPM_BUILD_ROOT; fi/m;
 
-    if (   $self->config($module_name)
-        && $self->config($module_name)->{no_depends} )
+    $spec_content
+        = $self->filter_requires_for_rpmbuild( $module_name, $spec_content );
+    $spec_content;
+
+}
+
+sub create_spec_file {
+    my ( $self, $spec_content, $spec_file_name ) = @_;
+    my $spec_file_path = file( $self->build_dir, $spec_file_name );
+    my $fh = file($spec_file_path)->openw;
+    print $fh $spec_content;
+    $fh->close;
+    copy( $spec_file_path,
+        file( $self->package_output_dir, $spec_file_name ) );
+
+}
+
+sub filter_requires_for_rpmbuild {
+    my ( $self, $module, $spec_content ) = @_;
+    $spec_content
+        = $self->_filter_module_requires_for_rpmbuild( $spec_content,
+        $module );
+    $spec_content
+        = $self->_filter_global_requires_for_rpmbuild( $spec_content,
+        $module );
+    $spec_content;
+}
+
+sub _filter_module_requires_for_rpmbuild {
+    my ( $self, $spec_content, $module ) = @_;
+    if (   $self->config( modules => $module )
+        && $self->config( modules => $module )->{no_depends} )
     {
-        for my $no_depend_module (
-            @{ $self->config($module_name)->{no_depends} } )
-        {
-            $spec_content
-                = $self->_filter_requires( $spec_content, $no_depend_module );
-        }
+
+        $spec_content
+            = $self->_filter_module_requires_for_spec( $spec_content,
+            $module );
 
         # generate macro which is used in spec file
         $spec_content
             = "Source2: filter_macro\n"
             . '%define __perl_requires %{SOURCE2}' . "\n"
             . $spec_content;
-        $self->generate_filter_macro_for_no_depends($module_name);
+        $self->_generate_module_filter_macro($module);
     }
+    $spec_content;
+}
+
+sub _filter_module_requires_for_spec {
+    my ( $self, $spec_content, $module ) = @_;
+    for my $no_depend_module (
+        @{ $self->config( modules => $module )->{no_depends} || [] } )
+    {
+        $spec_content
+            = $self->_filter_requires( $spec_content, $no_depend_module );
+    }
+    $spec_content;
+
+}
+
+sub _filter_global_requires_for_rpmbuild {
+    my ( $self, $spec_content, $module ) = @_;
+    $spec_content = $self->_filter_global_requires_for_spec($spec_content);
     $spec_content
-            = "Source3: filter_macro_for_special_modules\n"
-            . '%define __perl_requires %{SOURCE3}' . "\n" . $spec_content;
-    $self->generate_filter_macro_for_special_modules($module_name);
+        = "Source3: filter_macro_for_special_modules\n"
+        . '%define __perl_requires %{SOURCE3}' . "\n"
+        . $spec_content;
+    $self->_generate_global_filter_macro($module);
+    $spec_content;
+}
 
-    $spec_content = $self->_filter_pathtools_related_module_requires($spec_content);
-    $spec_content = $self->_filter_scalarutil_requires($spec_content);
-
-    my $spec_file_path = file( $self->build_dir, $spec_file_name );
-    my $fh = file($spec_file_path)->openw;
-    print $fh $spec_content;
-    $fh->close;
-
-    copy( $spec_file_path,
-        file( $self->package_output_dir, $spec_file_name ) );
+sub _filter_global_requires_for_spec {
+    my ( $self, $spec_content ) = @_;
+    foreach my $ignore ( @{ $self->config( global => 'no_depends' ) } ) {
+        $spec_content = $self->_filter_requires( $spec_content, $ignore );
+    }
+    $spec_content;
 }
 
 sub _filter_requires {
@@ -122,32 +173,7 @@ sub _filter_requires {
     $spec_content;
 }
 
-sub _filter_pathtools_related_module_requires {
-    my ( $self, $spec_content  ) = @_;
-    $spec_content =~ s/^Requires: perl\(PathTools\).+$//m;
-    $spec_content =~ s/^Requires: perl\(File::Spec::Unix\).+$//m;
-    $spec_content =~ s/^Requires: perl\(File::Spec::OS2\).+$//m;
-    $spec_content =~ s/^Requires: perl\(File::Spec::Win32\).+$//m;
-    $spec_content =~ s/^Requires: perl\(File::Spec::Mac\).+$//m;
-    $spec_content =~ s/^Requires: perl\(File::Spec::Epoc\).+$//m;
-    $spec_content =~ s/^Requires: perl\(File::Spec::Functions\).+$//m;
-    $spec_content =~ s/^BuildRequires: perl\(File::Spec::Unix\).+$//m;
-    $spec_content =~ s/^BuildRequires: perl\(File::Spec::Mac\).+$//m;
-    $spec_content
-}
-
-sub _filter_scalarutil_requires {
-    my ( $self, $spec_content  ) = @_;
-    $spec_content =~ s/^Requires: perl\(Scalar::Util\).+$//m;
-    $spec_content =~ s/^Requires: perl\(Scalar::List::Utils\).+$//m;
-    $spec_content =~ s/^BuildRequires: perl\(Scalar::Util\).+$//m;
-    $spec_content =~ s/^BuildRequires: perl\(Scalar::List::Utils\).+$//m;
-    $spec_content =~ s/^Requires: perl\(List::Util\).+$//m;
-    $spec_content =~ s/^BuildRequires: perl\(List::Util\).+$//m;
-    $spec_content
-}
-
-sub generate_filter_macro_for_no_depends {
+sub _generate_module_filter_macro {
     my ( $self, $module_name ) = @_;
 
     my $filter_macro_file = file( $self->build_dir, 'filter_macro' );
@@ -157,27 +183,29 @@ sub generate_filter_macro_for_no_depends {
  
 /usr/lib/rpm/perl.req \$\* |\\
     sed };
-    for my $mod ( @{ $self->config($module_name)->{no_depends} } ) {
+    for my $mod (
+        @{ $self->config( modules => $module_name )->{no_depends} || [] } )
+    {
         print $fh "-e '/perl($mod)/d' ";
-        #print $fh "-e '/\$require{\$module}=\$version\;/d ";
-        #print $fh "-e '/\$line{\$module}=\$_\;/d ";
     }
     print $fh "\n";
     system("chmod 755 $filter_macro_file");
 }
 
-sub generate_filter_macro_for_special_modules {
+sub _generate_global_filter_macro {
     my ( $self, $module_name ) = @_;
 
-    my $filter_macro_file = file( $self->build_dir, 'filter_macro_for_special_modules' );
-    my @special_modules = ('PathTools','Scalar::List::Utils', 'List::Util', 'Scalar::Util');
+    my $filter_macro_file
+        = file( $self->build_dir, 'filter_macro_for_special_modules' );
+    my @special_modules = ( 'PathTools', 'Scalar::List::Utils', 'List::Util',
+        'Scalar::Util' );
     my $fh = $filter_macro_file->openw
         or die "Can't create $filter_macro_file: $!";
     print $fh qq{#!/bin/sh
  
 /usr/lib/rpm/perl.req \$\* |\\
     sed };
-    for my $mod ( @special_modules) {
+    for my $mod (@special_modules) {
         print $fh "-e '/perl($mod)/d' ";
     }
     print $fh "\n";
@@ -250,8 +278,9 @@ sub build_rpm_package {
 
     $build_opt = "--rcfile $rpmrc_file -ba $spec_file_path"
         if &CPAN::Packager::DEBUG;
-    my $result = capture(EXIT_ANY, "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt");
-    $self->log( debug => $result )  if &CPAN::Packager::DEBUG;
+    my $result = capture( EXIT_ANY,
+        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
+    $self->log( debug => $result ) if &CPAN::Packager::DEBUG;
     $result;
 }
 
@@ -260,11 +289,10 @@ sub copy_module_sources_to_build_dir {
     my $module_tarball = $module->{tgz};
     my $build_dir      = $self->build_dir;
 
-
     my $module_name = $module->{module};
-    $module_name = 'PathTools' if $module_name  =~ m/File::Spec/;
+    $module_name = 'PathTools' if $module_name =~ m/File::Spec/;
     $module_name = 'Scalar::List::Utils' if $module_name eq 'Scalar::Util';
-    $module_name = 'Template::Toolkit' if $module_name eq 'Template';
+    $module_name = 'Template::Toolkit'   if $module_name eq 'Template';
 
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
@@ -308,15 +336,13 @@ __END__
 
 =head1 NAME
 
-CPAN::Packager -
+CPAN::Package::Builder::RPMr - RPM package builder
 
 =head1 SYNOPSIS
 
-  use CPAN::Packager;
 
 =head1 DESCRIPTION
 
-CPAN::Packager is
 
 =head1 AUTHOR
 

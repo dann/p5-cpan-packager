@@ -7,7 +7,7 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.011';
+our $VERSION = '0.02';
 
 BEGIN {
     if ( !defined &DEBUG ) {
@@ -54,10 +54,10 @@ sub make {
 
     my $config = $self->config_loader->load( $self->conf );
     my $modules = $self->analyze_module_dependencies( $module, $config );
-    $modules = $self->merge_config( $modules, $config )
+    $config = $self->merge_config( $modules, $config )
         if $self->conf;
-    $self->_dump_modules($modules);
-    $self->build_modules($modules);
+    $self->_dump_modules($config->{modules});
+    $self->build_modules($config->{modules}, $config);
 }
 
 sub _dump_modules {
@@ -74,12 +74,12 @@ sub merge_config {
 }
 
 sub build_modules {
-    my ( $self, $modules ) = @_;
+    my ( $self, $modules, $config ) = @_;
     my $builder_name = $self->builder;
     $self->log( info => "making packages for $builder_name ..." );
 
     my $builder
-        = CPAN::Packager::BuilderFactory->create( $builder_name, $modules );
+        = CPAN::Packager::BuilderFactory->create( $builder_name, $config );
     $builder->print_installed_packages;
 
     for my $module ( values %{$modules} ) {

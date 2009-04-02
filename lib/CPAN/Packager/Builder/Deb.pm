@@ -60,8 +60,8 @@ sub depends {
     push @depends, map { $self->package_name($_) } @{ $module->{depends} }
         if $module->{depends};
     my $module_name = $module->{module};
-    if (   $self->config($module_name)
-        && $self->config($module_name)->{no_depends} )
+    if (   $self->config(modules => $module_name)
+        && $self->config(modules => $module_name)->{no_depends} )
     {
         my @no_depends = ();
         push @no_depends,
@@ -130,15 +130,13 @@ __END__
 
 =head1 NAME
 
-CPAN::Packager -
+CPAN::Packager::Builder::Deb - Deb package builder
 
 =head1 SYNOPSIS
 
-  use CPAN::Packager;
 
 =head1 DESCRIPTION
 
-CPAN::Packager is
 
 =head1 AUTHOR
 

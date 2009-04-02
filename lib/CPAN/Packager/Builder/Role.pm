@@ -7,26 +7,32 @@ requires 'package_name';
 requires 'is_installed';
 
 has 'package_output_dir' => (
-    is      => 'rw',
+    is       => 'rw',
+    required => 1
 );
 
-has 'modules' => (
-    is => 'rw',
+has 'conf' => (
+    is       => 'rw',
+    required => 1
 );
-
-no Mouse::Role;
 
 sub config {
-    my ($self, $module_name) = @_;
-    $self->modules->{$module_name};
+    my ( $self, $key, $value ) = @_;
+    die 'key must be passed'   unless $key;
+    die 'value must be passed' unless $value;
+
+    return [] unless $self->conf->{$key};
+    return $self->conf->{$key}->{$value} || [];
 }
+
+no Mouse::Role;
 
 1;
 __END__
 
 =head1 NAME
 
-CPAN::Packager -
+CPAN::Packager::Builder::Role - package builder role
 
 =head1 SYNOPSIS
 
@@ -34,7 +40,8 @@ CPAN::Packager -
 
 =head1 DESCRIPTION
 
-CPAN::Packager is
+CPAN::Packager::Builder::Role is the common role for all package builders.
+The Builder developer must use this role.
 
 =head1 AUTHOR
 

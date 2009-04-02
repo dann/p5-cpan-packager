@@ -4,6 +4,7 @@ use Module::Depends;
 use Module::CoreList;
 use CPAN::Packager::Downloader;
 use CPAN::Packager::ModuleNameResolver;
+use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
 use List::MoreUtils qw(uniq);
 with 'CPAN::Packager::Role::Logger';
@@ -37,8 +38,15 @@ has 'resolved' => (
     }
 );
 
+has 'dependency_filter' => (
+    is => 'rw',
+    default => sub {
+        CPAN::Packager::DependencyFilter::Common->new;
+    }
+);
+
 sub analyze_dependencies {
-    my ( $self, $module, $conf ) = @_;
+    my ( $self, $module, $dependency_config ) = @_;
     $module = $self->resolve_module_name($module);
     return
         if $self->is_added($module)
@@ -48,16 +56,7 @@ sub analyze_dependencies {
 
     my ( $tgz, $src, $version ) = $self->downloder->download($module);
     my @depends = $self->get_dependencies($src);
-
-    if ( $conf->{$module} && $conf->{$module}->{no_depends} ) {
-        @depends = $self->_filter_depends( \@depends,
-            $conf->{$module}->{no_depends} );
-    }
-
-    @depends = grep {$_ ne 'Scalar::Util'} @depends;
-    @depends = grep {$_ ne 'Scalar::List::Utils'} @depends;
-    @depends = grep {$_ ne 'PathTools'} @depends;
-    @depends = grep {$_ ne 'List::Util'} @depends;
+    @depends = $self->dependency_filter->filter_dependencies($module, \@depends, $dependency_config);
 
     $self->modules->{$module} = {
         module  => $module,
@@ -70,12 +69,6 @@ sub analyze_dependencies {
     for my $depend_module (@depends) {
         $self->analyze_dependencies($depend_module);
     }
-}
-
-sub _filter_depends {
-    my ( $self, $depends, $no_depends ) = @_;
-    my @new_depends = List::Compare->new( $depends, $no_depends )->get_unique;
-    wantarray ? @new_depends : \@new_depends;
 }
 
 sub is_added {

@@ -5,11 +5,11 @@ use UNIVERSAL::require;
 
 # TODO decited Builder based on OS type
 sub create {
-    my ( $class, $builder, $modules ) = @_;
+    my ( $class, $builder, $config ) = @_;
     my $builder_class = join '::',
         ( 'CPAN', 'Packager', 'Builder', $builder );
     $builder_class->require or die "Can't load module $@";
-    $builder_class->new( modules => $modules );
+    $builder_class->new( conf => $config );
 }
 
 1;
