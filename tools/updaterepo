@@ -1,5 +1,6 @@
 #!/bin/sh
 sudo mkdir -p /share/CentOS/5/local/i386/RPMS
+sudo rm /share/CentOS/5/local/i386/RPMS/*.rpm
 sudo cp /tmp/cpanpackager/rpm/*.rpm /share/CentOS/5/local/i386/RPMS
 sudo createrepo -v /share/CentOS/5/local/i386/RPMS
 sudo yum clean metadata

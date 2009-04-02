@@ -26,6 +26,10 @@ global:
     - HTTP::Request
     - HTTP::Response
 
+  fix_module_name:
+    IO::stringy: IO::Stringy 
+    IO::Scalar: IO::Stringy
+
 modules:
   Test::Exception:
     depends:
@@ -51,6 +55,20 @@ modules:
       - Class::Classgen::classgen
   
   Class::Trigger:
+    depends:
+      - IO::Stringy
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+
+  Log::Dispatch::Config:
+    depends:
+      - IO::Stringy
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+
+  Getopt::Long::Descriptive:
     depends:
       - IO::Stringy
     no_depends:
