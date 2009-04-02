@@ -40,6 +40,10 @@ modules:
       - IO::stringy
       - URI
   
+  Module::Setup:
+    no_depends:
+      - Module::Install::AuthorTests 
+  
   Class::Accessor:
     depends:
       - Class::Classgen::Attribute
@@ -51,6 +55,7 @@ modules:
       - IO::Stringy
     no_depends:
       - IO::stringy
+      - IO::Scalar
   
   PathTools:
     build_skip: 1

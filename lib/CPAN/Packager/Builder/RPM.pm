@@ -168,8 +168,8 @@ sub _filter_global_requires_for_spec {
 
 sub _filter_requires {
     my ( $self, $spec_content, $no_depend_module ) = @_;
-    $spec_content =~ s/^Requires: perl\($no_depend_module\).+$//m;
-    $spec_content =~ s/^BuildRequires: perl\($no_depend_module\).+$//m;
+    $spec_content =~ s/^Requires: perl\($no_depend_module\).*?$//mg;
+    $spec_content =~ s/^BuildRequires: perl\($no_depend_module\).*?$//mg;
     $spec_content;
 }
 
