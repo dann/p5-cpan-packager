@@ -7,7 +7,7 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.03';
+our $VERSION = '0.031';
 
 BEGIN {
     if ( !defined &DEBUG ) {
@@ -64,6 +64,8 @@ sub make {
     my $modules = $self->analyze_module_dependencies( $module, $config );
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
+
+    $self->_dump_modules( $config->{modules} );
     eval {
         $built_modules = $self->build_modules( $config->{modules}, $config );
     };
@@ -71,16 +73,16 @@ sub make {
         $self->_dump_modules( $config->{modules} );
         die "### Built packages for $module faied :-( ###" . $@;
     }
-    $self->log( info => "### Builtpackages for $module faied :-( ### " );
+    $self->log( info => "### Built packages for $module :-) ### " );
     $built_modules;
 }
 
 sub _dump_modules {
     my ( $self, $modules ) = @_;
-    #if (DEBUG) {
+    if (DEBUG) {
         require Data::Dumper;
-        $self->log( debug =>"Modules info \n" . Data::Dumper::Dumper $modules );
-        #}
+        $self->log( debug => Data::Dumper::Dumper $modules );
+    }
 }
 
 sub merge_config {

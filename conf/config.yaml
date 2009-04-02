@@ -15,6 +15,7 @@ global:
     - HTTP::Response
     - HTTP::Request
     - Devel::PPPort
+    - version 
 
   skip_name_resolve_modules:
     - perl

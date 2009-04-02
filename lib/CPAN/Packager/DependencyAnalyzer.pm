@@ -108,8 +108,8 @@ sub is_added {
 sub is_core {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
-    my $version = Module::CoreList->first_release($_);
-    return 1 if $version;
+    my $corelist = $Module::CoreList::version{ $] };
+    return 1 if exists $corelist->{$module};
     return;
 }
 
