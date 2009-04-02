@@ -56,7 +56,6 @@ sub build {
     $self->generate_rpmrc;
     $self->copy_module_sources_to_build_dir($module);
     $self->build_rpm_package($spec_file_name);
-
     return $self->package_name( $module->{module} );
 }
 
@@ -64,7 +63,7 @@ sub generate_spec_file {
     my ( $self, $module ) = @_;
     my $spec_content = $self->generate_spec_with_cpanflute( $module->{tgz} );
     my $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
-    $self->filter_spec_file( $spec_content, $module->{module} );
+    $spec_content = $self->filter_spec_file( $spec_content, $module->{module} );
     $self->create_spec_file( $spec_content, $spec_file_name );
     ( $spec_file_name, $spec_content );
 }
@@ -117,6 +116,7 @@ sub filter_requires_for_rpmbuild {
 
 sub _filter_module_requires_for_rpmbuild {
     my ( $self, $spec_content, $module ) = @_;
+
     if (   $self->config( modules => $module )
         && $self->config( modules => $module )->{no_depends} )
     {
@@ -138,7 +138,7 @@ sub _filter_module_requires_for_rpmbuild {
 sub _filter_module_requires_for_spec {
     my ( $self, $spec_content, $module ) = @_;
     for my $no_depend_module (
-        @{ $self->config( modules => $module )->{no_depends} || [] } )
+        @{ $self->config( modules => $module )->{no_depends} || () } )
     {
         $spec_content
             = $self->_filter_requires( $spec_content, $no_depend_module );
@@ -184,7 +184,7 @@ sub _generate_module_filter_macro {
 /usr/lib/rpm/perl.req \$\* |\\
     sed };
     for my $mod (
-        @{ $self->config( modules => $module_name )->{no_depends} || [] } )
+        @{ $self->config( modules => $module_name )->{no_depends} || () } )
     {
         print $fh "-e '/perl($mod)/d' ";
     }
@@ -197,15 +197,13 @@ sub _generate_global_filter_macro {
 
     my $filter_macro_file
         = file( $self->build_dir, 'filter_macro_for_special_modules' );
-    my @special_modules = ( 'PathTools', 'Scalar::List::Utils', 'List::Util',
-        'Scalar::Util' );
     my $fh = $filter_macro_file->openw
         or die "Can't create $filter_macro_file: $!";
     print $fh qq{#!/bin/sh
  
 /usr/lib/rpm/perl.req \$\* |\\
     sed };
-    for my $mod (@special_modules) {
+    for my $mod (@{ $self->config( global => 'no_depends' ) || () } ) {
         print $fh "-e '/perl($mod)/d' ";
     }
     print $fh "\n";
@@ -290,13 +288,12 @@ sub copy_module_sources_to_build_dir {
     my $build_dir      = $self->build_dir;
 
     my $module_name = $module->{module};
-    $module_name = 'PathTools' if $module_name =~ m/File::Spec/;
-    $module_name = 'Scalar::List::Utils' if $module_name eq 'Scalar::Util';
-    $module_name = 'Template::Toolkit'   if $module_name eq 'Template';
+#    $module_name = 'PathTools' if $module_name =~ m/File::Spec/;
+#    $module_name = 'Scalar::List::Utils' if $module_name eq 'Scalar::Util';
+#    $module_name = 'Template::Toolkit'   if $module_name eq 'Template';
 
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
-
     copy( $module_tarball,
         file( $build_dir, "$module_name-$version.tar.gz" ) );
     copy( $module_tarball, file( $build_dir, "$module_name-$version.tgz" ) );

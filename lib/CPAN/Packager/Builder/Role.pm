@@ -21,8 +21,8 @@ sub config {
     die 'key must be passed'   unless $key;
     die 'value must be passed' unless $value;
 
-    return [] unless $self->conf->{$key};
-    return $self->conf->{$key}->{$value} || [];
+    return () unless $self->conf->{$key};
+    return $self->conf->{$key}->{$value} || ();
 }
 
 no Mouse::Role;

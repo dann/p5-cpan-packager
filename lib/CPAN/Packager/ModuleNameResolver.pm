@@ -1,6 +1,7 @@
 package CPAN::Packager::ModuleNameResolver;
 use Mouse;
 use LWP::UserAgent;
+use List::MoreUtils qw(any);
 with 'CPAN::Packager::Role::Logger';
 
 has 'ua' => (
@@ -13,9 +14,10 @@ has 'ua' => (
 );
 
 sub resolve {
-    my ( $self, $module ) = @_;
-    return if $module eq 'perl';
-    return if $module eq 'Template';
+    my ( $self, $module, $ignore_reslovement_modules ) = @_;
+    return $module if $module eq 'perl';
+    return $module if $module eq 'PerlInterp';
+    # return if any { $module eq $_ } @{ $ignore_reslovement_modules || [] };
 
     my $res = $self->get_or_retry(
         "http://search.cpan.org/search?query=$module&mode=module");

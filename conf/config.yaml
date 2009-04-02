@@ -1,6 +1,7 @@
 ---
 global:
   no_depends:
+    - perl
     - Scalar::Util
     - Scalar::List::Utils
     - List::Util
@@ -12,6 +13,13 @@ global:
     - File::Spec::Functions
     - HTTP::Response
     - HTTP::Request
+  skip_name_resolve_modules:
+    - perl
+    - PerlInterp
+    - Template
+    - LWP::UserAgent
+    - HTTP::Request
+    - HTTP::Response
 
 modules:
   Test::Exception:
