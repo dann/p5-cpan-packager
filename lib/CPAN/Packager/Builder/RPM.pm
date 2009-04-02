@@ -178,11 +178,12 @@ sub _filter_requires {
 
 sub _fix_requires {
     my ( $self, $spec_content ) = @_;
-    my $fix_module_names = $self->config( global => 'fix_module_name' );
+    my $fix_package_depends
+        = $self->config( global => 'fix_package_depends' );
 
-    foreach my $module ( keys %{$fix_module_names} ) {
+    foreach my $module ( keys %{$fix_package_depends} ) {
         $spec_content
-            =~ s/^Requires: perl\($module\).*?$/Requires: perl\($fix_module_names->{$module}\)/mg;
+            =~ s/^Requires: perl\($module\).*?$/Requires: perl\($fix_package_depends->{$module}\)/mg;
     }
     $spec_content;
 }
@@ -300,14 +301,17 @@ sub copy_module_sources_to_build_dir {
     my ( $self, $module ) = @_;
     my $module_tarball = $module->{tgz};
     my $build_dir      = $self->build_dir;
-
-    my $module_name = $module->{module};
+    my $module_name    = $module->{module};
 
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
     copy( $module_tarball,
         file( $build_dir, "$module_name-$version.tar.gz" ) );
     copy( $module_tarball, file( $build_dir, "$module_name-$version.tgz" ) );
+
+    #    my $module_file = file($module_tarball)->basename;
+    #    copy( $module_tarball,       file( $build_dir, $module_file ) );
+    #    copy( $module_tarball, file( $build_dir, $module_file ) );
 }
 
 sub package_name {

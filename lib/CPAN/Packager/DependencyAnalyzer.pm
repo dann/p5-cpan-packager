@@ -53,7 +53,8 @@ sub analyze_dependencies {
 
     my $resolved_module
         = $self->resolve_module_name( $module, $dependency_config );
-    $resolved_module = $self->fix_module_name($resolved_module, $dependency_config);
+    $resolved_module
+        = $self->fix_module_name( $resolved_module, $dependency_config );
     return
         if $self->is_added($resolved_module)
             || $self->is_core($resolved_module)
@@ -69,7 +70,6 @@ sub analyze_dependencies {
     @depends
         = $self->dependency_filter->filter_dependencies( $resolved_module,
         \@depends, $dependency_config );
-    @depends = map {$self->fix_module_name($_, $dependency_config) } @depends;
 
     my @skip_name_resolve_modules
         = @{ $dependency_config->{global}->{skip_name_resolve_modules}
@@ -121,6 +121,7 @@ sub get_dependencies {
     my $deps = Module::Depends->new->dist_dir($src)->find_modules;
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
+        map { $self->fix_module_name( $_, $dependency_config ) }
         map { $self->resolve_module_name( $_, $dependency_config ) } uniq(
         keys %{ $deps->requires || {} },
         keys %{ $deps->build_requires || {} }
@@ -140,8 +141,8 @@ sub resolve_module_name {
 sub fix_module_name {
     my ( $self, $module, $config ) = @_;
     my $new_module_name = $module;
-    $new_module_name = $config->{fix_module_name}->{$module}
-        if $config->{fix_module_name}->{$module};
+    $new_module_name = $config->{global}->{fix_module_name}->{$module}
+        if $config->{global}->{fix_module_name}->{$module};
     $new_module_name;
 }
 
