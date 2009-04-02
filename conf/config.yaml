@@ -17,6 +17,8 @@ global:
     - Devel::PPPort
     - IO::stringy
     - version 
+    - Module::Install
+    - Module::Install::AuthorTests
 
   skip_name_resolve_modules:
     - perl

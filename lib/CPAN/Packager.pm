@@ -79,10 +79,10 @@ sub make {
 
 sub _dump_modules {
     my ( $self, $modules ) = @_;
-    #if (DEBUG) {
+    if (DEBUG) {
         require Data::Dumper;
         $self->log( debug => Data::Dumper::Dumper $modules );
-        #}
+    }
 }
 
 sub merge_config {
@@ -104,7 +104,7 @@ sub build_modules {
         next if $module->{build_statas};
         next
             if $builder->is_installed( $module->{module} )
-                && $self->always_build;
+                && !$self->always_build;
 
         if ( my $package = $builder->build($module) ) {
             $module->{build_statas} = 'success';
