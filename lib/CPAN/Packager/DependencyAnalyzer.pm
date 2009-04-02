@@ -39,7 +39,7 @@ has 'resolved' => (
 );
 
 has 'dependency_filter' => (
-    is => 'rw',
+    is      => 'rw',
     default => sub {
         CPAN::Packager::DependencyFilter::Common->new;
     }
@@ -47,40 +47,56 @@ has 'dependency_filter' => (
 
 sub analyze_dependencies {
     my ( $self, $module, $dependency_config ) = @_;
-    my $resolved_module = $self->resolve_module_name($module, $dependency_config);
+    return if $dependency_config->{modules}->{$module}
+            && $dependency_config->{modules}->{$module}->{build_status};
+
+    my $resolved_module
+        = $self->resolve_module_name( $module, $dependency_config );
     return
         if $self->is_added($resolved_module)
             || $self->is_core($resolved_module)
             || $resolved_module eq 'perl'
             || $resolved_module eq 'PerlInterp';
 
-    my $module_name_to_download = $self->_module_name_to_download($module, $resolved_module, $dependency_config);
-    my ( $tgz, $src, $version ) = $self->downloder->download($module_name_to_download);
-    my @depends = $self->get_dependencies($src, $dependency_config);
-    @depends = $self->dependency_filter->filter_dependencies($resolved_module, \@depends, $dependency_config);
+    my $module_name_to_download
+        = $self->_module_name_to_download( $module, $resolved_module,
+        $dependency_config );
+    my ( $tgz, $src, $version )
+        = $self->downloder->download($module_name_to_download);
+    my @depends = $self->get_dependencies( $src, $dependency_config );
+    @depends
+        = $self->dependency_filter->filter_dependencies( $resolved_module,
+        \@depends, $dependency_config );
 
-    my @skip_name_resolve_modules = @{$dependency_config->{global}->{skip_name_resolve_modules} ||()} ;
-    my $skip_name_resolve =  any {$_ eq $module } @skip_name_resolve_modules;
+    my @skip_name_resolve_modules
+        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
+            || () };
+    my $skip_name_resolve = any { $_ eq $module } @skip_name_resolve_modules;
 
     $self->modules->{$module} = {
-        module  => $resolved_module,
+        module               => $resolved_module,
         original_module_name => $module,
-        skip_name_resolve => $skip_name_resolve,
-        version => $version,
-        tgz     => $tgz,
-        src     => $src,
-        depends => \@depends,
+        skip_name_resolve    => $skip_name_resolve,
+        version              => $version,
+        tgz                  => $tgz,
+        src                  => $src,
+        depends              => \@depends,
     };
 
     for my $depend_module (@depends) {
-        $self->analyze_dependencies($depend_module, $dependency_config);
+        $self->analyze_dependencies( $depend_module, $dependency_config );
     }
 }
 
 sub _module_name_to_download {
-    my ($self, $original_module_name, $resolved_module_name, $dependency_config) = @_;
-    my @skip_name_resolve_modules = @{$dependency_config->{global}->{skip_name_resolve_modules} ||()} ;
-    return $original_module_name if any {$_ eq $original_module_name} @skip_name_resolve_modules;
+    my ( $self, $original_module_name, $resolved_module_name,
+        $dependency_config )
+        = @_;
+    my @skip_name_resolve_modules
+        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
+            || () };
+    return $original_module_name
+        if any { $_ eq $original_module_name } @skip_name_resolve_modules;
     return $resolved_module_name;
 }
 
@@ -98,11 +114,11 @@ sub is_core {
 }
 
 sub get_dependencies {
-    my ( $self, $src, $dependency_config) = @_;
+    my ( $self, $src, $dependency_config ) = @_;
     my $deps = Module::Depends->new->dist_dir($src)->find_modules;
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
-        map     { $self->resolve_module_name($_, $dependency_config) } uniq(
+        map { $self->resolve_module_name( $_, $dependency_config ) } uniq(
         keys %{ $deps->requires || {} },
         keys %{ $deps->build_requires || {} }
         );
@@ -112,7 +128,7 @@ sub resolve_module_name {
     my ( $self, $module, $dependency_config ) = @_;
     return $self->resolved->{$module} if $self->resolved->{$module};
 
-    #my $skip_name_resolve_modules = $dependency_config->{global}->{skip_name_resolve_modules};
+#my $skip_name_resolve_modules = $dependency_config->{global}->{skip_name_resolve_modules};
     my $resolved_module_name = $self->module_name_resolver->resolve($module);
     return $module unless $resolved_module_name;
     $self->resolved->{$module} = $resolved_module_name;

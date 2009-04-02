@@ -49,21 +49,23 @@ has 'dependency_analyzer' => (
 );
 
 has 'always_build' => (
-    is => 'rw',
-    isa => 'Int',
+    is      => 'rw',
+    isa     => 'Int',
     default => 0,
 );
 
 sub make {
-    my ( $self, $module ) = @_;
+    my ( $self, $module, $built_modules ) = @_;
     die 'module must be passed' unless $module;
-
     my $config = $self->config_loader->load( $self->conf );
+    $config->{modules} = $built_modules if $built_modules;
+
     my $modules = $self->analyze_module_dependencies( $module, $config );
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
-    $self->_dump_modules($config->{modules});
-    $self->build_modules($config->{modules}, $config);
+    $self->_dump_modules( $config->{modules} );
+    $built_modules = $self->build_modules( $config->{modules}, $config );
+    $built_modules;
 }
 
 sub _dump_modules {
@@ -91,15 +93,21 @@ sub build_modules {
     for my $module ( values %{$modules} ) {
         next if $module->{build_skip} && $module->{build_skip} == 1;
         next unless $module->{module};
-        next if $builder->is_installed( $module->{module} ) && $self->always_build;
+        next if $module->{build_statas};
+        next
+            if $builder->is_installed( $module->{module} )
+                && $self->always_build;
+
         if ( my $package = $builder->build($module) ) {
+            $module->{build_statas} = 'success';
             $self->log( info => "$module->{module} created ($package)" );
         }
         else {
+            $module->{build_stata} = 'failed';
             $self->log( info => "$module->{module} failed" );
         }
     }
-
+    $modules;
 }
 
 sub analyze_module_dependencies {

@@ -54,8 +54,10 @@ sub run {
 
     if ( $self->modulelist ) {
         my @modules = file( $self->modulelist )->slurp( chomp => 1 );
+        @modules = grep { $_ !~ /^#/ } @modules;
+        my $built_modules;
         foreach my $module (@modules) {
-            $packager->make($module);
+            $built_modules = $packager->make( $module, $built_modules );
         }
     }
     else {
