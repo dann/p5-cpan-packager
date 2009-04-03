@@ -3,6 +3,7 @@ Revision history for Perl extension CPAN::Packager
 0.02 Thu Apr 3 21:47:06 2009
        * Supportted an global dependency filter
        * added the spec requires filter for cpanflute2
+       * skip module name resolve
 
 0.011 Thu Apr 2 23:11:46 2009
         * filter List::Util from spec file
