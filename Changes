@@ -1,5 +1,10 @@
 Revision history for Perl extension CPAN::Packager
 
+0.03 Thu Apr 4 14:40:00 2009
+       * build multiple modules with modulelist option
+       * added always_build option to build always if the module is aready
+         installed
+
 0.02 Thu Apr 3 21:47:06 2009
        * Supportted an global dependency filter
        * added the spec requires filter for cpanflute2
