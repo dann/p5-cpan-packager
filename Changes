@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.041 Thu Apr 18 3:21:03 2009
+       * fixed pod bug
+
 0.04 Thu Apr 4 3:56:00 2009
        * fixed filtering require bugs 
        * added fix_module_name config
