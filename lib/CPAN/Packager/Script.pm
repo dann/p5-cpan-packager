@@ -77,6 +77,7 @@ __END__
 
 =head1 SYNOPSIS
 
+  use CPAN::Packager::Script;
 
 =head1 DESCRIPTION
 
