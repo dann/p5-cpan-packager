@@ -189,6 +189,7 @@ This makes it so easy to make a perl module into a Redhat/Debian package
 =head1 AUTHOR
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
+walf443
 
 =head1 SEE ALSO
 

@@ -1,5 +1,10 @@
 Revision history for Perl extension CPAN::Packager
 
+0.05 Thu Apr 18 3:21:03 2009
+       * added skip_test option for Deb package (walf443)
+       * use Module::Depends::Instrusive for broken META.yml (walf443) 
+       * added a setting for custom src of modules (walf443)
+
 0.041 Thu Apr 18 3:21:03 2009
        * fixed pod bug
 
