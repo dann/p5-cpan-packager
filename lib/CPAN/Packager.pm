@@ -8,7 +8,7 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.041';
+our $VERSION = '0.05';
 
 BEGIN {
     if ( !defined &DEBUG ) {
@@ -68,7 +68,9 @@ sub make {
     my $config = $self->config_loader->load( $self->conf );
     $config->{modules} = $built_modules if $built_modules;
 
+    $self->log( info => "# Analyzing dependencies for $module ... ###" );
     my $modules = $self->analyze_module_dependencies( $module, $config );
+
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
 

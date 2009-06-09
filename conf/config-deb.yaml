@@ -1,0 +1,159 @@
+---
+global:
+  fix_meta_yml_modules:
+    - Any::Moose
+    - HTTP::Request::AsCGI
+  fix_module_name:
+    IO::Compress: IO::Compress::Base
+    Scalar::Util: Scalar::List::Utils
+    libwww-perl: LWP::UserAgent
+    podlators: Pod::Man
+  fix_package_depends: ~
+  no_depends:
+    - CGI
+    - Class::Accessor
+    - Devel::PPPort
+    - Encode
+    - ExtUtils::MakeMaker
+    - File::Copy
+    - File::Spec
+    - File::Spec::Functions
+    - File::Spec::Mac
+    - File::Spec::OS2
+    - File::Spec::Unix
+    - File::Spec::Win32
+    - File::Temp
+    - 'Filter # brokes?'
+    - HTTP::Request
+    - HTTP::Response
+    - IO::stringy
+    - LWP::UserAgent
+    - List::Util
+    - Module::Install
+    - Module::Install::AuthorTests
+    - PathTools
+    - Pod::Parser
+    - Pod::Parser
+    - Scalar::List::Utils
+    - Scalar::Util
+    - Test::Harness
+    - kurila
+    - perl
+    - version
+  skip_name_resolve_modules:
+    - Class::DBI
+    - Class::DBI::AbstractSearch
+    - Date::Parse
+    - HTTP::Request
+    - HTTP::Response
+    - IO::Scalar
+    - IO::stringy
+    - LWP::UserAgent
+    - PathTools
+    - PerlInterp
+    - Template
+    - perl
+  skip_analyze_dependencies:
+    - HTTP::Request::AsCGI
+
+modules:
+  CGI::Ajax:
+    no_depends:
+      - CGI::Ajax
+  CPAN::Packager:
+    depends:
+      - CPANPLUS::Backend
+      - FindBin::libs
+      - IPC::System::Simple
+      - LWP::UserAgent
+      - Module::Depends
+      - Module::CoreList
+      - Mouse
+      - Path::Class
+      - RPM::Specfile
+      - UNIVERSAL::require
+      - File::Copy
+      - Hash::Merge
+      - List::MoreUtils
+      - YAML
+      - MouseX::Getopt
+      - List::MoreUtils
+      - List::Compare
+  Class::Accessor:
+    depends:
+      - Class::Classgen::Attribute
+    no_depends:
+      - Class::Classgen::classgen
+  Class::Classgen::classgen:
+    build_skip: 1
+  Class::DBI::AbstractSearch:
+    depends:
+      - Class::DBI # hmm.
+    no_depends:
+      - Class::DBI::AbstractSearch
+  Class::Trigger:
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+  DBIx::Class:
+    skip_test: 1
+  File::Spec:
+    build_skip: 1
+  File::Find::Rule::Perl:
+    skip_test: 1
+  FindBin::libs:
+    skip_test: 1
+  Getopt::Long::Descriptive:
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+  HTTP::Engine:
+    no_depends:
+      - URI
+      - IO::stringy
+      - IO::Scalar
+  HTTP::Server::Simple:
+    depends:
+      - URI
+    no_depends:
+      - ASNMTAP
+  IPC::System::Simple:
+    no_depends:
+      - Solaris::PerlGcc
+  JSON::Any:
+    depends:
+      - JSON
+      - JSON::XS
+  Log::Dispatch::Config:
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+  Module::Setup:
+    no_depends:
+      - Module::Install::AuthorTests
+  Mouse:
+    skip_test: 1
+  Perl::MinimumVersion:
+    skip_test: 1
+  PathTools:
+    build_skip: 1
+  Scalar::List::Utils:
+    build_skip: 1
+  Test::Exception:
+    depends:
+      - Test::Simple
+    no_depends:
+      - Test::Builder::Tester
+  YAML:
+    no_depends:
+      - Filter
+  HTTP::Request::AsCGI:
+    depends:
+      - Carp
+      - Class::Accessor
+      - HTTP::Request
+      - HTTP::Response
+      - IO::File
+      - Test::More
+      - URI::Escape
+

@@ -72,13 +72,14 @@ sub generate_spec_file {
 
 sub generate_spec_with_cpanflute {
     my ( $self, $tgz ) = @_;
-    $self->log( info => '>>> generate specfile with cpanflute2' );
+    $self->log( info => '>>> generate specfile with cpanflute2 for ' . $tgz );
 
     # TODO Should we specify build_arch in spec file?
     my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
     my $spec = capture("LANG=C cpanflute2 $opts $tgz");
+
     $spec;
 }
 

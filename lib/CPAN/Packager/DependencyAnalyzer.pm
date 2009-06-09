@@ -52,32 +52,21 @@ sub analyze_dependencies {
         if $dependency_config->{modules}->{$module}
             && $dependency_config->{modules}->{$module}->{build_status};
 
-    my @skip_name_resolve_modules
-        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
-            || () };
-
-    my $skip_name_resolve = any { $_ eq $module } @skip_name_resolve_modules;
-
+    my $skip_name_resolve = $self->_does_skip_resolve_module_name($module, $dependency_config);
     my $resolved_module
         = $skip_name_resolve ? $module : $self->resolve_module_name( $module, $dependency_config );
-    $resolved_module
-        = $self->fix_module_name( $resolved_module, $dependency_config );
+    $resolved_module = $self->fix_module_name( $resolved_module, $dependency_config );
 
-    return if $self->is_added($resolved_module);
-    return if $self->is_core($resolved_module);
-    return if $resolved_module eq 'perl';
-    return if $resolved_module eq 'PerlInterp';
+    return unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
     my $module_name_to_download
-        = $self->_module_name_to_download( $module, $resolved_module,
-        $dependency_config );
+        = $self->_module_name_to_download( $module, $resolved_module,$dependency_config );
 
     my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
     my ( $tgz, $src, $version )
         = $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module_name_to_download);
-    my $make_yml_generate_fg = any { $_ eq $module } @{ $dependency_config->{global}->{fix_meta_yml_modules} || [] };
 
-    my @depends = $self->get_dependencies( $module, $src, $dependency_config, $make_yml_generate_fg);
+    my @depends = $self->get_dependencies( $module, $src, $dependency_config);
     @depends
         = $self->dependency_filter->filter_dependencies( $resolved_module,
         \@depends, $dependency_config );
@@ -95,6 +84,24 @@ sub analyze_dependencies {
     for my $depend_module (@depends) {
         $self->analyze_dependencies( $depend_module, $dependency_config );
     }
+}
+
+sub _is_needed_to_analyze_dependencies {
+    my ($self, $resolved_module) = @_;
+    return 0 if $self->is_added($resolved_module);
+    return 0 if $self->is_core($resolved_module);
+    return 0 if $resolved_module eq 'perl';
+    return 0 if $resolved_module eq 'PerlInterp';
+    return 1;
+}
+
+sub _does_skip_resolve_module_name {
+    my ($self, $module, $dependency_config) = @_;
+    my @skip_name_resolve_modules
+        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
+            || () };
+    my $skip_name_resolve = any { $_ eq $module } @skip_name_resolve_modules;
+    return $skip_name_resolve;
 }
 
 sub _module_name_to_download {
@@ -124,11 +131,13 @@ sub is_core {
 }
 
 sub get_dependencies {
-    my ( $self, $module, $src, $dependency_config, $make_yml_generate_fg ) = @_;
-
+    my ( $self, $module, $src, $dependency_config ) = @_;
     if ( $dependency_config->{modules} && $dependency_config->{modules}->{$module} && $dependency_config->{modules}->{$module}->{depends} ) {
         return @{ $dependency_config->{modules}->{$module}->{depends} };
     }
+
+    my $make_yml_generate_fg = any { $_ eq $module } @{ $dependency_config->{global}->{fix_meta_yml_modules} || [] };
+
     my $depends_mod = $make_yml_generate_fg ? "Module::Depends::Intrusive" : "Module::Depends";
     my $deps = $depends_mod->new->dist_dir($src)->find_modules;
 
