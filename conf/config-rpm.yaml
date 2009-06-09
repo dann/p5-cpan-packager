@@ -112,6 +112,7 @@ modules:
       - URI
       - IO::stringy
       - IO::Scalar
+      - Any::Moose
   HTTP::Server::Simple:
     depends:
       - URI
@@ -147,6 +148,13 @@ modules:
   YAML:
     no_depends:
       - Filter
+  # META.yml is broken...
   HTTP::Request::AsCGI:
     build_skip: 1
+  # META.yml is broken...
+  Any::Moose:
+    build_skip: 1
+  CGI::Simple:
+    no_depends:
+      - IO::Scalar
 
