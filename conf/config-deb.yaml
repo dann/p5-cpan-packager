@@ -40,6 +40,7 @@ global:
     - kurila
     - perl
     - version
+    - IO::Compress::Base
   skip_name_resolve_modules:
     - Class::DBI
     - Class::DBI::AbstractSearch

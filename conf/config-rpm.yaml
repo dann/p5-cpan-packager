@@ -3,6 +3,7 @@ global:
   fix_meta_yml_modules:
     - Any::Moose
     - HTTP::Request::AsCGI
+    - MooseX::MethodAttributes
   fix_module_name:
     IO::Compress: IO::Compress::Base
     Scalar::Util: Scalar::List::Utils
@@ -40,6 +41,8 @@ global:
     - kurila
     - perl
     - version
+    - IO::Compress::Base
+    - Compress::Zlib
   skip_name_resolve_modules:
     - Class::DBI
     - Class::DBI::AbstractSearch
@@ -152,7 +155,16 @@ modules:
   # META.yml is broken...
   Any::Moose:
     build_skip: 1
+  # META.yml is broken...
+  MooseX::MethodAttributes:
+    build_skip: 1
   CGI::Simple:
     no_depends:
       - IO::Scalar
-
+  IO::Compress::Base:
+    build_skip: 1
+  Archive::Tar:
+    no_depends:
+      - Compress::Zlib
+      - IO::Compress::Bzip2
+      - IO::Compress::Gzip
