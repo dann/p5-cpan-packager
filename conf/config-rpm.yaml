@@ -158,6 +158,8 @@ modules:
   # META.yml is broken...
   MooseX::MethodAttributes:
     build_skip: 1
+  MooseX::MethodAttributes::Inheritable:
+    build_skip: 1
   CGI::Simple:
     no_depends:
       - IO::Scalar
@@ -168,3 +170,7 @@ modules:
       - Compress::Zlib
       - IO::Compress::Bzip2
       - IO::Compress::Gzip
+  Catalyst::Runtime:
+    no_depends:
+      - HTTP::Request::AsCGI
+      - MooseX::MethodAttributes::Inheritable
