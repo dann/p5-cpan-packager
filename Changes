@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
+0.052 June 20 18 01:21:03 2009
+       * added some modules into config to build Catalyst 
+       * fixed the degrade of modulelistoption
+
 0.051 June 20 18 01:21:03 2009
        * can build modules which module name and tarball  name is different.
          ex) Template Toolkit
