@@ -8,7 +8,7 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.05';
+our $VERSION = '0.051';
 
 BEGIN {
     if ( !defined &DEBUG ) {

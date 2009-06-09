@@ -62,7 +62,7 @@ sub build {
 
 sub generate_spec_file {
     my ( $self, $module ) = @_;
-    my $spec_content = $self->generate_spec_with_cpanflute( $module->{tgz} );
+    my $spec_content   = $self->generate_spec_with_cpanflute($module);
     my $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
     $spec_content
         = $self->filter_spec_file( $spec_content, $module->{module} );
@@ -71,14 +71,20 @@ sub generate_spec_file {
 }
 
 sub generate_spec_with_cpanflute {
-    my ( $self, $tgz ) = @_;
+    my ( $self, $module ) = @_;
+
+    my $tgz = $module->{tgz};
     $self->log( info => '>>> generate specfile with cpanflute2 for ' . $tgz );
 
     # TODO Should we specify build_arch in spec file?
     my $build_arch = $self->get_default_build_arch();
     my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
         . $self->release;
-    my $spec = capture("LANG=C cpanflute2 $opts $tgz");
+    my $module_name = $module->{module};
+    my $version     = $module->{version};
+    my $copy_to = file( $self->build_dir, "$module_name-$version.tar.gz" );
+    copy( $module->{tgz}, $copy_to );
+    my $spec = capture("LANG=C cpanflute2 $opts $copy_to");
 
     $spec;
 }
@@ -310,6 +316,7 @@ sub copy_module_sources_to_build_dir {
         file( $build_dir, "$module_name-$version.tar.gz" ) );
     copy( $module_tarball, file( $build_dir, "$module_name-$version.tgz" ) );
 
+    #copy( $module_tarball, $build_dir );
     #    my $module_file = file($module_tarball)->basename;
     #    copy( $module_tarball,       file( $build_dir, $module_file ) );
     #    copy( $module_tarball, file( $build_dir, $module_file ) );

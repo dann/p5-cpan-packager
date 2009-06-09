@@ -1,6 +1,10 @@
 Revision history for Perl extension CPAN::Packager
 
-0.05 Thu Apr 18 3:21:03 2009
+0.051 June 20 18 01:21:03 2009
+       * can build modules which module name and tarball  name is different.
+         ex) Template Toolkit
+
+0.05 Thu June 20 00:21:03 2009
        * added skip_test option for Deb package (walf443)
        * use Module::Depends::Instrusive for broken META.yml (walf443) 
        * added a setting for custom src of modules (walf443)
