@@ -8,7 +8,7 @@ use CPAN::Packager::DependencyConfigMerger;
 use CPAN::Packager::ConfigLoader;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.051';
+our $VERSION = '0.052';
 
 BEGIN {
     if ( !defined &DEBUG ) {
@@ -137,7 +137,7 @@ sub build_modules {
     for my $module ( @{$modules} ) {
         next if $module->{build_skip} && $module->{build_skip} == 1;
         next unless $module->{module};
-        next if $module->{build_statas};
+        next if $module->{build_status};
         next
             if $builder->is_installed( $module->{module} )
                 && !$self->always_build;
@@ -146,18 +146,19 @@ sub build_modules {
         my $package = $builder->build($module);
         
         if ( $package ) {
-            $module->{build_statas} = 'success';
+            $module->{build_status} = 'success';
             $self->log( info => "$module->{module} created ($package)" );
         }
         else {
-            $module->{build_stata} = 'failed';
+            $module->{build_status} = 'failed';
             $self->log( info => "$module->{module} failed" );
             if ( $@ ) {
                 die "failed building module: $@";
             }
         }
     }
-    $modules;
+    my %modules = map { $_->{module} => $_ } @{$modules};
+    return \%modules;
 }
 
 sub analyze_module_dependencies {
