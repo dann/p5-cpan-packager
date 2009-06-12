@@ -28,6 +28,7 @@ global:
     - Class::Accessor
     - CGI
     - Filter # brokes?
+    - kurila
 
   skip_name_resolve_modules:
     - perl
@@ -54,6 +55,14 @@ global:
     - HTTP::Request::AsCGI
 
 modules:
+  JSON::Any:
+    depends:
+      - JSON
+      - JSON::XS
+
+  DBIx::Class:
+    skip_test: 1
+
   YAML:
     no_depends:
       - Filter
@@ -133,15 +142,9 @@ modules:
   File::Spec:
     build_skip: 1
   
-  namespace::clean:
-    no_depends:
-      - kurila
-  
   Class::Classgen::classgen:
     build_skip: 1
   
   Scalar::List::Utils:
     build_skip: 1
   
-  kurila:
-    build_skip: 1
