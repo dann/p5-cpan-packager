@@ -43,8 +43,9 @@ sub _build_package_with_dh_make_perl {
     eval {
         system("sudo rm -rf $module->{src}/debian");
         system(
-            "sudo dh-make-perl --build --notest --depends '$depends' $module->{src}"
+            "sudo dh-make-perl --build --depends '$depends' $module->{src}"
         );
+        system("sudo dpkg -i $module->{src}/../$package*.deb");
         system("sudo cp $module->{src}/../$package*.deb $package_output_dir");
     };
     if ($@) {
