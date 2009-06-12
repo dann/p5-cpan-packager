@@ -46,7 +46,9 @@ sub _build_package_with_dh_make_perl {
     eval {
         my $already_installed = system("dpkg -l $package > /dev/null"); 
         if ( $already_installed ) {
-            die "$package already installed. skip building";
+            $self->log(info => "$package already installed. skip building");
+            return $package;
+
         }
     };
     if ( $@ ) {
@@ -57,9 +59,12 @@ sub _build_package_with_dh_make_perl {
 
         system("sudo rm -rf $module->{src}/debian") == 0
             or die "error";
-        system(
-            "sudo dh-make-perl --build --depends '$depends' $module->{src}"
-        ) == 0
+
+        my $dh_make_perl_cmd = "sudo dh-make-perl --build --depends '$depends' $module->{src}";
+        if ( $module->{skip_test} ) {
+            $dh_make_perl_cmd .= " --notest";
+        }
+        system($dh_make_perl_cmd) == 0
             or die "error";
         system("sudo dpkg -i $module->{src}/../$package*.deb") == 0
             or die "error";
