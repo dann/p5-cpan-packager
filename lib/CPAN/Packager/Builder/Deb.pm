@@ -42,9 +42,19 @@ sub _build_package_with_dh_make_perl {
     my $depends = join ',', @depends;
     $self->log( debug => "depends: $depends" );
     my $package_output_dir = $self->package_output_dir;
+
     eval {
-        system("dpkg -l $package > /dev/null") 
-            or die "$package already installed. skip building";
+        my $already_installed = system("dpkg -l $package > /dev/null"); 
+        if ( $already_installed ) {
+            die "$package already installed. skip building";
+        }
+    };
+    if ( $@ ) {
+        $@ = undef; # ok. skiped.
+    }
+
+    eval {
+
         system("sudo rm -rf $module->{src}/debian") == 0
             or die "error";
         system(
