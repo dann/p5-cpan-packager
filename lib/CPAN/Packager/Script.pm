@@ -12,6 +12,12 @@ has 'help' => (
     default => 0,
 );
 
+has 'dry_run' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    defalut => 0,
+);
+
 has 'module' => (
     is  => 'rw',
     isa => 'Str',
@@ -50,6 +56,7 @@ sub run {
         builder      => $self->builder,
         conf         => $self->conf,
         always_build => $self->always_build,
+        dry_run      => $self->dry_run,
     );
 
     if ( $self->modulelist ) {

@@ -26,6 +26,12 @@ has 'builder' => (
     default => 'Deb',
 );
 
+has 'dry_run' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
+);
+
 has 'conf' => ( is => 'rw', );
 
 has 'dependency_config_merger' => (
@@ -70,10 +76,13 @@ sub make {
     my $sorted_modules = [ uniq reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
     $self->_dump_modules( $sorted_modules );
 
-    local $@;
-    eval {
-        $built_modules = $self->build_modules( $sorted_modules, $config );
-    };
+    unless ( $self->dry_run ) {
+        local $@;
+        eval {
+            $built_modules = $self->build_modules( $sorted_modules, $config );
+        };
+    }
+
     if ($@) {
         $self->_dump_modules( $sorted_modules );
         die "### Built packages for $module faied :-( ###" . $@;
