@@ -2,23 +2,31 @@
 global:
   no_depends:
     - perl
-    - Scalar::Util
-    - Scalar::List::Utils
-    - List::Util
-    - PathTools 
-    - File::Spec
-    - File::Spec::Unix
-    - File::Spec::OS2
-    - File::Spec::Win32
-    - File::Spec::Mac
-    - File::Spec::Functions
-    - HTTP::Response
-    - HTTP::Request
     - Devel::PPPort
+    - Encode
+    - ExtUtils::MakeMaker
+    - File::Temp
+    - File::Spec
+    - File::Spec::Functions
+    - File::Spec::Mac
+    - File::Spec::OS2
+    - File::Spec::Unix
+    - File::Spec::Win32
+    - HTTP::Request
+    - HTTP::Response
     - IO::stringy
-    - version 
+    - List::Util
     - Module::Install
     - Module::Install::AuthorTests
+    - Pod::Parser
+    - PathTools 
+    - Scalar::List::Utils
+    - Scalar::Util
+    - Test::Harness
+    - Pod::Parser
+    - version 
+    - Class::Accessor
+    - Filter # brokes?
 
   skip_name_resolve_modules:
     - perl
@@ -33,12 +41,48 @@ global:
     - IO::stringy
 
   fix_module_name:
+    podlators: Pod::Man
 #    IO::stringy: IO::Scalar
 
   fix_package_depends:
 #    IO::Scalar: IO::stringy
 
+  fix_meta_yml_modules:
+    - Any::Moose
+    - HTTP::Request::AsCGI
+
 modules:
+  YAML:
+    no_depends:
+      - Filter
+
+  Mouse:
+    skip_test: 1
+
+  CGI::Ajax:
+    no_depends:
+      - CGI::Ajax
+
+  CPAN::Packager:
+    depends:
+      - CPANPLUS::Backend
+      - FindBin::libs
+      - IPC::System::Simple
+      - LWP::Simple
+      - LWP::UserAgent
+      - Module::Depends
+      - Module::CoreList
+      - Mouse
+      - Path::Class
+      - RPM::Specfile
+      - UNIVERSAL::require
+      - File::Copy
+      - Hash::Merge
+      - List::MoreUtils
+      - YAML
+      - MouseX::Getopt
+      - List::MoreUtils
+      - List::Compare
   Test::Exception:
     depends:
       - Test::Simple
