@@ -66,15 +66,33 @@ sub make {
         if $self->conf;
 
     $self->_dump_modules( $config->{modules} );
+    my $sorted_modules = [ reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
+    $self->_dump_modules( $sorted_modules );
     eval {
-        $built_modules = $self->build_modules( $config->{modules}, $config );
+        $built_modules = $self->build_modules( $sorted_modules, $config );
     };
     if ($@) {
-        $self->_dump_modules( $config->{modules} );
+        $self->_dump_modules( $sorted_modules );
         die "### Built packages for $module faied :-( ###" . $@;
     }
     $self->log( info => "### Built packages for $module :-) ### " );
     $built_modules;
+}
+
+sub topological_sort {
+    my ( $self, $target, $modules ) = @_;
+
+    my @results;
+
+    push @results, $modules->{$target};
+    if ( @{ $modules->{$target}->{depends} } ) {
+        for my $mod ( @{ $modules->{$target}->{depends} } ) {
+            my $result = $self->topological_sort( $mod, $modules );
+            push @results, @{$result};
+        }
+    }
+
+    return \@results;
 }
 
 sub _dump_modules {
@@ -98,7 +116,7 @@ sub build_modules {
         = CPAN::Packager::BuilderFactory->create( $builder_name, $config );
     $builder->print_installed_packages;
 
-    for my $module ( values %{$modules} ) {
+    for my $module ( @{$modules} ) {
         next if $module->{build_skip} && $module->{build_skip} == 1;
         next unless $module->{module};
         next if $module->{build_statas};
