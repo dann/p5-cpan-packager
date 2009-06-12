@@ -88,11 +88,15 @@ sub topological_sort {
     my @results;
 
     push @results, $modules->{$target};
-    if ( $modules->{$target} && $modules->{$target}->{depends} && @{ $modules->{$target}->{depends} } ) {
-        for my $mod ( @{ $modules->{$target}->{depends} } ) {
-            my $result = $self->topological_sort( $mod, $modules );
-            push @results, @{$result};
+    if ( $modules->{$target} ) {
+        if ( $modules->{$target}->{depends} && @{ $modules->{$target}->{depends} } ) {
+            for my $mod ( @{ $modules->{$target}->{depends} } ) {
+                my $result = $self->topological_sort( $mod, $modules );
+                push @results, @{$result};
+            }
         }
+    } else {
+        die "invalid module: $target";
     }
 
     return \@results;
