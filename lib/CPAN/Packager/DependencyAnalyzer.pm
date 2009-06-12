@@ -66,7 +66,9 @@ sub analyze_dependencies {
         $dependency_config );
     my ( $tgz, $src, $version )
         = $self->downloder->download($module_name_to_download);
-    my @depends = $self->get_dependencies( $src, $dependency_config );
+    my $make_yml_generate_fg = any { $_ eq $module } @{ $dependency_config->{global}->{fix_meta_yml_modules} || [] };
+
+    my @depends = $self->get_dependencies( $src, $dependency_config, $make_yml_generate_fg);
     @depends
         = $self->dependency_filter->filter_dependencies( $resolved_module,
         \@depends, $dependency_config );
@@ -117,8 +119,10 @@ sub is_core {
 }
 
 sub get_dependencies {
-    my ( $self, $src, $dependency_config ) = @_;
-    my $deps = Module::Depends->new->dist_dir($src)->find_modules;
+    my ( $self, $src, $dependency_config, $make_yml_generate_fg ) = @_;
+
+    my $depends_mod = $make_yml_generate_fg ? "Module::Depends::Intrusive" : "Module::Depends";
+    my $deps = $depends_mod->new->dist_dir($src)->find_modules;
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
         map { $self->fix_module_name( $_, $dependency_config ) }
