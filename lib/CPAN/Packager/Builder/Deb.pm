@@ -22,8 +22,10 @@ sub BUILD {
 }
 
 sub check_executables_exist_in_path {
-    system("which dh-make-perl");
-    system("which dpkg");
+    system("which dh-make-perl") == 0 
+        or die "dh-make-perl not found";
+    system("which dpkg") == 0
+        or die "dpkg not found";
 }
 
 sub build {
@@ -41,12 +43,18 @@ sub _build_package_with_dh_make_perl {
     $self->log( debug => "depends: $depends" );
     my $package_output_dir = $self->package_output_dir;
     eval {
-        system("sudo rm -rf $module->{src}/debian");
+        system("dpkg -l $package > /dev/null") 
+            or die "$package already installed. skip building";
+        system("sudo rm -rf $module->{src}/debian") == 0
+            or die "error";
         system(
             "sudo dh-make-perl --build --depends '$depends' $module->{src}"
-        );
-        system("sudo dpkg -i $module->{src}/../$package*.deb");
-        system("sudo cp $module->{src}/../$package*.deb $package_output_dir");
+        ) == 0
+            or die "error";
+        system("sudo dpkg -i $module->{src}/../$package*.deb") == 0
+            or die "error";
+        system("sudo cp $module->{src}/../$package*.deb $package_output_dir") == 0
+            or die "errer";
     };
     if ($@) {
         $self->log( info => $@ );
