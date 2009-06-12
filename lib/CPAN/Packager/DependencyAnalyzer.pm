@@ -107,7 +107,8 @@ sub _module_name_to_download {
 
 sub is_added {
     my ( $self, $module ) = @_;
-    grep { $module eq $_ } keys %{ $self->modules };
+
+    exists $self->modules->{$module};
 }
 
 sub is_core {
