@@ -1,6 +1,7 @@
 package CPAN::Packager;
 use 5.00800;
 use Mouse;
+use List::MoreUtils qw/uniq/;
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
 use CPAN::Packager::DependencyConfigMerger;
@@ -66,7 +67,7 @@ sub make {
         if $self->conf;
 
     $self->_dump_modules( $config->{modules} );
-    my $sorted_modules = [ reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
+    my $sorted_modules = [ uniq reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
     $self->_dump_modules( $sorted_modules );
 
     local $@;
