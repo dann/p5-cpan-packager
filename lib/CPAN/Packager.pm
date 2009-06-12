@@ -68,6 +68,8 @@ sub make {
     $self->_dump_modules( $config->{modules} );
     my $sorted_modules = [ reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
     $self->_dump_modules( $sorted_modules );
+
+    local $@;
     eval {
         $built_modules = $self->build_modules( $sorted_modules, $config );
     };
@@ -85,7 +87,7 @@ sub topological_sort {
     my @results;
 
     push @results, $modules->{$target};
-    if ( @{ $modules->{$target}->{depends} } ) {
+    if ( $modules->{$target} && $modules->{$target}->{depends} && @{ $modules->{$target}->{depends} } ) {
         for my $mod ( @{ $modules->{$target}->{depends} } ) {
             my $result = $self->topological_sort( $mod, $modules );
             push @results, @{$result};
@@ -123,14 +125,20 @@ sub build_modules {
         next
             if $builder->is_installed( $module->{module} )
                 && !$self->always_build;
-
-        if ( my $package = $builder->build($module) ) {
+        
+        local $@;
+        my $package = $builder->build($module);
+        
+        if ( $package ) {
             $module->{build_statas} = 'success';
             $self->log( info => "$module->{module} created ($package)" );
         }
         else {
             $module->{build_stata} = 'failed';
             $self->log( info => "$module->{module} failed" );
+            if ( $@ ) {
+                die "failed building module: $@";
+            }
         }
     }
     $modules;
