@@ -87,8 +87,8 @@ sub topological_sort {
 
     my @results;
 
-    push @results, $modules->{$target};
     if ( $modules->{$target} ) {
+        push @results, $modules->{$target};
         if ( $modules->{$target}->{depends} && @{ $modules->{$target}->{depends} } ) {
             for my $mod ( @{ $modules->{$target}->{depends} } ) {
                 my $result = $self->topological_sort( $mod, $modules );
@@ -96,7 +96,7 @@ sub topological_sort {
             }
         }
     } else {
-        die "invalid module: $target";
+        $self->log(info => "skipped $target. no meta data found.");
     }
 
     return \@results;
