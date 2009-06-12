@@ -15,10 +15,12 @@ sub download {
     $self->log(info => "Downloading $module ...");
     my $dist = $self->fetcher->parse_module( module => $module );
     return unless $dist;
+
     my ( $archive, $where );
+    my $is_force = $dist->is_uptodate ? 0 : 1;
     eval {
-        $archive = $dist->fetch( force   => 1 ) or next;
-        $where   = $dist->extract( force => 1 ) or next;
+        $archive = $dist->fetch(force => $is_force) or next;
+        $where   = $dist->extract(force => $is_force) or next;
     };
 
     return () unless $archive;
