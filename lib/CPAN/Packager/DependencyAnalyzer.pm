@@ -9,7 +9,7 @@ use List::Compare;
 use List::MoreUtils qw(uniq any);
 with 'CPAN::Packager::Role::Logger';
 
-has 'downloder' => (
+has 'downloader' => (
     is      => 'rw',
     default => sub {
         CPAN::Packager::Downloader->new;
@@ -65,7 +65,7 @@ sub analyze_dependencies {
         = $self->_module_name_to_download( $module, $resolved_module,
         $dependency_config );
     my ( $tgz, $src, $version )
-        = $self->downloder->download($module_name_to_download);
+        = $self->downloader->download($module_name_to_download);
     my $make_yml_generate_fg = any { $_ eq $module } @{ $dependency_config->{global}->{fix_meta_yml_modules} || [] };
 
     my @depends = $self->get_dependencies( $module, $src, $dependency_config, $make_yml_generate_fg);
