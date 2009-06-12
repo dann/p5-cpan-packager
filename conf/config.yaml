@@ -26,6 +26,7 @@ global:
     - Pod::Parser
     - version 
     - Class::Accessor
+    - CGI
     - Filter # brokes?
 
   skip_name_resolve_modules:
@@ -42,6 +43,7 @@ global:
 
   fix_module_name:
     podlators: Pod::Man
+    Scalar::Util: Scalar::List::Utils
 #    IO::stringy: IO::Scalar
 
   fix_package_depends:
@@ -55,6 +57,11 @@ modules:
   YAML:
     no_depends:
       - Filter
+  HTTP::Server::Simple:
+    no_depends:
+      - ASNMTAP
+    depends:
+      - URI
 
   Mouse:
     skip_test: 1
