@@ -3,21 +3,23 @@ use Mouse;
 use YAML;
 use CPAN::Packager::ConfigLoader;
 use List::Compare;
+use List::MoreUtils qw/any/;
 use Hash::Merge qw(merge);
 Hash::Merge::set_behavior('RIGHT_PRECEDENT');
 
 sub merge_module_config {
     my ( $self, $modules, $config ) = @_;
     my $merged_modules = merge( $modules, $config->{modules} );
-    $self->_filter_depends($merged_modules);
+    $self->_filter_depends($merged_modules, $config);
     $config->{modules} = $merged_modules;
     $config;
 }
 
 sub _filter_depends {
-    my ($self, $modules) = @_;
+    my ($self, $modules, $config) = @_;
    for my $module ( values %{$modules} ) {
         next unless $module->{module} && $module->{depends} && $module->{no_depends};
+        next if ( $config->{global}->{no_depends} && any { $_ eq $module } @{ $config->{global}->{no_depends} } );
         my @new_depends = List::Compare->new( $module->{depends}, $module->{no_depends} )->get_unique;
         $module->{depends} = \@new_depends;
     }
