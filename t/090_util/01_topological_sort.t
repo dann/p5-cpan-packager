@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use CPAN::Packager;
+use CPAN::Packager::Util;
 use Data::Dumper;
 use Test::Base;
 
@@ -14,7 +14,7 @@ filters({
 run {
     my $block = shift;
 
-    my $result = CPAN::Packager->topological_sort($block->module, $block->config);
+    my $result = CPAN::Packager::Util::topological_sort($block->module, $block->config);
     is_deeply([ map { $_->{module_name} } @{ $result } ], $block->expected, $block->name)
         or diag("got: " . Data::Dumper($result));
 

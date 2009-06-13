@@ -31,6 +31,8 @@ test_requires(
     'Module::Install::AuthorTests' => 0,
 );
 
+tests('t/*.t t/*/*.t');
+
 install_script 'bin/cpan-packager';
 use_test_base;
 auto_include;
