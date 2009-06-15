@@ -157,7 +157,8 @@ sub build_modules {
             }
         }
     }
-    my %modules = map { $_->{module} => $_ } @{$modules};
+    my %modules = map { exists $_->{module} ? { $_->{module} => $_ } : $_; }
+        @{$modules};
     return \%modules;
 }
 
