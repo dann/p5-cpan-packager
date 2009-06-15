@@ -1,6 +1,7 @@
 package CPAN::Packager::DependencyAnalyzer;
 use Mouse;
 use Module::Depends;
+use Module::Depends::Intrusive;
 use Module::CoreList;
 use CPAN::Packager::Downloader;
 use CPAN::Packager::ModuleNameResolver;
