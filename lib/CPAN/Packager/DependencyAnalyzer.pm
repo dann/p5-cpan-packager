@@ -52,8 +52,14 @@ sub analyze_dependencies {
         if $dependency_config->{modules}->{$module}
             && $dependency_config->{modules}->{$module}->{build_status};
 
+    my @skip_name_resolve_modules
+        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
+            || () };
+
+    my $skip_name_resolve = any { $_ eq $module } @skip_name_resolve_modules;
+
     my $resolved_module
-        = $self->resolve_module_name( $module, $dependency_config );
+        = $skip_name_resolve ? $module : $self->resolve_module_name( $module, $dependency_config );
     $resolved_module
         = $self->fix_module_name( $resolved_module, $dependency_config );
 
@@ -73,11 +79,6 @@ sub analyze_dependencies {
     @depends
         = $self->dependency_filter->filter_dependencies( $resolved_module,
         \@depends, $dependency_config );
-
-    my @skip_name_resolve_modules
-        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
-            || () };
-    my $skip_name_resolve = any { $_ eq $module } @skip_name_resolve_modules;
 
     $self->modules->{$module} = {
         module               => $resolved_module,
@@ -141,7 +142,6 @@ sub resolve_module_name {
     my ( $self, $module, $dependency_config ) = @_;
     return $self->resolved->{$module} if $self->resolved->{$module};
 
-#my $skip_name_resolve_modules = $dependency_config->{global}->{skip_name_resolve_modules};
     my $resolved_module_name = $self->module_name_resolver->resolve($module);
     return $module unless $resolved_module_name;
     $self->resolved->{$module} = $resolved_module_name;
