@@ -89,7 +89,7 @@ sub download_module {
 
     unless ( $self->{__downloaded}->{$module} ) {
         my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
-        $self->{__downloaded}->{$module} = [ $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module) ];
+        $self->{__downloaded}->{$module} = [ $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module) ]; ## no critic
     }
 
     return @{ $self->{__downloaded}->{$module} } if $self->{__downloaded}->{$module};

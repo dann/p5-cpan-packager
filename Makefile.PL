@@ -29,9 +29,12 @@ test_requires(
     'Test::Base'                   => 0,
     'Test::LoadAllModules'         => '0.02',
     'Module::Install::AuthorTests' => 0,
+    'Mudule::Install::Repository'  => 0,
 );
 
-tests('t/*.t t/*/*.t');
+tests(
+    't/*.t t/0*/*.t',
+);
 
 install_script 'bin/cpan-packager';
 use_test_base;
