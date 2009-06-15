@@ -77,6 +77,10 @@ sub make {
 
     $self->_dump_modules( $config->{modules} );
 
+    # FIXME
+    # Why do we need this procedure?
+    # Can we use ModuleName resolver?
+    # needs comment
     my $resolved_module_name;
     for my $mod ( keys %{ $config->{modules} } ) {
         if (   $config->{modules}->{$mod}->{original_module_name}
@@ -87,8 +91,9 @@ sub make {
         }
     }
 
-    die "resolved module name not found: $module"
-        unless $resolved_module_name;
+    unless($resolved_module_name) {
+        die "resolved module name not found: $module";
+    }
 
     my $sorted_modules = [
         uniq reverse @{
