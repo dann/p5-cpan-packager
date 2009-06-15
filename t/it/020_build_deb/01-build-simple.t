@@ -9,9 +9,9 @@ sub test_build_simple_module : Test {
     my $self = shift;
     my $build_status
         = system(
-        'sudo perl bin/cpan-packager --module HTTP::Engine --builder DEB --conf t/it/conf/config-deb.yaml'
+        'sudo perl bin/cpan-packager --module Mojo --builder Deb --conf t/it/conf/config-deb.yaml'
         );
-    is $BUILD_SUCCESS, $build_status, 'build a module with multiple dependencies';
+    is $BUILD_SUCCESS, $build_status, 'build mojo suceded';
 }
 
 __PACKAGE__->runtests;
