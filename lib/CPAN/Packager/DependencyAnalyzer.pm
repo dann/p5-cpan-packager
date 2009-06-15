@@ -56,11 +56,11 @@ sub analyze_dependencies {
         = $self->resolve_module_name( $module, $dependency_config );
     $resolved_module
         = $self->fix_module_name( $resolved_module, $dependency_config );
-    return
-        if $self->is_added($resolved_module)
-            || $self->is_core($resolved_module)
-            || $resolved_module eq 'perl'
-            || $resolved_module eq 'PerlInterp';
+
+    return if $self->is_added($resolved_module);
+    return if $self->is_core($resolved_module);
+    return if $resolved_module eq 'perl';
+    return if $resolved_module eq 'PerlInterp';
 
     my $module_name_to_download
         = $self->_module_name_to_download( $module, $resolved_module,
