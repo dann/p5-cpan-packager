@@ -37,6 +37,8 @@ tests(
     't/*.t t/0*/*.t',
 );
 
+author_tests('xt');
+
 install_script 'bin/cpan-packager';
 use_test_base;
 auto_include;
