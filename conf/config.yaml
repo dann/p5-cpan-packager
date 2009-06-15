@@ -41,6 +41,8 @@ global:
     - perl
     - version
   skip_name_resolve_modules:
+    - Class::DBI
+    - Class::DBI::AbstractSearch
     - Date::Parse
     - HTTP::Request
     - HTTP::Response
@@ -81,6 +83,11 @@ modules:
       - Class::Classgen::classgen
   Class::Classgen::classgen:
     build_skip: 1
+  Class::DBI::AbstractSearch:
+    depends:
+      - Class::DBI # hmm.
+    no_depends:
+      - Class::DBI::AbstractSearch
   Class::Trigger:
     no_depends:
       - IO::stringy
