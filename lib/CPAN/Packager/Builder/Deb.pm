@@ -111,7 +111,7 @@ sub _filter_requires {
 sub package_name {
     my ( $self, $module_name ) = @_;
     die "module_name is required" unless $module_name;
-    return $module_name if $module_name eq 'libwww-perl';
+    return 'libwww-perl' if $module_name eq 'LWP::UserAgent';
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
     'lib' . lc($module_name) . '-perl';

@@ -2,7 +2,6 @@
 global:
   no_depends:
     - perl
-    - CPANPLUS::Backend
     - Devel::PPPort
     - Encode
     - ExtUtils::MakeMaker
@@ -48,6 +47,8 @@ global:
   fix_module_name:
     podlators: Pod::Man
     Scalar::Util: Scalar::List::Utils
+    libwww-perl: LWP::UserAgent
+    IO::Compress: IO::Compress::Base
 #    IO::stringy: IO::Scalar
 
   fix_package_depends:
@@ -93,7 +94,6 @@ modules:
       - CPANPLUS::Backend
       - FindBin::libs
       - IPC::System::Simple
-      - LWP::Simple
       - LWP::UserAgent
       - Module::Depends
       - Module::CoreList
