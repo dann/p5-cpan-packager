@@ -43,14 +43,15 @@ sub _build_package_with_dh_make_perl {
     $self->log( debug => "depends: $depends" );
     my $package_output_dir = $self->package_output_dir;
 
+    my $already_installed;
     eval {
-        my $already_installed = system("dpkg -l $package > /dev/null"); 
-        if ( $already_installed ) {
-            $self->log(info => "$package already installed. skip building");
-            return $package;
-
-        }
+        $already_installed = system("dpkg -l $package > /dev/null"); 
     };
+    unless ( $already_installed ) {
+        $self->log(info => "$package already installed. skip building");
+        return $package;
+
+    }
     if ( $@ ) {
         $@ = undef; # ok. skiped.
     }
