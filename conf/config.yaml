@@ -96,6 +96,8 @@ modules:
     skip_test: 1
   File::Spec:
     build_skip: 1
+  File::Find::Rule::Perl:
+    skip_test: 1
   FindBin::libs:
     skip_test: 1
   Getopt::Long::Descriptive:
@@ -127,6 +129,8 @@ modules:
     no_depends:
       - Module::Install::AuthorTests
   Mouse:
+    skip_test: 1
+  Perl::MinimumVersion:
     skip_test: 1
   PathTools:
     build_skip: 1
