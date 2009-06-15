@@ -58,10 +58,10 @@ sub _build_package_with_dh_make_perl {
 
     eval {
 
-        system("sudo rm -rf $module->{src}/debian") == 0
+        system("rm -rf $module->{src}/debian") == 0
             or die "error";
 
-        my $dh_make_perl_cmd = "sudo dh-make-perl --build --depends '$depends' $module->{src}";
+        my $dh_make_perl_cmd = "dh-make-perl --build --depends '$depends' $module->{src}";
         if ( $module->{skip_test} ) {
             $dh_make_perl_cmd .= " --notest";
         }
