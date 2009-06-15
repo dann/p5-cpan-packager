@@ -2,10 +2,12 @@
 global:
   no_depends:
     - perl
+    - CPANPLUS::Backend
     - Devel::PPPort
     - Encode
     - ExtUtils::MakeMaker
     - File::Temp
+    - File::Copy
     - File::Spec
     - File::Spec::Functions
     - File::Spec::Mac
@@ -16,6 +18,7 @@ global:
     - HTTP::Response
     - IO::stringy
     - List::Util
+    - LWP::UserAgent
     - Module::Install
     - Module::Install::AuthorTests
     - Pod::Parser
@@ -55,6 +58,12 @@ global:
     - HTTP::Request::AsCGI
 
 modules:
+  IPC::System::Simple:
+    no_depends:
+      - Solaris::PerlGcc
+
+  FindBin::libs:
+    skip_test: 1
   JSON::Any:
     depends:
       - JSON
