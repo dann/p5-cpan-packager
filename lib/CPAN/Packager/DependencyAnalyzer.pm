@@ -71,8 +71,10 @@ sub analyze_dependencies {
     my $module_name_to_download
         = $self->_module_name_to_download( $module, $resolved_module,
         $dependency_config );
+
+    my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
     my ( $tgz, $src, $version )
-        = $self->downloader->download($module_name_to_download);
+        = $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module_name_to_download);
     my $make_yml_generate_fg = any { $_ eq $module } @{ $dependency_config->{global}->{fix_meta_yml_modules} || [] };
 
     my @depends = $self->get_dependencies( $module, $src, $dependency_config, $make_yml_generate_fg);
@@ -129,6 +131,7 @@ sub get_dependencies {
     }
     my $depends_mod = $make_yml_generate_fg ? "Module::Depends::Intrusive" : "Module::Depends";
     my $deps = $depends_mod->new->dist_dir($src)->find_modules;
+
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
         map { $self->fix_module_name( $_, $dependency_config ) }
