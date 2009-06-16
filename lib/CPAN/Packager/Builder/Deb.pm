@@ -45,7 +45,7 @@ sub _build_package_with_dh_make_perl {
 
     my $already_installed;
     eval {
-        $already_installed = system("dpkg -l $package > /dev/null"); 
+        $already_installed = system("dpkg -L $package > /dev/null"); 
     };
     if ( defined $already_installed && $already_installed == 0 ) {
         $self->log(info => "$package already installed. skip building");
