@@ -76,8 +76,8 @@ sub make {
     my $sorted_modules = [ uniq reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
     $self->_dump_modules( $sorted_modules );
 
+    local $@;
     unless ( $self->dry_run ) {
-        local $@;
         eval {
             $built_modules = $self->build_modules( $sorted_modules, $config );
         };
