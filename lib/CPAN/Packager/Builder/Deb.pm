@@ -112,6 +112,7 @@ sub package_name {
     my ( $self, $module_name ) = @_;
     die "module_name is required" unless $module_name;
     return 'libwww-perl' if $module_name eq 'LWP::UserAgent';
+    return 'libzip-perl' if $module_name eq 'LibZip';
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
     'lib' . lc($module_name) . '-perl';
