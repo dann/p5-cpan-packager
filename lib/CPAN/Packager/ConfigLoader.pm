@@ -47,8 +47,12 @@ CPAN::Packager::ConfigLoader - load config
           "no_depends":
             type: seq
             sequence:
-              - type: str
-                unique: yes
+              - type: map
+                mapping:
+                  "module":
+                    type: str
+                    unique: yes
+                    required: yes
           "skip_name_resolve_modules":
             type: seq
             sequence:
@@ -77,13 +81,21 @@ CPAN::Packager::ConfigLoader - load config
               "no_depends":
                 type: seq
                 sequence:
-                  - type: str
-                    unique: yes
+                  - type: map
+                    mapping:
+                      "module":
+                        type: str
+                        unique: yes
+                        required: yes
               "depends":
                 type: seq
                 sequence:
-                  - type: str
-                    unique: yes
+                  - type: map
+                    mapping:
+                      "module":
+                        type: str
+                        unique: yes
+                        required: yes
               "skip_test":
                 type: bool
               "skip_build":

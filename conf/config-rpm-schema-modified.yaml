@@ -15,37 +15,37 @@ global:
       to: Scalar::List::Utils
   fix_package_depends: ~
   no_depends:
-    - CGI
-    - Class::Accessor
-    - Compress::Zlib
-    - Devel::PPPort
-    - Encode
-    - ExtUtils::MakeMaker
-    - File::Copy
-    - File::Spec
-    - File::Spec::Functions
-    - File::Spec::Mac
-    - File::Spec::OS2
-    - File::Spec::Unix
-    - File::Spec::Win32
-    - File::Temp
-    - 'Filter # brokes?'
-    - HTTP::Request
-    - HTTP::Response
-    - IO::stringy
-    - IO::Compress::Base
-    - kurila
-    - LWP::UserAgent
-    - List::Util
-    - Module::Install
-    - Module::Install::AuthorTests
-    - PathTools
-    - perl
-    - Pod::Parser
-    - Scalar::List::Utils
-    - Scalar::Util
-    - Test::Harness
-    - version
+    - module: CGI
+    - module: Class::Accessor
+    - module: Compress::Zlib
+    - module: Devel::PPPort
+    - module: Encode
+    - module: ExtUtils::MakeMaker
+    - module: File::Copy
+    - module: File::Spec
+    - module: File::Spec::Functions
+    - module: File::Spec::Mac
+    - module: File::Spec::OS2
+    - module: File::Spec::Unix
+    - module: File::Spec::Win32
+    - module: File::Temp
+    - module: 'Filter # brokes?'
+    - module: HTTP::Request
+    - module: HTTP::Response
+    - module: IO::stringy
+    - module: IO::Compress::Base
+    - module: kurila
+    - module: LWP::UserAgent
+    - module: List::Util
+    - module: Module::Install
+    - module: Module::Install::AuthorTests
+    - module: PathTools
+    - module: perl
+    - module: Pod::Parser
+    - module: Scalar::List::Utils
+    - module: Scalar::Util
+    - module: Test::Harness
+    - module: version
 
   skip_name_resolve_modules:
     - Class::DBI
@@ -64,56 +64,56 @@ global:
 modules:
   - module: Archive::Tar
     no_depends:
-      - Compress::Zlib
-      - IO::Compress::Bzip2
-      - IO::Compress::Gzip
+      - module: Compress::Zlib
+      - module: IO::Compress::Bzip2
+      - module: IO::Compress::Gzip
   # META.yml is broken...
   - module: Any::Moose
     skip_build: 1
   - module: CGI::Simple
     no_depends:
-      - IO::Scalar
+      - module: IO::Scalar
   - module: CGI::Ajax
     no_depends:
-      - CGI::Ajax
+      - module: CGI::Ajax
   - module: CPAN::Packager
     depends:
-      - CPANPLUS::Backend
-      - FindBin::libs
-      - IPC::System::Simple
-      - LWP::UserAgent
-      - Module::Depends
-      - Module::CoreList
-      - Mouse
-      - Path::Class
-      - RPM::Specfile
-      - UNIVERSAL::require
-      - File::Copy
-      - Hash::Merge
-      - YAML
-      - MouseX::Getopt
-      - List::MoreUtils
-      - List::Compare
-  - module: Class::Accessor
+      - module: CPANPLUS::Backend
+      - module: FindBin::libs
+      - module: IPC::System::Simple
+      - module: LWP::UserAgent
+      - module: Module::Depends
+      - module: Module::CoreList
+      - module: Mouse
+      - module: Path::Class
+      - module: RPM::Specfile
+      - module: UNIVERSAL::require
+      - module: File::Copy
+      - module: Hash::Merge
+      - module: YAML
+      - module: MouseX::Getopt
+      - module: List::MoreUtils
+      - module: List::Compare
+  - module: module: Class::Accessor
     depends:
-      - Class::Classgen::Attribute
+      - module: Class::Classgen::Attribute
     no_depends:
-      - Class::Classgen::classgen
+      - module: Class::Classgen::classgen
   - module: Class::Classgen::classgen
     skip_build: 1
   - module: Class::DBI::AbstractSearch
     depends:
-      - Class::DBI # hmm.
+      - module: Class::DBI # hmm.
     no_depends:
-      - Class::DBI::AbstractSearch
+      - module: Class::DBI::AbstractSearch
   - module: Class::Trigger
     no_depends:
-      - IO::stringy
-      - IO::Scalar
+      - module: IO::stringy
+      - module: IO::Scalar
   - module: Catalyst::Runtime
     no_depends:
-      - HTTP::Request::AsCGI
-      - MooseX::MethodAttributes::Inheritable
+      - module: HTTP::Request::AsCGI
+      - module: MooseX::MethodAttributes::Inheritable
   - module: DBIx::Class
     skip_test: 1
   - module: File::Spec
@@ -124,38 +124,38 @@ modules:
     skip_test: 1
   - module: Getopt::Long::Descriptive
     no_depends:
-      - IO::stringy
-      - IO::Scalar
+      - module: IO::stringy
+      - module: IO::Scalar
   - module: HTTP::Engine
     no_depends:
-      - URI
-      - IO::stringy
-      - IO::Scalar
-      - Any::Moose
-  - module: HTTP::Server::Simple
+      - module: URI
+      - module: IO::stringy
+      - module: IO::Scalar
+      - module: Any::Moose
+  - module:  module: HTTP::Server::Simple
     depends:
-      - URI
+      - module: URI
     no_depends:
-      - ASNMTAP
+      - module: ASNMTAP
   # META.yml is broken...
   - module: HTTP::Request::AsCGI
     skip_build: 1
   - module: IPC::System::Simple
     no_depends:
-      - Solaris::PerlGcc
+      - module: Solaris::PerlGcc
   - module: IO::Compress::Base
     skip_build: 1
   - module: JSON::Any:
     depends:
-      - JSON
-      - JSON::XS
+      - module: JSON
+      - module: JSON::XS
   - module: Log::Dispatch::Config
     no_depends:
-      - IO::stringy
-      - IO::Scalar
+      - module: IO::stringy
+      - module: IO::Scalar
   - module: Module::Setup:
     no_depends:
-      - Module::Install::AuthorTests
+      - module: Module::Install::AuthorTests
   - module: Mouse:
     skip_test: 1
   # META.yml is broken...
@@ -171,10 +171,10 @@ modules:
     skip_build: 1
   - module: Test::Exception
     depends:
-      - Test::Simple
+      - module: Test::Simple
     no_depends:
-      - Test::Builder::Tester
+      - module: Test::Builder::Tester
   - module: YAML:
     no_depends:
-      - Filter
+      - module: Filter
 
