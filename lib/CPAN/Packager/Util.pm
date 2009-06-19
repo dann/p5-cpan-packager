@@ -1,6 +1,10 @@
 package CPAN::Packager::Util;
 use strict;
 use warnings;
+use Class::Inspector;
+use Pod::POM ();
+use List::Util qw/first/;
+use YAML;
 
 sub topological_sort {
     my ( $target, $modules ) = @_;

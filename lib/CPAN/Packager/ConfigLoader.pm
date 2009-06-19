@@ -17,6 +17,7 @@ __END__
 
 =head1 NAME
 
+CPAN::Packager::ConfigLoader - load config
 
 =head1 SYNOPSIS
 
@@ -40,7 +41,7 @@ __END__
             sequence:
               type: str
               unique: yes
-          fix_package_depends: ~
+          fix_package_depends:
             type: str
           fix_module_name:
             type: seq
@@ -52,27 +53,26 @@ __END__
             sequence:
               type: str
               unique: yes
-       modules:
-         type: seq
-         sequence:
-           type: map
-           name: Module
-           unique: yes
-           mapping:
-             module:
-               type: str
-               required: yes
-             no_depends:
-               type: seq
-               sequence:
-                 type: str
-                 unique: yes
-             no_depends:
-               type: seq
-               sequence:
-                 type: str
-                 unique: yes
- 
+    modules:
+      type: seq
+      sequence:
+        type: map
+        name: Module
+        unique: yes
+        mapping:
+          module:
+            type: str
+            required: yes
+          no_depends:
+            type: seq
+            sequence:
+              type: str
+              unique: yes
+          depends:
+            type: seq
+            sequence:
+              type: str
+              unique: yes
 
 =head1 AUTHOR
 

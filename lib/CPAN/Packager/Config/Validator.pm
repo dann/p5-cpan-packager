@@ -2,6 +2,7 @@ package CPAN::Packager::Config::Validator;
 use Pod::POM;
 use YAML;
 use Class::Inspector;
+use CPAN::Packager::Util;
 
 our $HasKwalify; ## no critic
 eval { ## no critic
