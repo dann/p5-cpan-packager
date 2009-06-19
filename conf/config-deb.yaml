@@ -53,8 +53,6 @@ global:
     - PerlInterp
     - Template
     - perl
-  skip_analyze_dependencies:
-    - HTTP::Request::AsCGI
 
 modules:
   CGI::Ajax:
