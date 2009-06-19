@@ -32,42 +32,63 @@ CPAN::Packager::ConfigLoader - load config
       global:
         type: map
         mapping:
-          fix_meta_yml_modules:
-            sequence:
-              type: str
-              unique: yes
-          fix_meta_yml_modules:
+          "fix_meta_yml_modules":
             type: seq
             sequence:
-              type: str
-              unique: yes
-          fix_package_depends:
-            type: str
-          no_depends:
+              - type: str
+                unique: yes
+          "fix_meta_yml_modules":
             type: seq
             sequence:
-              type: str
-              unique: yes
-    modules:
-      type: seq
-      sequence:
-        type: map
-        name: Module
-        unique: yes
-        mapping:
-          module:
-            type: str
-            required: yes
-          no_depends:
+              - type: str
+                unique: yes
+          "fix_package_depends":
+            type: any
+          "no_depends":
             type: seq
             sequence:
-              type: str
-              unique: yes
-          depends:
+              - type: str
+                unique: yes
+          "skip_name_resolve_modules":
             type: seq
             sequence:
-              type: str
-              unique: yes
+              - type: str
+                unique: yes
+          "fix_module_name":
+            type: seq
+            sequence:
+              - type: map
+                mapping:
+                  from:
+                    type: str
+                    required: yes
+                  to:
+                    type: str
+                    required: yes
+      modules:
+        type: seq
+        sequence:
+          - type: map
+            mapping:
+              "module":
+                type: str
+                unique: yes
+                required: yes
+              "no_depends":
+                type: seq
+                sequence:
+                  - type: str
+                    unique: yes
+              "depends":
+                type: seq
+                sequence:
+                  - type: str
+                    unique: yes
+              "skip_test":
+                type: bool
+              "skip_build":
+                type: bool
+
 
 =head1 AUTHOR
 
