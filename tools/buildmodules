@@ -1,1 +1,1 @@
-CPAN_PACKAGER_DEBUG=1 sudo bin/cpan-packager --builder RPM --conf conf/config.yaml --always_build --modulelist tools/modulelist.txt
+CPAN_PACKAGER_DEBUG=1 sudo bin/cpan-packager --builder RPM --conf conf/config-rpm.yaml --always_build --modulelist tools/modulelist.txt
