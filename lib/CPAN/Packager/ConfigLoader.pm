@@ -43,11 +43,6 @@ CPAN::Packager::ConfigLoader - load config
               unique: yes
           fix_package_depends:
             type: str
-          fix_module_name:
-            type: seq
-            sequence:
-              type: str
-              unique: yes
           no_depends:
             type: seq
             sequence:

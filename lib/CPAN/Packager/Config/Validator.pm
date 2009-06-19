@@ -14,7 +14,7 @@ sub validate {
     my ( $class, $config ) = @_;
     my $schema = CPAN::Packager::Util::get_schema_from_pod(
         'CPAN::Packager::ConfigLoader');
-    $class->_validate_config($schema);
+    $class->_validate_config($config, $schema);
 }
 
 sub _validate_config {
