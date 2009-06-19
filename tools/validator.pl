@@ -2,13 +2,14 @@
 use FindBin::libs;
 use CPAN::Packager::ConfigLoader;
 use CPAN::Packager::Config::Validator;
+use Pod::Usage;
 
 main();
 exit;
 
 sub main {
     my $config_path = $ARGV[0];
-    die 'config is needed' unless $config_path;
+    pod2usage(2) unless $config_path;
     validate_config($config_path);
 }
 
@@ -17,6 +18,8 @@ sub validate_config {
     my $config = CPAN::Packager::ConfigLoader->load($config_path);
     CPAN::Packager::Config::Validator->validate($config);
 }
+
+__END__
 
 =head1 NAME
 
