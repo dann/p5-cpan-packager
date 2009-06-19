@@ -52,6 +52,7 @@ sub _build_package_with_dh_make_perl {
     };
     if ($@) {
         $self->log( info => $@ );
+        die;
     }
     $package;
 }
