@@ -22,10 +22,8 @@ sub BUILD {
 }
 
 sub check_executables_exist_in_path {
-    system("which dh-make-perl") == 0 
-        or die "dh-make-perl not found";
-    system("which dpkg") == 0
-        or die "dpkg not found";
+    system("which dh-make-perl");
+    system("which dpkg");
 }
 
 sub build {
@@ -36,49 +34,57 @@ sub build {
 sub _build_package_with_dh_make_perl {
     my ( $self, $module ) = @_;
     die "module param must have module name" unless $module->{module};
-    my $package = $self->package_name( $module->{module} );
-
-    my @depends = $self->depends($module);
-    my $depends = join ',', @depends;
-    $self->log( debug => "depends: $depends" );
+    my $package            = $self->package_name( $module->{module} );
     my $package_output_dir = $self->package_output_dir;
 
-    my $already_installed;
-    eval {
-        $already_installed = system("dpkg -L $package > /dev/null"); 
-    };
-    if ( defined $already_installed && $already_installed == 0 ) {
-        $self->log(info => "$package already installed. skip building");
+    if ( $self->_is_already_installed($package) ) {
         return $package;
-
-    }
-    if ( $@ ) {
-        $@ = undef; # ok. skiped.
     }
 
     eval {
+        system("rm -rf $module->{src}/debian");
+        my $dh_make_perl_cmd
+            = $self->_build_dh_make_perl_command( $module, $package );
+        system($dh_make_perl_cmd);
+        system("sudo dpkg -i $module->{src}/../$package*.deb");
+        system("sudo cp $module->{src}/../$package*.deb $package_output_dir");
 
-        system("rm -rf $module->{src}/debian") == 0
-            or die "error";
-
-        my $dh_make_perl_cmd = "dh-make-perl --build --depends '$depends' $module->{src} --package $package ";
-        if ( $module->{skip_test} ) {
-            $dh_make_perl_cmd .= " --notest";
-        }
-        if ( $module->{version} ) {
-            $dh_make_perl_cmd .= " --version $module->{version}";
-        }
-        system($dh_make_perl_cmd) == 0
-            or die "error";
-        system("sudo dpkg -i $module->{src}/../$package*.deb") == 0
-            or die "error";
-        system("sudo cp $module->{src}/../$package*.deb $package_output_dir") == 0
-            or die "errer";
     };
     if ($@) {
         $self->log( info => $@ );
     }
     $package;
+}
+
+sub _is_already_installed {
+    my ( $self, $package ) = @_;
+    my $already_installed;
+    eval { $already_installed = system("dpkg -L $package > /dev/null"); };
+    if ( defined $already_installed && $already_installed == 0 ) {
+        $self->log( info => "$package already installed. skip building" );
+        return 1;
+    }
+    if ($@) {
+        $@ = undef;    # ok. skiped.
+    }
+    return 0;
+}
+
+sub _build_dh_make_perl_command {
+    my ( $self, $module, $package ) = @_;
+    my @depends = $self->depends($module);
+    my $depends = join ',', @depends;
+    $self->log( debug => "depends: $depends" );
+    my $dh_make_perl_cmd
+        = "dh-make-perl --build --depends '$depends' $module->{src} --package $package ";
+    if ( $module->{skip_test} ) {
+        $dh_make_perl_cmd .= " --notest";
+    }
+    if ( $module->{version} ) {
+        $dh_make_perl_cmd .= " --version $module->{version}";
+    }
+
+    $dh_make_perl_cmd;
 }
 
 sub depends {
@@ -88,8 +94,8 @@ sub depends {
     push @depends, map { $self->package_name($_) } @{ $module->{depends} }
         if $module->{depends};
     my $module_name = $module->{module};
-    if (   $self->config(modules => $module_name)
-        && $self->config(modules => $module_name)->{no_depends} )
+    if (   $self->config( modules => $module_name )
+        && $self->config( modules => $module_name )->{no_depends} )
     {
         my @no_depends = ();
         push @no_depends,

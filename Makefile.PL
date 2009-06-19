@@ -21,6 +21,7 @@ requires(
     'MouseX::Getopt'      => '0.04',
     'List::MoreUtils'     => 0,
     'List::Compare'       => 0,
+    'Module::CoreList'    => '2.17',
 );
 
 test_requires(
