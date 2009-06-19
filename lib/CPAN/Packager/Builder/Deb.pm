@@ -61,9 +61,12 @@ sub _build_package_with_dh_make_perl {
         system("rm -rf $module->{src}/debian") == 0
             or die "error";
 
-        my $dh_make_perl_cmd = "dh-make-perl --build --depends '$depends' $module->{src} --version $module->{version}";
+        my $dh_make_perl_cmd = "dh-make-perl --build --depends '$depends' $module->{src} --package $package ";
         if ( $module->{skip_test} ) {
             $dh_make_perl_cmd .= " --notest";
+        }
+        if ( $module->{version} ) {
+            $dh_make_perl_cmd .= " --version $module->{version}";
         }
         system($dh_make_perl_cmd) == 0
             or die "error";
@@ -112,7 +115,6 @@ sub package_name {
     my ( $self, $module_name ) = @_;
     die "module_name is required" unless $module_name;
     return 'libwww-perl' if $module_name eq 'LWP::UserAgent';
-    return 'libzip-perl' if $module_name eq 'LibZip';
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
     'lib' . lc($module_name) . '-perl';
