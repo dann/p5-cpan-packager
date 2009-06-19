@@ -24,6 +24,56 @@ __END__
 =head1 DESCRIPTION
 
 
+=head1 SCHEMA
+
+    type: map
+    mapping:
+      global:
+        type: map
+        mapping:
+          fix_meta_yml_modules:
+            sequence:
+              type: str
+              unique: yes
+          fix_meta_yml_modules:
+            type: seq
+            sequence:
+              type: str
+              unique: yes
+          fix_package_depends: ~
+            type: str
+          fix_module_name:
+            type: seq
+            sequence:
+              type: str
+              unique: yes
+          no_depends:
+            type: seq
+            sequence:
+              type: str
+              unique: yes
+       modules:
+         type: seq
+         sequence:
+           type: map
+           name: Module
+           unique: yes
+           mapping:
+             module:
+               type: str
+               required: yes
+             no_depends:
+               type: seq
+               sequence:
+                 type: str
+                 unique: yes
+             no_depends:
+               type: seq
+               sequence:
+                 type: str
+                 unique: yes
+ 
+
 =head1 AUTHOR
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>

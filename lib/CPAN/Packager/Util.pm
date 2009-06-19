@@ -25,4 +25,20 @@ sub topological_sort {
     return \@results;
 }
 
+sub get_schema_from_pod {
+    my $target = shift;
+    my $proto = ref $target || $target;
+
+    my $parser = Pod::POM->new;
+    my $pom = $parser->parse(Class::Inspector->resolved_filename($proto));
+    if (my $schema_node = first { $_->title eq 'SCHEMA' } $pom->head1) {
+        my $schema_content = $schema_node->content;
+        $schema_content =~ s/^    //gm;
+        my $schema = YAML::Load($schema_content);
+        return $schema;
+    } else {
+        return; # 404 schema not found.
+    }
+}
+
 1;

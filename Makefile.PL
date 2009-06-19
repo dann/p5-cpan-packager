@@ -21,6 +21,8 @@ requires(
     'RPM::Specfile'       => 0,
     'UNIVERSAL::require'  => 0,
     'YAML'                => 0,
+    'Pod::POM'            => 0,
+    'Class::Inspector'    => 0,
 );
 
 test_requires(
