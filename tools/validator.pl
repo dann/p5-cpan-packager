@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 use FindBin::libs;
-use CPAN::Packager::ConfigLoader;
+use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Config::Validator;
 use Pod::Usage;
 
@@ -15,7 +15,7 @@ sub main {
 
 sub validate_config {
     my $config_path = shift;
-    my $config = CPAN::Packager::ConfigLoader->load($config_path);
+    my $config = CPAN::Packager::Config::Loader->load($config_path);
     CPAN::Packager::Config::Validator->validate($config);
 }
 

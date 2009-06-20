@@ -1,7 +1,7 @@
 package CPAN::Packager::DependencyConfigMerger;
 use Mouse;
 use YAML;
-use CPAN::Packager::ConfigLoader;
+use CPAN::Packager::Config::Loader;
 use List::Compare;
 use List::MoreUtils qw/any/;
 use Hash::Merge qw(merge);

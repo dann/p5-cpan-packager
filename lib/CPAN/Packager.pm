@@ -5,7 +5,7 @@ use List::MoreUtils qw/uniq/;
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
 use CPAN::Packager::DependencyConfigMerger;
-use CPAN::Packager::ConfigLoader;
+use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Role::Logger';
 
@@ -45,7 +45,7 @@ has 'dependency_config_merger' => (
 has 'config_loader' => (
     is      => 'rw',
     default => sub {
-        CPAN::Packager::ConfigLoader->new;
+        CPAN::Packager::Config::Loader->new;
     }
 );
 
