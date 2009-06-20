@@ -8,8 +8,6 @@ use YAML;
 
 sub topological_sort {
     my ( $target, $modules ) = @_;
-    warn $target;
-
     my @results;
 
     if ( $modules->{$target} ) {
