@@ -1,9 +1,11 @@
 package CPAN::Packager::Config::Schema;
+use strict;
+use warnings;
 use CPAN::Packager::Util;
-use utf8;
 
 sub schema {
-    my $schema = CPAN::Packager::Util::get_schema_from_pod(__PACKAGE__);
+    my $schema = CPAN::Packager::Util::get_schema_from_pod(
+        '__PACKAGE__'); 
     $schema;
 }
 
