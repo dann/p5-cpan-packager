@@ -3,6 +3,7 @@ use Pod::POM;
 use YAML;
 use Class::Inspector;
 use CPAN::Packager::Util;
+use CPAN::Packager::Config::Schema;
 
 our $HasKwalify; ## no critic
 eval { ## no critic
@@ -12,8 +13,7 @@ eval { ## no critic
 
 sub validate {
     my ( $class, $config ) = @_;
-    my $schema = CPAN::Packager::Util::get_schema_from_pod(
-        'CPAN::Packager::ConfigLoader');
+    my $schema = CPAN::Packager::Config::Schema->schema();
     $class->_validate_config($config, $schema);
 }
 

@@ -8,6 +8,7 @@ use YAML;
 
 sub topological_sort {
     my ( $target, $modules ) = @_;
+    warn $target;
 
     my @results;
 
@@ -17,6 +18,10 @@ sub topological_sort {
             && @{ $modules->{$target}->{depends} } )
         {
             for my $mod ( @{ $modules->{$target}->{depends} } ) {
+                # ex) fix for List::AllUtils
+                if($mod eq $target) {
+                    next;
+                }
                 my $result = CPAN::Packager::Util::topological_sort( $mod, $modules );
                 push @results, @{$result};
             }

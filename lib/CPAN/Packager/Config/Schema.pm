@@ -1,23 +1,19 @@
-package CPAN::Packager::ConfigLoader;
-use Mouse;
-use YAML;
-use Encode;
-use Path::Class;
+package CPAN::Packager::Config::Schema;
+use CPAN::Packager::Util;
+use utf8;
 
-sub load {
-    my ($self,$filename) = @_;
-    YAML::LoadFile($filename);
+sub schema {
+    my $schema = CPAN::Packager::Util::get_schema_from_pod(__PACKAGE__);
+    $schema;
 }
 
-no Mouse;
-__PACKAGE__->meta->make_immutable;
 1;
 
 __END__
 
 =head1 NAME
 
-CPAN::Packager::ConfigLoader - load config
+CPAN::Packager::Config::Schema - configuration schema
 
 =head1 SYNOPSIS
 
@@ -52,7 +48,7 @@ CPAN::Packager::ConfigLoader - load config
                   "module":
                     type: str
                     unique: yes
-                    required: yes
+                    required: true
           "skip_name_resolve_modules":
             type: seq
             sequence:
@@ -65,10 +61,10 @@ CPAN::Packager::ConfigLoader - load config
                 mapping:
                   from:
                     type: str
-                    required: yes
+                    required: true 
                   to:
                     type: str
-                    required: yes
+                    required: true 
       modules:
         type: seq
         sequence:
@@ -77,7 +73,7 @@ CPAN::Packager::ConfigLoader - load config
               "module":
                 type: str
                 unique: yes
-                required: yes
+                required: true 
               "no_depends":
                 type: seq
                 sequence:
@@ -86,7 +82,7 @@ CPAN::Packager::ConfigLoader - load config
                       "module":
                         type: str
                         unique: yes
-                        required: yes
+                        required: true
               "depends":
                 type: seq
                 sequence:
@@ -95,7 +91,7 @@ CPAN::Packager::ConfigLoader - load config
                       "module":
                         type: str
                         unique: yes
-                        required: yes
+                        required: true
               "skip_test":
                 type: bool
               "skip_build":
@@ -114,3 +110,5 @@ This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =cut
+
+
