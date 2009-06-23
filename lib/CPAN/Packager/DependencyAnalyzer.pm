@@ -52,9 +52,7 @@ sub analyze_dependencies {
         if $dependency_config->{modules}->{$module}
             && $dependency_config->{modules}->{$module}->{build_status};
 
-    my $skip_name_resolve = $self->_does_skip_resolve_module_name($module, $dependency_config);
-    my $resolved_module
-        = $skip_name_resolve ? $module : $self->resolve_module_name( $module, $dependency_config );
+    my $resolved_module = $self->resolve_module_name( $module, $dependency_config );
     $resolved_module = $self->fix_module_name( $resolved_module, $dependency_config );
 
     return unless $self->_is_needed_to_analyze_dependencies($resolved_module);
@@ -71,7 +69,7 @@ sub analyze_dependencies {
     $self->modules->{$resolved_module} = {
         module               => $resolved_module,
         original_module_name => $module,
-        skip_name_resolve    => $skip_name_resolve,
+        skip_name_resolve    => $self->_does_skip_resolve_module_name($module, $dependency_config),
         version              => $version,
         tgz                  => $tgz,
         src                  => $src,
@@ -129,7 +127,7 @@ sub get_dependencies {
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
         map { $self->fix_module_name( $_, $dependency_config ) }
-        map { $self->_does_skip_resolve_module_name($_, $dependency_config) ? $_ : $self->resolve_module_name( $_, $dependency_config ) } uniq(
+        map { $self->resolve_module_name( $_, $dependency_config ) } uniq(
         keys %{ $deps->requires || {} },
         keys %{ $deps->build_requires || {} }
         );
@@ -137,7 +135,9 @@ sub get_dependencies {
 
 sub resolve_module_name {
     my ( $self, $module, $dependency_config ) = @_;
+
     return $self->resolved->{$module} if $self->resolved->{$module};
+    return $module if $self->_does_skip_resolve_module_name($module, $dependency_config);
 
     my $resolved_module_name = $self->module_name_resolver->resolve($module);
     return $module unless $resolved_module_name;
