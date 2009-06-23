@@ -59,19 +59,16 @@ sub analyze_dependencies {
 
     return unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
-    my $module_name_to_download
-        = $self->_module_name_to_download( $module, $resolved_module,$dependency_config );
-
     my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
     my ( $tgz, $src, $version )
-        = $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module_name_to_download);
+        = $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($resolved_module);
 
     my @depends = $self->get_dependencies( $module, $src, $dependency_config);
     @depends
         = $self->dependency_filter->filter_dependencies( $resolved_module,
         \@depends, $dependency_config );
 
-    $self->modules->{$module} = {
+    $self->modules->{$resolved_module} = {
         module               => $resolved_module,
         original_module_name => $module,
         skip_name_resolve    => $skip_name_resolve,
@@ -104,18 +101,6 @@ sub _does_skip_resolve_module_name {
     return $skip_name_resolve;
 }
 
-sub _module_name_to_download {
-    my ( $self, $original_module_name, $resolved_module_name,
-        $dependency_config )
-        = @_;
-    my @skip_name_resolve_modules
-        = @{ $dependency_config->{global}->{skip_name_resolve_modules}
-            || () };
-    return $original_module_name
-        if any { $_ eq $original_module_name } @skip_name_resolve_modules;
-    return $resolved_module_name;
-}
-
 sub is_added {
     my ( $self, $module ) = @_;
 
@@ -144,7 +129,7 @@ sub get_dependencies {
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
         map { $self->fix_module_name( $_, $dependency_config ) }
-        map { $self->resolve_module_name( $_, $dependency_config ) } uniq(
+        map { $self->_does_skip_resolve_module_name($_, $dependency_config) ? $_ : $self->resolve_module_name( $_, $dependency_config ) } uniq(
         keys %{ $deps->requires || {} },
         keys %{ $deps->build_requires || {} }
         );
