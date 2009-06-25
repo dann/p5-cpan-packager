@@ -58,8 +58,9 @@ sub analyze_dependencies {
     return unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
     my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
-    my ( $tgz, $src, $version, $resolved_module )
-        = $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($resolved_module);
+    my ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $dependency_config);
+
+    $resolved_module = $dist ? $dist : $resolved_module;
 
     my @depends = $self->get_dependencies( $resolved_module, $src, $dependency_config);
     @depends
@@ -79,6 +80,20 @@ sub analyze_dependencies {
     for my $depend_module (@depends) {
         $self->analyze_dependencies( $depend_module, $dependency_config );
     }
+}
+
+sub download_module {
+    my ( $self, $module, $dependency_config ) = @_;
+
+    $self->{__downloaded} ||= {};
+
+    unless ( $self->{__downloaded}->{$module} ) {
+        my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
+        $self->{__downloaded}->{$module} = [ $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module) ];
+    }
+
+    return @{ $self->{__downloaded}->{$module} } if $self->{__downloaded}->{$module};
+
 }
 
 sub _is_needed_to_analyze_dependencies {

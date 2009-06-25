@@ -29,6 +29,7 @@ sub download {
     my $dist_name = $1;
     my $version      = $2;
 
+    $dist_name =~ s/-/::/g;
     $self->log(info => "Downloaded $module ! dist is $dist_name ");
     ( $archive, $where, $version, $dist_name );
 }
