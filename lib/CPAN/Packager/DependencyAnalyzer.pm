@@ -58,10 +58,10 @@ sub analyze_dependencies {
     return unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
     my $custom_src = $dependency_config->{modules}->{$module}->{custom_src};
-    my ( $tgz, $src, $version )
+    my ( $tgz, $src, $version, $resolved_module )
         = $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($resolved_module);
 
-    my @depends = $self->get_dependencies( $module, $src, $dependency_config);
+    my @depends = $self->get_dependencies( $resolved_module, $src, $dependency_config);
     @depends
         = $self->dependency_filter->filter_dependencies( $resolved_module,
         \@depends, $dependency_config );

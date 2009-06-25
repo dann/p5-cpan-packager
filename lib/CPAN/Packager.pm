@@ -75,7 +75,18 @@ sub make {
         if $self->conf;
 
     $self->_dump_modules( $config->{modules} );
-    my $sorted_modules = [ uniq reverse @{ $self->topological_sort( $module, $config->{modules} ) } ];
+
+    my $resolved_module_name;
+    for my $mod ( keys %{ $config->{modules} } ) {
+        if ( $config->{modules}->{$mod}->{original_module_name} && $config->{modules}->{$mod}->{original_module_name} eq $module ) {
+            $resolved_module_name = $mod;
+            last;
+        }
+    }
+
+    die "resolved module name not found: $module" unless $resolved_module_name;
+
+    my $sorted_modules = [ uniq reverse @{ $self->topological_sort( $resolved_module_name, $config->{modules} ) } ];
     $self->_dump_modules( $sorted_modules );
 
     local $@;
