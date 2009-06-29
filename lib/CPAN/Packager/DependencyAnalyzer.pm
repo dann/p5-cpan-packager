@@ -77,9 +77,16 @@ sub analyze_dependencies {
         depends              => \@depends,
     };
 
+    my @new_depends;
     for my $depend_module (@depends) {
-        $self->analyze_dependencies( $depend_module, $config );
+        my $new_name = $self->analyze_dependencies( $depend_module, $config );
+        push @new_depends, $new_name;
     }
+
+    # fix depends to resolved module name.
+    $self->modules->{$resolved_module}->{depends} = \@new_depends;
+
+    return $resolved_module;
 }
 
 sub download_module {
