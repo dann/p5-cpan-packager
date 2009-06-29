@@ -77,22 +77,24 @@ sub make {
 
     $self->_dump_modules( $config->{modules} );
 
-    # FIXME
-    # Why do we need this procedure?
-    # Can we use ModuleName resolver?
-    # needs comment
     my $resolved_module_name;
-    for my $mod ( keys %{ $config->{modules} } ) {
-        if (   $config->{modules}->{$mod}->{original_module_name}
-            && $config->{modules}->{$mod}->{original_module_name} eq $module )
-        {
-            $resolved_module_name = $mod;
-            last;
+    # FIXME: is there better way?
+    # This code is for specifing module as wrong dist name.
+    # Different name module that contain the same files may break your environment.
+    # So, you may be better to create deb by CPAN's dist name.
+    {
+        for my $mod ( keys %{ $config->{modules} } ) {
+            if (   $config->{modules}->{$mod}->{original_module_name}
+                && $config->{modules}->{$mod}->{original_module_name} eq $module )
+            {
+                $resolved_module_name = $mod;
+                last;
+            }
         }
-    }
+        unless($resolved_module_name) {
+            die "resolved module name not found: $module";
+        }
 
-    unless($resolved_module_name) {
-        die "resolved module name not found: $module";
     }
 
     my $sorted_modules = [
