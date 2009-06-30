@@ -63,10 +63,6 @@ sub analyze_dependencies {
     $resolved_module = $dist ? $dist : $resolved_module;
 
     my @depends = $self->get_dependencies( $resolved_module, $src, $config);
-    @depends
-        = $self->dependency_filter->filter_dependencies( $resolved_module,
-        \@depends, $config );
-
     $self->modules->{$resolved_module} = {
         module               => $resolved_module,
         original_module_name => $module,
@@ -82,6 +78,9 @@ sub analyze_dependencies {
         my $new_name = $self->analyze_dependencies( $depend_module, $config );
         push @new_depends, $new_name;
     }
+
+    @new_depends 
+        = $self->dependency_filter->filter_dependencies( $resolved_module, \@new_depends, $config );
 
     # fix depends to resolved module name.
     $self->modules->{$resolved_module}->{depends} = \@new_depends;
