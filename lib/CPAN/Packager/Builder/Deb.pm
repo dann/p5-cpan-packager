@@ -34,6 +34,8 @@ sub build {
 sub _build_package_with_dh_make_perl {
     my ( $self, $module ) = @_;
     die "module param must have module name" unless $module->{module};
+    die "Can't find source for package" unless $module->{src};
+
     my $package            = $self->package_name( $module->{module} );
     my $package_output_dir = $self->package_output_dir;
 
