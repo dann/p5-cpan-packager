@@ -48,14 +48,14 @@ has 'dependency_filter' => (
 
 sub analyze_dependencies {
     my ( $self, $module, $config ) = @_;
-    return
+    return $module
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
     my $resolved_module = $self->resolve_module_name( $module, $config );
     $resolved_module = $self->fix_module_name( $resolved_module, $config );
 
-    return unless $self->_is_needed_to_analyze_dependencies($resolved_module);
+    return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
     my $custom_src = $config->{modules}->{$module}->{custom_src};
     my ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
