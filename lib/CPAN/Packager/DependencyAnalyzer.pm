@@ -96,7 +96,13 @@ sub download_module {
 
     unless ( $self->{__downloaded}->{$module} ) {
         my $custom_src = $config->{modules}->{$module}->{custom_src};
-        $self->{__downloaded}->{$module} = [ $custom_src ? map { $_ =~ s/^~/$ENV{HOME}/; $_ } @{ $custom_src } : $self->downloader->download($module) ];
+        $self->{__downloaded}->{$module} = [ 
+            $custom_src ? 
+                map { 
+                    my $mod = shift; $mod =~ s/^~/$ENV{HOME}/; $mod 
+                } @{ $custom_src } : 
+                $self->downloader->download($module) 
+        ];
     }
 
     return @{ $self->{__downloaded}->{$module} } if $self->{__downloaded}->{$module};
