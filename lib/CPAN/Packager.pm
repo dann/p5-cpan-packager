@@ -70,32 +70,12 @@ sub make {
     $config->{modules} = $built_modules if $built_modules;
 
     $self->log( info => "# Analyzing dependencies for $module ... ###" );
-    my $modules = $self->analyze_module_dependencies( $module, $config );
+    my ( $modules, $resolved_module_name) = $self->analyze_module_dependencies( $module, $config );
 
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
 
     $self->_dump_modules( $config->{modules} );
-
-    my $resolved_module_name;
-    # FIXME: is there better way?
-    # This code is for specifing module as wrong dist name.
-    # Different name module that contain the same files may break your environment.
-    # So, you may be better to create deb by CPAN's dist name.
-    {
-        for my $mod ( keys %{ $config->{modules} } ) {
-            if (   $config->{modules}->{$mod}->{original_module_name}
-                && $config->{modules}->{$mod}->{original_module_name} eq $module )
-            {
-                $resolved_module_name = $mod;
-                last;
-            }
-        }
-        unless($resolved_module_name) {
-            die "resolved module name not found: $module";
-        }
-
-    }
 
     my $sorted_modules = [
         uniq reverse @{
@@ -173,8 +153,8 @@ sub analyze_module_dependencies {
     my ( $self, $module, $config ) = @_;
     $self->log( info => "Analyzing dependencies for $module ..." );
     my $analyzer = $self->dependency_analyzer;
-    $analyzer->analyze_dependencies( $module, $config );
-    $analyzer->modules;
+    my $resolved_module = $analyzer->analyze_dependencies( $module, $config );
+    return ( $analyzer->modules, $resolved_module);
 }
 
 no Mouse;
