@@ -1,7 +1,7 @@
 use inc::Module::Install;
 name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
-repository 'http://github.com/dann/p5-cpan-packager/tree/master';
+#repository 'http://github.com/dann/p5-cpan-packager/tree/master';
 
 requires(
     'CPANPLUS::Backend'   => 0,
