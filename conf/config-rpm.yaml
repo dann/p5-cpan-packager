@@ -6,13 +6,14 @@ global:
     - MooseX::MethodAttributes
   fix_module_name:
     IO::Compress: IO::Compress::Base
-    Scalar::Util: Scalar::List::Utils
     libwww-perl: LWP::UserAgent
     podlators: Pod::Man
+    Scalar::Util: Scalar::List::Utils
   fix_package_depends: ~
   no_depends:
     - CGI
     - Class::Accessor
+    - Compress::Zlib
     - Devel::PPPort
     - Encode
     - ExtUtils::MakeMaker
@@ -28,21 +29,21 @@ global:
     - HTTP::Request
     - HTTP::Response
     - IO::stringy
+    - IO::Compress::Base
+    - kurila
     - LWP::UserAgent
     - List::Util
     - Module::Install
     - Module::Install::AuthorTests
     - PathTools
+    - perl
     - Pod::Parser
     - Pod::Parser
     - Scalar::List::Utils
     - Scalar::Util
     - Test::Harness
-    - kurila
-    - perl
     - version
-    - IO::Compress::Base
-    - Compress::Zlib
+
   skip_name_resolve_modules:
     - Class::DBI
     - Class::DBI::AbstractSearch
@@ -53,11 +54,22 @@ global:
     - IO::stringy
     - LWP::UserAgent
     - PathTools
+    - perl
     - PerlInterp
     - Template
-    - perl
 
 modules:
+  Archive::Tar:
+    no_depends:
+      - Compress::Zlib
+      - IO::Compress::Bzip2
+      - IO::Compress::Gzip
+  # META.yml is broken...
+  Any::Moose:
+    build_skip: 1
+  CGI::Simple:
+    no_depends:
+      - IO::Scalar
   CGI::Ajax:
     no_depends:
       - CGI::Ajax
@@ -96,6 +108,10 @@ modules:
     no_depends:
       - IO::stringy
       - IO::Scalar
+  Catalyst::Runtime:
+    no_depends:
+      - HTTP::Request::AsCGI
+      - MooseX::MethodAttributes::Inheritable
   DBIx::Class:
     skip_test: 1
   File::Spec:
@@ -119,9 +135,14 @@ modules:
       - URI
     no_depends:
       - ASNMTAP
+  # META.yml is broken...
+  HTTP::Request::AsCGI:
+    build_skip: 1
   IPC::System::Simple:
     no_depends:
       - Solaris::PerlGcc
+  IO::Compress::Base:
+    build_skip: 1
   JSON::Any:
     depends:
       - JSON
@@ -135,6 +156,11 @@ modules:
       - Module::Install::AuthorTests
   Mouse:
     skip_test: 1
+  # META.yml is broken...
+  MooseX::MethodAttributes:
+    build_skip: 1
+  MooseX::MethodAttributes::Inheritable:
+    build_skip: 1
   Perl::MinimumVersion:
     skip_test: 1
   PathTools:
@@ -149,28 +175,4 @@ modules:
   YAML:
     no_depends:
       - Filter
-  # META.yml is broken...
-  HTTP::Request::AsCGI:
-    build_skip: 1
-  # META.yml is broken...
-  Any::Moose:
-    build_skip: 1
-  # META.yml is broken...
-  MooseX::MethodAttributes:
-    build_skip: 1
-  MooseX::MethodAttributes::Inheritable:
-    build_skip: 1
-  CGI::Simple:
-    no_depends:
-      - IO::Scalar
-  IO::Compress::Base:
-    build_skip: 1
-  Archive::Tar:
-    no_depends:
-      - Compress::Zlib
-      - IO::Compress::Bzip2
-      - IO::Compress::Gzip
-  Catalyst::Runtime:
-    no_depends:
-      - HTTP::Request::AsCGI
-      - MooseX::MethodAttributes::Inheritable
+
