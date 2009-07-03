@@ -1,6 +1,7 @@
 use inc::Module::Install;
 name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
+
 #repository 'http://github.com/dann/p5-cpan-packager/tree/master';
 
 requires(
@@ -30,12 +31,11 @@ test_requires(
     'Test::Base'                   => 0,
     'Test::Class'                  => 0,
     'Test::LoadAllModules'         => '0.02',
+    'Test::Requires'               => 0,
     'Module::Install::AuthorTests' => 0,
 );
 
-tests(
-    't/*.t t/0*/*.t',
-);
+tests( 't/*.t t/0*/*.t', );
 
 author_tests('xt');
 
