@@ -46,7 +46,6 @@ global:
     - module: Scalar::Util
     - module: Test::Harness
     - module: version
-
   skip_name_resolve_modules:
     - Class::DBI
     - Class::DBI::AbstractSearch
