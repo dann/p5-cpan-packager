@@ -1,4 +1,3 @@
-
 # setup cpan-packager environment for lenny.
 set -x
 sudo aptitude update
