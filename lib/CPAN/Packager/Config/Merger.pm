@@ -1,4 +1,4 @@
-package CPAN::Packager::DependencyConfigMerger;
+package CPAN::Packager::Config::Merger;
 use Mouse;
 use YAML;
 use CPAN::Packager::Config::Loader;
@@ -33,6 +33,7 @@ __END__
 
 =head1 NAME
 
+CPAN::Packager::Config::Merger - merge dependency config
 
 =head1 SYNOPSIS
 
