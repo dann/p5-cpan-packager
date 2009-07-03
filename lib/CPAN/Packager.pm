@@ -4,7 +4,7 @@ use Mouse;
 use List::MoreUtils qw/uniq/;
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
-use CPAN::Packager::DependencyConfigMerger;
+use CPAN::Packager::Config::Merger;
 use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Role::Logger';
@@ -38,7 +38,7 @@ has 'conf' => ( is => 'rw', );
 has 'dependency_config_merger' => (
     is      => 'rw',
     default => sub {
-        CPAN::Packager::DependencyConfigMerger->new;
+        CPAN::Packager::Config::Merger->new;
     }
 );
 
