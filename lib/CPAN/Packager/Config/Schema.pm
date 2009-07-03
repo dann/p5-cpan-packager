@@ -4,8 +4,7 @@ use warnings;
 use CPAN::Packager::Util;
 
 sub schema {
-    my $schema = CPAN::Packager::Util::get_schema_from_pod(
-        '__PACKAGE__'); 
+    my $schema = CPAN::Packager::Util::get_schema_from_pod(__PACKAGE__);
     $schema;
 }
 
