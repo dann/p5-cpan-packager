@@ -2,6 +2,7 @@ Revision history for Perl extension CPAN::Packager
 
 0.053 July 3 18 01:21:03 2009
        * fixed deep recursion in topological sort
+       * added simple tests
 
 0.052 June 20 18 01:21:03 2009
        * added some modules into config to build Catalyst 
