@@ -1,6 +1,10 @@
 Revision history for Perl extension CPAN::Packager
 
-0.053 July 3 18 01:21:03 2009
+0.054 July 7 20:02:00 2009
+       * reslove module name after downloading module with CPANPlus::Backend.
+         This change makes module name resolvement better. (walf443++)
+
+0.053 July 3 18:21:03 2009
        * fixed deep recursion in topological sort
        * added simple tests
 
