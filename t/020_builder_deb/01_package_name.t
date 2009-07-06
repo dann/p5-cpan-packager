@@ -18,5 +18,5 @@ __END__
 --- expected: libfoo-bar-perl
 
 ===
---- input: LWP::UserAgent
+--- input: libwww::perl
 --- expected: libwww-perl

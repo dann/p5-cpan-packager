@@ -52,15 +52,28 @@ sub analyze_dependencies {
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
-    my $resolved_module = $self->resolve_module_name( $module, $config );
-    $resolved_module = $self->fix_module_name( $resolved_module, $config );
+    # try to download unresolved name because resolver sometimes return wrong name.
+    my ( $tgz, $src, $version, $dist ) = $self->download_module($module, $config);
+
+    my $resolved_module = $dist;
+    $resolved_module = $self->fix_module_name( $module, $config );
+    unless ( $dist ) {
+        # try to download unresolved name because resolver sometimes return wrong name.
+        ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
+        $resolved_module = $dist;
+    }
+
+    $resolved_module = $dist;
+    unless ( $dist ) {
+        $resolved_module = $self->resolve_module_name( $module, $config ) ;
+    }
 
     return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
-    my $custom_src = $config->{modules}->{$module}->{custom_src};
-    my ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
-
-    $resolved_module = $dist ? $dist : $resolved_module;
+    unless ( $dist ) {
+        ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
+        $resolved_module = $dist ? $dist : $resolved_module;
+    }
 
     my @depends = $self->get_dependencies( $resolved_module, $src, $config);
     $self->modules->{$resolved_module} = {
@@ -153,10 +166,9 @@ sub get_dependencies {
 
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
-        map { $self->fix_module_name( $_, $config ) }
-        map { $self->resolve_module_name( $_, $config ) } uniq(
-        keys %{ $deps->requires || {} },
-        keys %{ $deps->build_requires || {} }
+        uniq(
+            keys %{ $deps->requires || {} },
+            keys %{ $deps->build_requires || {} }
         );
 }
 

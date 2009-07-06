@@ -39,8 +39,10 @@ sub _build_package_with_dh_make_perl {
     my $package            = $self->package_name( $module->{module} );
     my $package_output_dir = $self->package_output_dir;
 
-    if ( $self->_is_already_installed($package) ) {
-        return $package;
+    if ( !$module->{force_build} ) {
+        if ( $self->_is_already_installed($package) ) {
+            return $package;
+        }
     }
 
     eval {
@@ -84,7 +86,20 @@ sub _build_dh_make_perl_command {
         $dh_make_perl_cmd .= " --notest";
     }
     if ( $module->{version} ) {
-        $dh_make_perl_cmd .= " --version $module->{version}";
+        my $version = $module->{version};
+        # XXX: Debian package compare version.
+        # So if module version is 1.2 and debian's module version is 1.1901, 
+        # atitude install 1.1901.
+        # so convert vertion 1.2 to 1.2000.
+        if ( $version =~ /^(\d+\.)(\d)+$/ ) { # major-minor pattern version.
+            my $geta = length $1;
+            while ( length($version) - $geta < 4 ) {
+                $version .= "0";
+            }
+        }
+        
+        $version .= "-1";
+        $dh_make_perl_cmd .= " --version $version";
     }
 
     $dh_make_perl_cmd;
@@ -123,7 +138,7 @@ sub _filter_requires {
 sub package_name {
     my ( $self, $module_name ) = @_;
     die "module_name is required" unless $module_name;
-    return 'libwww-perl' if $module_name eq 'LWP::UserAgent';
+    return 'libwww-perl' if $module_name eq 'libwww::perl';
     $module_name =~ s{::}{-}g;
     $module_name =~ s{_}{-}g;
     'lib' . lc($module_name) . '-perl';

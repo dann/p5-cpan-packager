@@ -97,7 +97,8 @@ CPAN::Packager::Config::Schema - configuration schema
                 type: bool
               "skip_build":
                 type: bool
-
+              "force_build":
+                type: bool
 
 =head1 AUTHOR
 
