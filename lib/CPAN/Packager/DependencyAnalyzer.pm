@@ -52,14 +52,21 @@ sub analyze_dependencies {
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
-    my $resolved_module = $self->resolve_module_name( $module, $config );
+    # try to download unresolved name because resolver sometimes return wrong name.
+    my ( $tgz, $src, $version, $dist ) = $self->download_module($module, $config);
+
+    my $resolved_module = $dist;
+    unless ( $resolved_module ) {
+        $resolved_module = $self->resolve_module_name( $module, $config ) ;
+    }
     $resolved_module = $self->fix_module_name( $resolved_module, $config );
 
     return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
-    my ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
-
-    $resolved_module = $dist ? $dist : $resolved_module;
+    unless ( $dist ) {
+        ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
+        $resolved_module = $dist ? $dist : $resolved_module;
+    }
 
     my @depends = $self->get_dependencies( $resolved_module, $src, $config);
     $self->modules->{$resolved_module} = {
