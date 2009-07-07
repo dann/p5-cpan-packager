@@ -63,7 +63,7 @@ sub analyze_dependencies {
         $resolved_module = $dist;
     }
 
-    my $resolved_module = $dist;
+    $resolved_module = $dist;
     unless ( $dist ) {
         $resolved_module = $self->resolve_module_name( $module, $config ) ;
     }
