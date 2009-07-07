@@ -72,6 +72,8 @@ sub make {
     $self->log( info => "# Analyzing dependencies for $module ... ###" );
     my ( $modules, $resolved_module_name) = $self->analyze_module_dependencies( $module, $config );
 
+    $modules->{$resolved_module_name}->{force_build} = 1; # always build target module.
+
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
 

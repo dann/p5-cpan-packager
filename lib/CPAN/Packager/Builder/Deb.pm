@@ -39,8 +39,10 @@ sub _build_package_with_dh_make_perl {
     my $package            = $self->package_name( $module->{module} );
     my $package_output_dir = $self->package_output_dir;
 
-    if ( $self->_is_already_installed($package) ) {
-        return $package;
+    if ( !$module->{force_build} ) {
+        if ( $self->_is_already_installed($package) ) {
+            return $package;
+        }
     }
 
     eval {
