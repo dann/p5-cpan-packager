@@ -166,8 +166,6 @@ sub get_dependencies {
 
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
-        map { $self->fix_module_name( $_, $config ) }
-        map { $self->resolve_module_name( $_, $config ) } 
         uniq(
             keys %{ $deps->requires || {} },
             keys %{ $deps->build_requires || {} }
