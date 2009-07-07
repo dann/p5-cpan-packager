@@ -57,7 +57,6 @@ sub analyze_dependencies {
 
     return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
-    my $custom_src = $config->{modules}->{$module}->{custom_src};
     my ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
 
     $resolved_module = $dist ? $dist : $resolved_module;
