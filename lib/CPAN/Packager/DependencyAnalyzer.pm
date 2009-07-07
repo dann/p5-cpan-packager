@@ -56,10 +56,17 @@ sub analyze_dependencies {
     my ( $tgz, $src, $version, $dist ) = $self->download_module($module, $config);
 
     my $resolved_module = $dist;
-    unless ( $resolved_module ) {
+    $resolved_module = $self->fix_module_name( $module, $config );
+    unless ( $dist ) {
+        # try to download unresolved name because resolver sometimes return wrong name.
+        ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
+        $resolved_module = $dist;
+    }
+
+    my $resolved_module = $dist;
+    unless ( $dist ) {
         $resolved_module = $self->resolve_module_name( $module, $config ) ;
     }
-    $resolved_module = $self->fix_module_name( $resolved_module, $config );
 
     return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module);
 
@@ -160,9 +167,10 @@ sub get_dependencies {
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) }
         map { $self->fix_module_name( $_, $config ) }
-        map { $self->resolve_module_name( $_, $config ) } uniq(
-        keys %{ $deps->requires || {} },
-        keys %{ $deps->build_requires || {} }
+        map { $self->resolve_module_name( $_, $config ) } 
+        uniq(
+            keys %{ $deps->requires || {} },
+            keys %{ $deps->build_requires || {} }
         );
 }
 
