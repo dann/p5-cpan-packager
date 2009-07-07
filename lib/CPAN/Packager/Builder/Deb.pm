@@ -84,7 +84,20 @@ sub _build_dh_make_perl_command {
         $dh_make_perl_cmd .= " --notest";
     }
     if ( $module->{version} ) {
-        $dh_make_perl_cmd .= " --version $module->{version}";
+        my $version = $module->{version};
+        # XXX: Debian package compare version.
+        # So if module version is 1.2 and debian's module version is 1.1901, 
+        # atitude install 1.1901.
+        # so convert vertion 1.2 to 1.2000.
+        if ( $version =~ /^(\d+\.)(\d)+$/ ) { # major-minor pattern version.
+            my $geta = length $1;
+            while ( length($version) - $geta < 4 ) {
+                $version .= "0";
+            }
+        }
+        
+        $version .= "-1";
+        $dh_make_perl_cmd .= " --version $version";
     }
 
     $dh_make_perl_cmd;
