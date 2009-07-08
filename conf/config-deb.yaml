@@ -2,8 +2,10 @@
 global:
   fix_meta_yml_modules:
     - HTTP::Request::AsCGI
-  fix_module_name: {}
+  fix_module_name:
+    Template::Toolkit: Template
   fix_package_depends: []
-  no_depends: []
+  no_depends:
+    - mod_perl
   skip_name_resolve_modules: []
 modules: {}
