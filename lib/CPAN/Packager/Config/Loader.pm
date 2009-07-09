@@ -3,10 +3,13 @@ use Mouse;
 use YAML;
 use Encode;
 use Path::Class;
+use CPAN::Packager::Config::Validator;
 
 sub load {
     my ($self,$filename) = @_;
-    YAML::LoadFile($filename);
+    my $config = YAML::LoadFile($filename);
+    CPAN::Packager::Config::Validator->validate($config);
+    $config;
 }
 
 no Mouse;
