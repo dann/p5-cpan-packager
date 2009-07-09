@@ -160,7 +160,7 @@ sub is_core {
 sub get_dependencies {
     my ( $self, $module, $src, $config ) = @_;
     if ( $config->{modules} && $config->{modules}->{$module} && $config->{modules}->{$module}->{depends} ) {
-        return @{ $config->{modules}->{$module}->{depends} };
+        return map { $_->{module} } @{ $config->{modules}->{$module}->{depends} };
     }
 
     my $make_yml_generate_fg = any { $_ eq $module } @{ $config->{global}->{fix_meta_yml_modules} || [] };

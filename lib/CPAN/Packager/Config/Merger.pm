@@ -19,8 +19,12 @@ sub _filter_depends {
     my ($self, $modules, $config) = @_;
    for my $module ( values %{$modules} ) {
         next unless $module->{module} && $module->{depends} && $module->{no_depends};
-        next if ( $config->{global}->{no_depends} && any { $_ eq $module } @{ $config->{global}->{no_depends} } );
-        my @new_depends = List::Compare->new( $module->{depends}, $module->{no_depends} )->get_unique;
+        next if ( $config->{global}->{no_depends} && any { $_->{module} eq $module } @{ $config->{global}->{no_depends} } );
+        # FIXME: hmm.
+        my @new_depends = List::Compare->new( 
+            [ map { ( ref $_ eq "HASH" ) ? $_->{module} : $_ } @{ $module->{depends} || () } ] , 
+            [ map { $_->{module} } @{ $module->{no_depends} || () } ]
+        )->get_unique;
         $module->{depends} = \@new_depends;
     }
 }
