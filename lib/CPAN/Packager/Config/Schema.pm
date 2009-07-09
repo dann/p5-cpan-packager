@@ -99,6 +99,10 @@ CPAN::Packager::Config::Schema - configuration schema
                 type: bool
               "force_build":
                 type: bool
+              "custom_src":
+                type: seq
+                sequence:
+                  - type: any
 
 =head1 AUTHOR
 
