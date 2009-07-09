@@ -119,7 +119,7 @@ sub download_module {
         } else {
             if ( my $version = $config->{modules}->{$module}->{version} ) {
                 my $dist_with_version = "$module-$version";
-                $dist_with_version =~ s/::/-/;
+                $dist_with_version =~ s/::/-/g;
                 $self->{__downloaded}->{$module} = [ $self->downloader->download($dist_with_version) ];
             } else {
                 $self->{__downloaded}->{$module} = [ $self->downloader->download($module) ];
