@@ -103,6 +103,8 @@ CPAN::Packager::Config::Schema - configuration schema
                 type: seq
                 sequence:
                   - type: any
+              "version":
+                type: any
 
 =head1 AUTHOR
 

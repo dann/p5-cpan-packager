@@ -117,7 +117,13 @@ sub download_module {
                 } @{ $custom_src }
             ];
         } else {
-            $self->{__downloaded}->{$module} = [ $self->downloader->download($module) ];
+            if ( my $version = $config->{modules}->{$module}->{version} ) {
+                my $dist_with_version = "$module-$version";
+                $dist_with_version =~ s/::/-/;
+                $self->{__downloaded}->{$module} = [ $self->downloader->download($dist_with_version) ];
+            } else {
+                $self->{__downloaded}->{$module} = [ $self->downloader->download($module) ];
+            }
         }
     }
 
