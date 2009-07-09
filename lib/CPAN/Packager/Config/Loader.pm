@@ -9,6 +9,29 @@ sub load {
     my ($self,$filename) = @_;
     my $config = YAML::LoadFile($filename);
     CPAN::Packager::Config::Validator->validate($config);
+
+    # FIXME: refactor it.
+    
+    if ( $config->{global}->{fix_module_name} ) {
+        my $fix_module_map = {};
+        my $fix_module_name = $config->{global}->{fix_module_name};
+        for my $conf ( @{ $fix_module_name } ) {
+            $fix_module_map->{ $conf->{from} } = $conf->{to};
+        }
+
+        $config->{global}->{fix_module_name} = $fix_module_map;
+    }
+    
+    # change array to hash for speed.
+    if ( $config->{modules} ) {
+        my $modules = $config->{modules};
+        my $module_of = {};
+        for my $mod ( @{ $modules } ) {
+            $module_of->{$mod->{module}} = $mod;
+        }
+        $config->{modules} = $module_of;
+    }
+
     $config;
 }
 
