@@ -15,7 +15,10 @@ sub _filter_global_dependencies {
     my ( $self, $depends, $conf ) = @_;
     my $no_depends
         = $conf->{global}->{no_depends} ? $conf->{global}->{no_depends} : [];
-    $depends = $self->_first_list_uniq( $depends, [ map { $_->{module} } @{ $no_depends || () } ] );
+    $depends = $self->_first_list_uniq( 
+        [ map { ref $_ eq "HASH" ? $_->{module} : $_ } @{ $depends || () } ], 
+        [ map { $_->{module} } @{ $no_depends || () } ] 
+    );
     wantarray ? @$depends : $depends;
 }
 
@@ -26,7 +29,10 @@ sub _filter_module_dependensies {
         && $conf->{modules}->{$module}->{no_depends}
         ? $conf->{modules}->{$module}->{no_depends}
         : [];
-    $depends = $self->_first_list_uniq( $depends, [ map { $_->{module} } @{ $no_depends } ]);
+    $depends = $self->_first_list_uniq( 
+        [ map { ref $_ eq "HASH" ? $_->{module} : $_ } @{ $depends || () } ], 
+        [ map { $_->{module} } @{ $no_depends } ]
+    );
     wantarray ? @$depends : $depends;
 }
 
