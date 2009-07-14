@@ -1,4 +1,7 @@
 package CPAN::Packager::DependencyAnalyzer;
+use Coro;
+use Coro::LWP;
+use File::Fetch;
 use Mouse;
 use Module::Depends;
 use Module::Depends::Intrusive;
@@ -46,6 +49,13 @@ has 'dependency_filter' => (
     }
 );
 
+no Mouse;
+
+# FIXME: for using Coro::LWP, change CPANPLUS's fetcher to use LWP.
+# please config cpanp setting for mirrors to use not ftp:// but http:// .
+# 
+$File::Fetch::BLACKLIST = [qw/wget curl lynx /];
+
 sub analyze_dependencies {
     my ( $self, $module, $config ) = @_;
     return $module
@@ -87,10 +97,15 @@ sub analyze_dependencies {
     };
 
     my @new_depends;
+    my @colos;
     for my $depend_module (@depends) {
-        my $new_name = $self->analyze_dependencies( $depend_module, $config );
-        push @new_depends, $new_name;
+        push @colos, Coro::async {
+            my $new_name = $self->analyze_dependencies( $depend_module, $config );
+            push @new_depends, $new_name;
+        };
     }
+
+    $_->join for @colos;
 
     @new_depends 
         = $self->dependency_filter->filter_dependencies( $resolved_module, \@new_depends, $config );
@@ -103,7 +118,6 @@ sub analyze_dependencies {
 
 sub download_module {
     my ( $self, $module, $config ) = @_;
-
     $self->{__downloaded} ||= {};
 
     unless ( $self->{__downloaded}->{$module} ) {
@@ -124,6 +138,7 @@ sub download_module {
             } else {
                 $self->{__downloaded}->{$module} = [ $self->downloader->download($module) ];
             }
+
         }
     }
 
