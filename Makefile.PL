@@ -24,6 +24,7 @@ requires(
     'YAML'                => 0,
     'Pod::POM'            => 0,
     'Class::Inspector'    => 0,
+    'Coro'                => 0,
 );
 
 test_requires(
