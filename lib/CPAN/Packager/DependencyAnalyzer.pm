@@ -1,6 +1,6 @@
 package CPAN::Packager::DependencyAnalyzer;
 use Coro;
-use Coro::LWP;
+# use Coro::LWP; # XXX: hmm. Coro::LWP and File::Fetch with LWP is not good combination?
 use File::Fetch;
 use Mouse;
 use Module::Depends;
