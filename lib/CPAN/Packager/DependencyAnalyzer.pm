@@ -1,6 +1,7 @@
 package CPAN::Packager::DependencyAnalyzer;
 use Coro;
 # use Coro::LWP; # XXX: hmm. Coro::LWP and File::Fetch with LWP is not good combination?
+use Coro::LWP;
 use Coro::Semaphore;
 use File::Fetch;
 use Mouse;
@@ -14,7 +15,7 @@ use List::Compare;
 use List::MoreUtils qw(uniq any);
 with 'CPAN::Packager::Role::Logger';
 
-our $GLOBAL_REQUESTS_LOCK_NUM = 50;
+our $GLOBAL_REQUESTS_LOCK_NUM = 5;
 
 has 'downloader' => (
     is      => 'rw',
@@ -64,7 +65,7 @@ no Mouse;
 # FIXME: for using Coro::LWP, change CPANPLUS's fetcher to use LWP.
 # please config cpanp setting for mirrors to use not ftp:// but http:// .
 # 
-$File::Fetch::BLACKLIST = [qw/wget curl lynx /];
+$File::Fetch::BLACKLIST = [qw/wget curl lynx lftp/];
 
 sub analyze_dependencies {
     my ( $self, $module, $config ) = @_;
@@ -110,7 +111,7 @@ sub analyze_dependencies {
     my @coros;
     for my $depend_module (@depends) {
         push @coros, Coro::async {
-            # my $guard = $self->_semaphore->guard;
+            my $guard = $self->_semaphore->guard;
 
             my $new_name = $self->analyze_dependencies( $depend_module, $config );
             push @new_depends, $new_name;
