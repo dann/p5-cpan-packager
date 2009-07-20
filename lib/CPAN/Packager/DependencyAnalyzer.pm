@@ -1,6 +1,7 @@
 package CPAN::Packager::DependencyAnalyzer;
 use Coro;
 # use Coro::LWP; # XXX: hmm. Coro::LWP and File::Fetch with LWP is not good combination?
+use Coro::Semaphore;
 use File::Fetch;
 use Mouse;
 use Module::Depends;
@@ -11,7 +12,10 @@ use CPAN::Packager::ModuleNameResolver;
 use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
 use List::MoreUtils qw(uniq any);
+my $semaphore = Coro::Semaphore->new(20);
 with 'CPAN::Packager::Role::Logger';
+
+our $GLOBAL_REQUESTS_LOCK_NUM = 50;
 
 has 'downloader' => (
     is      => 'rw',
@@ -46,6 +50,13 @@ has 'dependency_filter' => (
     is      => 'rw',
     default => sub {
         CPAN::Packager::DependencyFilter::Common->new;
+    }
+);
+
+has '_semaphore' => (
+    is => 'rw',
+    default => sub {
+        Coro::Semaphore->new($GLOBAL_REQUESTS_LOCK_NUM);
     }
 );
 
@@ -97,15 +108,16 @@ sub analyze_dependencies {
     };
 
     my @new_depends;
-    my @colos;
+    my @coros;
     for my $depend_module (@depends) {
-        push @colos, Coro::async {
+        push @coros, Coro::async {
+            my $guard = $self->_semaphore->guard;
+
             my $new_name = $self->analyze_dependencies( $depend_module, $config );
             push @new_depends, $new_name;
         };
     }
-
-    $_->join for @colos;
+    $_->join for @coros;
 
     @new_depends 
         = $self->dependency_filter->filter_dependencies( $resolved_module, \@new_depends, $config );
