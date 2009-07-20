@@ -12,7 +12,6 @@ use CPAN::Packager::ModuleNameResolver;
 use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
 use List::MoreUtils qw(uniq any);
-my $semaphore = Coro::Semaphore->new(20);
 with 'CPAN::Packager::Role::Logger';
 
 our $GLOBAL_REQUESTS_LOCK_NUM = 50;
@@ -111,7 +110,7 @@ sub analyze_dependencies {
     my @coros;
     for my $depend_module (@depends) {
         push @coros, Coro::async {
-            my $guard = $self->_semaphore->guard;
+            # my $guard = $self->_semaphore->guard;
 
             my $new_name = $self->analyze_dependencies( $depend_module, $config );
             push @new_depends, $new_name;
