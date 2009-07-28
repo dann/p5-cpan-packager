@@ -86,6 +86,8 @@ sub generate_spec_with_cpanflute {
     copy( $module->{tgz}, $copy_to );
     my $spec = capture("LANG=C cpanflute2 $opts $copy_to");
 
+    $self->log( info => '>>> generated specfile for ' . $tgz );
+
     $spec;
 }
 
@@ -188,9 +190,9 @@ sub _fix_requires {
     my $fix_package_depends
         = $self->config( global => 'fix_package_depends' );
 
-    foreach my $module ( keys %{$fix_package_depends} ) {
+    foreach my $module (@$fix_package_depends ) {
         $spec_content
-            =~ s/^Requires: perl\($module\).*?$/Requires: perl\($fix_package_depends->{$module}\)/mg;
+            =~ s/^Requires: perl\($module->{from}\).*?$/Requires: perl\($module->{to}\)/mg;
     }
     $spec_content;
 }
@@ -251,6 +253,7 @@ sub is_installed {
 
 sub generate_macro {
     my $self       = shift;
+    warn 'macro_start';
     my $macro_file = file( $self->build_dir, 'macros' );
     my $fh         = $macro_file->openw or die "Can't create $macro_file: $!";
     my $package_output_dir = $self->package_output_dir;
@@ -300,7 +303,10 @@ sub build_rpm_package {
         if &CPAN::Packager::DEBUG;
     my $result = capture( EXIT_ANY,
         "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
+
+    warn $result;
     $self->log( debug => $result ) if &CPAN::Packager::DEBUG;
+    $self->log( info => '>>> finished builidng rpm pacckage for ' . $spec_file_name );
     $result;
 }
 

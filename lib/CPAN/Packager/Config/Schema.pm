@@ -40,7 +40,16 @@ CPAN::Packager::Config::Schema - configuration schema
               - type: str
                 unique: yes
           "fix_package_depends":
-            type: any
+            type: seq
+            sequence:
+              - type: map
+                mapping:
+                  from:
+                    type: str
+                    required: true 
+                  to:
+                    type: str
+                    required: true 
           "no_depends":
             type: seq
             sequence:

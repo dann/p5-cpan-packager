@@ -1,0 +1,178 @@
+---
+global:
+  fix_meta_yml_modules:
+    - Any::Moose
+    - HTTP::Request::AsCGI
+    - MooseX::MethodAttributes
+  fix_module_name:
+    IO::Compress: IO::Compress::Base
+    libwww-perl: LWP::UserAgent
+    podlators: Pod::Man
+    Scalar::Util: Scalar::List::Utils
+  fix_package_depends: ~
+  no_depends:
+    - CGI
+    - Class::Accessor
+    - Compress::Zlib
+    - Devel::PPPort
+    - Encode
+    - ExtUtils::MakeMaker
+    - File::Copy
+    - File::Spec
+    - File::Spec::Functions
+    - File::Spec::Mac
+    - File::Spec::OS2
+    - File::Spec::Unix
+    - File::Spec::Win32
+    - File::Temp
+    - 'Filter # brokes?'
+    - HTTP::Request
+    - HTTP::Response
+    - IO::stringy
+    - IO::Compress::Base
+    - kurila
+    - LWP::UserAgent
+    - List::Util
+    - Module::Install
+    - Module::Install::AuthorTests
+    - PathTools
+    - perl
+    - Pod::Parser
+    - Pod::Parser
+    - Scalar::List::Utils
+    - Scalar::Util
+    - Test::Harness
+    - version
+
+  skip_name_resolve_modules:
+    - Class::DBI
+    - Class::DBI::AbstractSearch
+    - Date::Parse
+    - HTTP::Request
+    - HTTP::Response
+    - IO::Scalar
+    - IO::stringy
+    - LWP::UserAgent
+    - PathTools
+    - perl
+    - PerlInterp
+    - Template
+
+modules:
+  Archive::Tar:
+    no_depends:
+      - Compress::Zlib
+      - IO::Compress::Bzip2
+      - IO::Compress::Gzip
+  # META.yml is broken...
+  Any::Moose:
+    build_skip: 1
+  CGI::Simple:
+    no_depends:
+      - IO::Scalar
+  CGI::Ajax:
+    no_depends:
+      - CGI::Ajax
+  CPAN::Packager:
+    depends:
+      - CPANPLUS::Backend
+      - FindBin::libs
+      - IPC::System::Simple
+      - LWP::UserAgent
+      - Module::Depends
+      - Module::CoreList
+      - Mouse
+      - Path::Class
+      - RPM::Specfile
+      - UNIVERSAL::require
+      - File::Copy
+      - Hash::Merge
+      - List::MoreUtils
+      - YAML
+      - MouseX::Getopt
+      - List::MoreUtils
+      - List::Compare
+  Class::Accessor:
+    depends:
+      - Class::Classgen::Attribute
+    no_depends:
+      - Class::Classgen::classgen
+  Class::Classgen::classgen:
+    build_skip: 1
+  Class::DBI::AbstractSearch:
+    depends:
+      - Class::DBI # hmm.
+    no_depends:
+      - Class::DBI::AbstractSearch
+  Class::Trigger:
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+  Catalyst::Runtime:
+    no_depends:
+      - HTTP::Request::AsCGI
+      - MooseX::MethodAttributes::Inheritable
+  DBIx::Class:
+    skip_test: 1
+  File::Spec:
+    build_skip: 1
+  File::Find::Rule::Perl:
+    skip_test: 1
+  FindBin::libs:
+    skip_test: 1
+  Getopt::Long::Descriptive:
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+  HTTP::Engine:
+    no_depends:
+      - URI
+      - IO::stringy
+      - IO::Scalar
+      - Any::Moose
+  HTTP::Server::Simple:
+    depends:
+      - URI
+    no_depends:
+      - ASNMTAP
+  # META.yml is broken...
+  HTTP::Request::AsCGI:
+    build_skip: 1
+  IPC::System::Simple:
+    no_depends:
+      - Solaris::PerlGcc
+  IO::Compress::Base:
+    build_skip: 1
+  JSON::Any:
+    depends:
+      - JSON
+      - JSON::XS
+  Log::Dispatch::Config:
+    no_depends:
+      - IO::stringy
+      - IO::Scalar
+  Module::Setup:
+    no_depends:
+      - Module::Install::AuthorTests
+  Mouse:
+    skip_test: 1
+  # META.yml is broken...
+  MooseX::MethodAttributes:
+    build_skip: 1
+  MooseX::MethodAttributes::Inheritable:
+    build_skip: 1
+  Perl::MinimumVersion:
+    skip_test: 1
+  PathTools:
+    build_skip: 1
+  Scalar::List::Utils:
+    build_skip: 1
+  Test::Exception:
+    depends:
+      - Test::Simple
+    no_depends:
+      - Test::Builder::Tester
+  YAML:
+    no_depends:
+      - Filter
+
