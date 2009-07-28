@@ -82,8 +82,8 @@ CPAN::Packager::Config::Schema - configuration schema
             mapping:
               "module":
                 type: str
+                required: true
                 unique: yes
-                required: true 
               "no_depends":
                 type: seq
                 sequence:
