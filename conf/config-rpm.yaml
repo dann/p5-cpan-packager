@@ -9,4 +9,16 @@ global:
   no_depends:
     - module: mod_perl
   skip_name_resolve_modules: []
-modules: []
+modules:
+  - module: CGI::Simple
+    no_depends:
+     - module: IO::Scalar
+  - module: Test::Exception
+    depends:
+      - module: Test::Simple
+    no_depends:
+      - module: Test::Builder::Tester
+  - module: FindBin::libs
+    skip_test: 1
+  - module: CGI::Simple
+
