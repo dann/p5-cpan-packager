@@ -69,7 +69,7 @@ sub make {
     my $config = $self->config_loader->load( $self->conf );
     $config->{modules} = $built_modules if $built_modules;
 
-    $self->log( info => "# Analyzing dependencies for $module ... ###" );
+    $self->log( info => "### Analyzing dependencies for $module ... ###" );
     my ( $modules, $resolved_module_name) = $self->analyze_module_dependencies( $module, $config );
 
     $modules->{$resolved_module_name}->{force_build} = 1; # always build target module.
