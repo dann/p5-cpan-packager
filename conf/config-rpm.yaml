@@ -20,5 +20,4 @@ modules:
       - module: Test::Builder::Tester
   - module: FindBin::libs
     skip_test: 1
-  - module: CGI::Simple
 

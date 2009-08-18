@@ -4,22 +4,17 @@ use YAML;
 use Class::Inspector;
 use CPAN::Packager::Util;
 use CPAN::Packager::Config::Schema;
-
-our $HasKwalify; ## no critic
-eval { ## no critic
-    require Kwalify;
-    $HasKwalify++;
-}; ## no critic
+use Kwalify;
 
 sub validate {
     my ( $class, $config ) = @_;
     my $schema = CPAN::Packager::Config::Schema->schema();
-    $class->_validate_config($config, $schema);
+    $class->_validate_config( $config, $schema );
 }
 
 sub _validate_config {
     my ( $class, $config, $schema ) = @_;
-    if ( $HasKwalify && $schema ) {
+    if ($schema) {
         my $res = Kwalify::validate( $schema, $config );
         unless ( $res == 1 ) {
             die "config.yaml validation error : $res";
