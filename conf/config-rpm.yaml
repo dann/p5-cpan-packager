@@ -37,9 +37,8 @@ global:
     - module: Scalar::Util
     - module: Test::Harness
     - module: version
-
-
   skip_name_resolve_modules: []
+
 modules:
   - module: CGI::Simple
     no_depends:
