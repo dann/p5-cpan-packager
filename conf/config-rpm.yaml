@@ -6,6 +6,39 @@ global:
   fix_package_depends: []
   no_depends:
     - module: mod_perl
+    - module: CGI
+    - module: Class::Accessor
+    - module: Compress::Zlib
+    - module: Devel::PPPort
+    - module: Encode
+    - module: ExtUtils::MakeMaker
+    - module: File::Copy
+    - module: File::Spec
+    - module: File::Spec::Functions
+    - module: File::Spec::Mac
+    - module: File::Spec::OS2
+    - module: File::Spec::Unix
+    - module: File::Spec::Win32
+    - module: File::Temp
+    - module: 'Filter # brokes?'
+    - module: HTTP::Request
+    - module: HTTP::Response
+    - module: IO::stringy
+    - module: IO::Compress::Base
+    - module: kurila
+    - module: LWP::UserAgent
+    - module: List::Util
+    - module: Module::Install
+    - module: Module::Install::AuthorTests
+    - module: PathTools
+    - module: perl
+    - module: Pod::Parser
+    - module: Scalar::List::Utils
+    - module: Scalar::Util
+    - module: Test::Harness
+    - module: version
+
+
   skip_name_resolve_modules: []
 modules:
   - module: CGI::Simple
@@ -30,3 +63,6 @@ modules:
     skip_build: 1
   - module: Scalar::List::Utils
     skip_build: 1
+  - module: Module::Setup 
+    no_depends:
+      - module: Module::Install::AuthorTests

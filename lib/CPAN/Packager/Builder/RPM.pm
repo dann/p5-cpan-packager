@@ -174,7 +174,7 @@ sub _filter_global_requires_for_rpmbuild {
 sub _filter_global_requires_for_spec {
     my ( $self, $spec_content ) = @_;
     foreach my $ignore ( @{ $self->config( global => 'no_depends' ) } ) {
-        $spec_content = $self->_filter_requires( $spec_content, $ignore );
+        $spec_content = $self->_filter_requires( $spec_content, $ignore->{module} );
     }
     $spec_content;
 }
