@@ -89,7 +89,7 @@ sub analyze_dependencies {
         $resolved_module = $self->resolve_module_name( $module, $config ) ;
     }
 
-    return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module);
+    return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module, $config);
 
     unless ( $dist ) {
         ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
@@ -159,11 +159,12 @@ sub download_module {
 }
 
 sub _is_needed_to_analyze_dependencies {
-    my ($self, $resolved_module) = @_;
+    my ($self, $resolved_module, $config) = @_;
     return 0 if $self->is_added($resolved_module);
     return 0 if $self->is_core($resolved_module);
     return 0 if $resolved_module eq 'perl';
     return 0 if $resolved_module eq 'PerlInterp';
+    return 0 if $config->{modules}->{$resolved_module}->{skip_build};
     return 1;
 }
 

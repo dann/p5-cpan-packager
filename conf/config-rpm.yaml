@@ -1,7 +1,5 @@
 ---
 global:
-  fix_meta_yml_modules:
-    - HTTP::Request::AsCGI
   fix_module_name:
     - from: Template::Toolkit
       to:   Template
@@ -20,4 +18,15 @@ modules:
       - module: Test::Builder::Tester
   - module: FindBin::libs
     skip_test: 1
-
+  - module: HTTP::Request::AsCGI
+    skip_build: 1
+  - module: IO::Compress::Base
+    skip_build: 1
+  - module: MooseX::MethodAttributes::Inheritable
+    skip_build: 1
+  - module: Perl::MinimumVersion
+    skip_test: 1
+  - module: PathTools
+    skip_build: 1
+  - module: Scalar::List::Utils
+    skip_build: 1
