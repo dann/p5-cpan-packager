@@ -173,7 +173,7 @@ sub _does_skip_resolve_module_name {
     my @skip_name_resolve_modules
         = @{ $config->{global}->{skip_name_resolve_modules}
             || () };
-    my $skip_name_resolve = any { $_ eq $module } @skip_name_resolve_modules;
+    my $skip_name_resolve = any { $_->{module} eq $module } @skip_name_resolve_modules;
     return $skip_name_resolve;
 }
 
