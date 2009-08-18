@@ -25,6 +25,7 @@ requires(
     'Pod::POM'            => 0,
     'Class::Inspector'    => 0,
     'Coro'                => 0,
+    'Kwalify'             => '1.20',
 );
 
 test_requires(
