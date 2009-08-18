@@ -66,6 +66,8 @@ sub generate_spec_file {
     my $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
     $spec_content
         = $self->filter_spec_file( $spec_content, $module->{module} );
+
+    $self->log( info => ">>> generated specfile : \n $spec_content" );
     $self->create_spec_file( $spec_content, $spec_file_name );
     ( $spec_file_name, $spec_content );
 }
@@ -85,7 +87,6 @@ sub generate_spec_with_cpanflute {
     my $copy_to = file( $self->build_dir, "$module_name-$version.tar.gz" );
     copy( $module->{tgz}, $copy_to );
     my $spec = capture("LANG=C cpanflute2 $opts $copy_to");
-
     $self->log( info => '>>> generated specfile for ' . $tgz );
 
     $spec;
@@ -253,7 +254,6 @@ sub is_installed {
 
 sub generate_macro {
     my $self       = shift;
-    warn 'macro_start';
     my $macro_file = file( $self->build_dir, 'macros' );
     my $fh         = $macro_file->openw or die "Can't create $macro_file: $!";
     my $package_output_dir = $self->package_output_dir;
@@ -304,7 +304,6 @@ sub build_rpm_package {
     my $result = capture( EXIT_ANY,
         "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
 
-    warn $result;
     $self->log( debug => $result ) if &CPAN::Packager::DEBUG;
     $self->log( info => '>>> finished builidng rpm pacckage for ' . $spec_file_name );
     $result;

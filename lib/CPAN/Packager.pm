@@ -124,7 +124,7 @@ sub build_modules {
     $builder->print_installed_packages;
 
     for my $module ( @{$modules} ) {
-        next if $module->{build_skip} && $module->{build_skip} == 1;
+        next if $module->{skip_build} && $module->{skip_build} == 1;
         next unless $module->{module};
         next if $module->{build_status};
         next
