@@ -62,8 +62,12 @@ CPAN::Packager::Config::Schema - configuration schema
           "skip_name_resolve_modules":
             type: seq
             sequence:
-              - type: str
-                unique: yes
+              - type: map
+                mapping:
+                  "module":
+                    type: str
+                    unique: yes
+                    required: true
           "fix_module_name":
             type: seq
             sequence:
