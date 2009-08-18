@@ -1,8 +1,6 @@
 package CPAN::Packager::Config::Validator;
-use Pod::POM;
-use YAML;
-use Class::Inspector;
-use CPAN::Packager::Util;
+use strict;
+use warnings;
 use CPAN::Packager::Config::Schema;
 use Kwalify;
 
