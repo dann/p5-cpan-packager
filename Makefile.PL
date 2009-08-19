@@ -29,12 +29,20 @@ requires(
 );
 
 test_requires(
-    'Test::More'                   => 0,
-    'Test::Base'                   => 0,
-    'Test::Class'                  => 0,
-    'Test::LoadAllModules'         => '0.02',
-    'Test::Requires'               => 0,
+    'Test::More'           => 0,
+    'Test::Base'           => 0,
+    'Test::Class'          => 0,
+    'Test::LoadAllModules' => '0.02',
+    'Test::Requires'       => 0,
+);
+
+# Module::Install::AuthorRequires
+author_requires(
+    'Module::Install::Repository'  => 0,
     'Module::Install::AuthorTests' => 0,
+    'Test::Perl::Critic'           => 0,
+    'Test::Pod'                    => 0,
+    'Test::NoTabs'                 => 0,
 );
 
 tests( 't/*.t t/0*/*.t', );
@@ -44,4 +52,5 @@ author_tests('xt');
 install_script 'bin/cpan-packager';
 use_test_base;
 auto_include;
+auto_set_repository;
 WriteAll;
