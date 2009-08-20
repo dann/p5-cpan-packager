@@ -37,7 +37,6 @@ test_requires(
 author_requires(
     'Module::Install::Repository'  => 0,
     'Module::Install::AuthorTests' => 0,
-    'Test::Perl::Critic'           => 0,
     'Test::Pod'                    => 0,
     'Test::NoTabs'                 => 0,
 );
