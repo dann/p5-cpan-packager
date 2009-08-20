@@ -7,9 +7,9 @@ use YAML;
 {
     my $config = +{
         global => +{
-            skip_name_resolve_modules => [qw/
-              Foo::Bar
-            /],
+            skip_name_resolve_modules => [
+                { module => "Foo::Bar" },
+            ],
         },
     };
     ok(CPAN::Packager::DependencyAnalyzer->_does_skip_resolve_module_name('Foo::Bar', $config), 'it should be skipped')
@@ -19,9 +19,9 @@ use YAML;
 {
     my $config = +{
         global => +{
-            skip_name_resolve_modules => [qw/
-              Foo::Bar
-            /],
+            skip_name_resolve_modules => [
+                { module => "Foo::Bar" },
+            ],
         },
     };
     ok(!( CPAN::Packager::DependencyAnalyzer->_does_skip_resolve_module_name('Foo::Baz', $config) ), 'it should not be skipped')
