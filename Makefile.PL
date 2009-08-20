@@ -34,12 +34,14 @@ test_requires(
 );
 
 # Module::Install::AuthorRequires
-author_requires(
-    'Module::Install::Repository'  => 0,
-    'Module::Install::AuthorTests' => 0,
-    'Test::Pod'                    => 0,
-    'Test::NoTabs'                 => 0,
-);
+#author_requires(
+#    'Module::Install::Repository'  => 0,
+#    'Module::Install::AuthorTests' => 0,
+#    'Test::Pod'                    => 0,
+#    'Test::NoTabs'                 => 0,
+#    'Test::Perl::Critic'           => 0,
+#    'Exception::Class'             => 0,
+#);
 
 tests( 't/*.t t/0*/*.t', );
 
