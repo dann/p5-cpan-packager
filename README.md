@@ -26,10 +26,12 @@ Then install it:
 How to use
 ==============
 case1: build a module
-  sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml 
+
+    sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml 
 
 case2: build multiple modules at a time 
-  sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml 
+
+    sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml 
 
 options
     --module         module name (required option)
@@ -41,12 +43,13 @@ options
 RPM/Deb Packages are generated at /tmp/cpanpackager/{deb or rpm}
 
 config.yaml is located at github repo.
-  See http://github.com/dann/cpan-packager/tree/master
+
+    See http://github.com/dann/cpan-packager/tree/master
 
 Please see the configuration schema if you want to write config your self.
 you can see schema like below.
 
-  perldoc CPAN::Packager::Config::Schema
+    perldoc CPAN::Packager::Config::Schema
 
 Takatoshi Kitano
 
