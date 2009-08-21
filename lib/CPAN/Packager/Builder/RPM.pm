@@ -154,7 +154,7 @@ sub _filter_module_requires_for_spec {
         @{ $self->config( modules => $module )->{no_depends} || () } )
     {
         $spec_content
-            = $self->_filter_requires( $spec_content, $no_depend_module );
+            = $self->_filter_requires( $spec_content, $no_depend_module->{module} );
     }
     $spec_content;
 
@@ -211,7 +211,7 @@ sub _generate_module_filter_macro {
     for my $mod (
         @{ $self->config( modules => $module_name )->{no_depends} || () } )
     {
-        print $fh "-e '/perl($mod)/d' ";
+        print $fh "-e '/perl($mod->{module})/d' ";
     }
     print $fh "\n";
     system("chmod 755 $filter_macro_file");
@@ -229,7 +229,7 @@ sub _generate_global_filter_macro {
 /usr/lib/rpm/perl.req \$\* |\\
     sed };
     for my $mod ( @{ $self->config( global => 'no_depends' ) || () } ) {
-        print $fh "-e '/perl($mod)/d' ";
+        print $fh "-e '/perl($mod->{module})/d' ";
     }
     print $fh "\n";
     system("chmod 755 $filter_macro_file");
