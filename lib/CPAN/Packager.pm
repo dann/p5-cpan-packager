@@ -9,7 +9,7 @@ use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.061';
+our $VERSION = '0.062';
 
 BEGIN {
     if ( !defined &DEBUG ) {
@@ -180,6 +180,7 @@ This makes it so easy to make a perl module into a Redhat/Debian package
 =head1 AUTHOR
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
+
 walf443
 
 =head1 SEE ALSO

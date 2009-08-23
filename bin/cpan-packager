@@ -15,20 +15,43 @@ cpan-packager -  create redhat/debian packages from perl modules
 
 =head1 SYNOPSIS
 
-Packages are generated at /tmp/cpanpackager/{deb or rpm}
+case1: build a module
 
-  sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml 
-  sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml 
+    sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml 
 
+case2: build multiple modules at a time 
+
+    sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml 
+
+options
     --module         module name (required option)
     --builder        Deb or RPM (optional. default is Deb)
     --conf           configuration file path (required)
     --always-build   always build cpan modules if module is aready installed (optional)
     --modulelist     File containing a list of modules that should be built. (optional)
 
+RPM/Deb Packages are generated at /tmp/cpanpackager/{deb or rpm}
 
-  config.yaml is located at github repo
-  See http://github.com/dann/cpan-packager/tree/master
+config.yaml is located at github repo.
+
+    See http://github.com/dann/cpan-packager/tree/master
+
+Please see the configuration schema if you want to write config your self.
+You can see schema like below.
+
+    perldoc CPAN::Packager::Config::Schema
+
+You can use minicpan with CPAN::Packager (optional).
+At first, you mirror CPAN modules with minicpan.
+
+    minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/.cpanpackager/minicpan
+
+Set use_minicpan flag in your config if you want to use minicpan.
+after that you just use cpan-packager ;)
+
+    ---
+    global:
+      use_minicpan: 1
 
 =head1 DESCRIPTION
 

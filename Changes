@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.062 Aug 24  1:25:00 2009
+      * support minicpan
+
 0.061 Aug 21 21:17:00 2009
       * fixed filtering requires with each module's no_depends config
 

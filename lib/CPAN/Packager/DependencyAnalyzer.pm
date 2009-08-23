@@ -103,6 +103,9 @@ sub analyze_dependencies {
 
 sub download_module {
     my ( $self, $module, $config ) = @_;
+    if(defined $config->{global}->{use_minicpan} && $config->{global}->{use_minicpan}) {
+       $self->downloader->use_minicpan;
+    }
 
     $self->{__downloaded} ||= {};
 

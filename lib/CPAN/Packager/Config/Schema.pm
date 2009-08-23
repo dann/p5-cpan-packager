@@ -29,6 +29,8 @@ CPAN::Packager::Config::Schema - configuration schema
       global:
         type: map
         mapping:
+          "use_minicpan":
+            type: bool
           "fix_meta_yml_modules":
             type: seq
             sequence:

@@ -1,5 +1,6 @@
 ---
 global:
+  use_minicpan: 0
   fix_module_name:
     - from: Template::Toolkit
       to:   Template

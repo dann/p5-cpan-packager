@@ -33,7 +33,7 @@ Please apply the patch below if you need to build the module which uses Build.PL
       patches/cpanflute2_module_build.patch
 
 How to use
-==============
+===========
 case1: build a module
 
     sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml 
@@ -56,9 +56,22 @@ config.yaml is located at github repo.
     See http://github.com/dann/cpan-packager/tree/master
 
 Please see the configuration schema if you want to write config your self.
-you can see schema like below.
+You can see schema like below.
 
     perldoc CPAN::Packager::Config::Schema
+
+Use cpan-packager with minicpan (Optional)
+=============================================
+You can use minicpan with CPAN::Packager.
+At first, you mirror CPAN modules with minicpan.
+
+    minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/.cpanpackager/minicpan
+
+Set use_minicpan flag in your config if you want to use minicpan.
+after that you just use cpan-packager ;)
+
+    global:
+      use_minicpan: 1
 
 Takatoshi Kitano
 
