@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.063 Aug 24  22:29:00 2009
+      * support cpan mirros uri and remove minicpan setting
+
 0.062 Aug 24  1:25:00 2009
       * support minicpan
 

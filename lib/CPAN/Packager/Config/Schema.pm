@@ -29,8 +29,10 @@ CPAN::Packager::Config::Schema - configuration schema
       global:
         type: map
         mapping:
-          "use_minicpan":
-            type: bool
+          "cpan_mirrors":
+            type: seq
+            sequence:
+              - type: str
           "fix_meta_yml_modules":
             type: seq
             sequence:

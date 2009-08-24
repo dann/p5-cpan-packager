@@ -2,10 +2,8 @@ package CPAN::Packager::Downloader;
 use Mouse;
 use CPANPLUS::Backend;
 use Path::Class;
+use URI;
 with 'CPAN::Packager::Role::Logger';
-
-our $DEFAULT_MINICPAN_MIRROR_PATH
-    = file( $ENV{HOME}, '.cpanpackager', 'minicpan' );
 
 has 'fetcher' => (
     is      => 'rw',
@@ -14,15 +12,20 @@ has 'fetcher' => (
     }
 );
 
-sub use_minicpan {
-    my $self = shift;
-    my $local = {
-        path   => $DEFAULT_MINICPAN_MIRROR_PATH->stringify,
-        scheme => 'file',
-        host   => '',
-    };
+sub set_cpan_mirrors {
+    my ( $self, $cpan_mirrors ) = @_;
+    my $hosts = [];
+    foreach my $mirror (@$cpan_mirrors) {
+        my $uri  = URI->new($mirror);
+        my $host = {
+            path   => $uri->path,
+            scheme => $uri->scheme,
+            host   => $uri->host,
+        };
+        push @{$hosts}, $host;
+    }
     my $cpanp_conf = $self->fetcher->configure_object;
-    $cpanp_conf->set_conf( 'hosts' => [$local] );
+    $cpanp_conf->set_conf( 'hosts' => $hosts );
 }
 
 sub download {

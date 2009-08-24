@@ -60,19 +60,36 @@ You can see schema like below.
 
     perldoc CPAN::Packager::Config::Schema
 
+Configure CPAN mirrors
+======================
+Set cpan mirror uri in your config.
+CPAN::Packager downloads modules from cpan_mirrors
+
+    ---
+    global:
+      cpan_mirrors:
+        - file:///home/dann/minicpan
+        - http://ftp.funet.fi/pub/languages/perl/CPAN/
+
 Use cpan-packager with minicpan (Optional)
 =============================================
 You can use minicpan with CPAN::Packager.
 At first, you mirror CPAN modules with minicpan.
 
-    minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/.cpanpackager/minicpan
+    minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/minicpan
 
-Set use_minicpan flag in your config if you want to use minicpan.
+Set cpan mirrors uri in your config if you want to use minicpan.
 after that you just use cpan-packager ;)
 
+    ---
     global:
-      use_minicpan: 1
+      cpan_mirrors:
+        - file:///home/dann/minicpan
+
+Author
+======
 
 Takatoshi Kitano
+techmemo@gmail.com
 
-
+special thanks: walf443

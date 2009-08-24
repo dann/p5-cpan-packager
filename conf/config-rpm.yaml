@@ -1,6 +1,7 @@
 ---
 global:
-  use_minicpan: 0
+  cpan_mirrors:
+    - file:///home/dann/.cpanpackager/minicpan/
   fix_module_name:
     - from: Template::Toolkit
       to:   Template
