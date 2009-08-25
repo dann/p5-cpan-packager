@@ -48,6 +48,7 @@ global:
     - module: Sub::Uplevel
     - module: Text::Exception
     - module: Test::Simple
+    # apply cpanflute2 patch to build UNIVERSAL::can and UNIVERSAL::isa  because they use BUILD.PL
     - module: UNIVERSAL::can
     - module: UNIVERSAL::isa
 
