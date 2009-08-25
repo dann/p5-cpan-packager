@@ -1,0 +1,5 @@
+[TestingAndDebugging::ProhibitNoStrict]
+allow=refs
+ 
+[TestingAndDebugging::RequireUseStrict]
+equivalent_modules = Mouse Mouse::Role CPAN::Packager::Role::Logger CPAN::Packager::DependencyFilter::Role

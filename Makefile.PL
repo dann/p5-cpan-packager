@@ -2,8 +2,6 @@ use inc::Module::Install;
 name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
 
-#repository 'http://github.com/dann/p5-cpan-packager/tree/master';
-
 requires(
     'CPANPLUS::Backend'   => 0,
     'File::Copy'          => 0,
@@ -37,20 +35,21 @@ test_requires(
 );
 
 # Module::Install::AuthorRequires
-author_requires(
-    'Module::Install::Repository'  => 0,
-    'Module::Install::AuthorTests' => 0,
-    'Test::Perl::Critic'           => 0,
-    'Test::Pod'                    => 0,
-    'Test::NoTabs'                 => 0,
-);
+#author_requires(
+#    'Module::Install::Repository'  => 0,
+#    'Module::Install::AuthorTests' => 0,
+#    'Test::Pod'                    => 0,
+#    'Test::NoTabs'                 => 0,
+#    'Test::Perl::Critic'           => 0,
+#    'Exception::Class'             => 0,
+#);
 
 tests( 't/*.t t/0*/*.t', );
 
 author_tests('xt');
 
-install_script 'bin/cpan-packager';
+install_script('bin/cpan-packager');
 use_test_base;
 auto_include;
-auto_set_repository;
+#auto_set_repository;
 WriteAll;

@@ -1,5 +1,7 @@
 ---
 global:
+  cpan_mirrors:
+    - file:///home/dann/.cpanpackager/minicpan/
   fix_module_name:
     - from: Template::Toolkit
       to:   Template
@@ -37,6 +39,8 @@ global:
     - module: Scalar::Util
     - module: Test::Harness
     - module: version
+    - module: Sub::Uplevel
+    - module: Text::Exception
   skip_name_resolve_modules: []
 
 modules:
@@ -65,3 +69,7 @@ modules:
   - module: Module::Setup 
     no_depends:
       - module: Module::Install::AuthorTests
+  - module: Catalyst::Runtime
+    no_depends:
+      - module: HTTP::Request::AsCGI
+      - module: Test::Exception 

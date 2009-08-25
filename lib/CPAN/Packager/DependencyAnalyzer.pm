@@ -130,6 +130,13 @@ sub analyze_dependencies {
 
 sub download_module {
     my ( $self, $module, $config ) = @_;
+    # REFACTOR
+    # move to this to BUILD method after implementing config as singleton
+    # class
+    if(defined $config->{global}->{cpan_mirrors} && $config->{global}->{cpan_mirrors}) {
+        $self->downloader->set_cpan_mirrors($config->{global}->{cpan_mirrors}); 
+    }
+
     $self->{__downloaded} ||= {};
 
     unless ( $self->{__downloaded}->{$module} ) {

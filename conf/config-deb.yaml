@@ -1,5 +1,6 @@
 ---
 global:
+  use_minicpan: 0
   fix_meta_yml_modules:
     - HTTP::Request::AsCGI
   fix_module_name:

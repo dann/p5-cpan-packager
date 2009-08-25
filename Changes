@@ -1,5 +1,18 @@
 Revision history for Perl extension CPAN::Packager
 
+0.063 Aug 24  22:29:00 2009
+      * support cpan mirros uri and remove minicpan setting
+
+0.062 Aug 24  1:25:00 2009
+      * support minicpan
+
+0.061 Aug 21 21:17:00 2009
+      * fixed filtering requires with each module's no_depends config
+
+0.06 Aug 20 23:43:00 2009
+       * changed configuration schema to validate configuration schame.
+       * impolemented configuration schame validator
+
 0.054 July 7 20:02:00 2009
        * reslove module name after downloading module with CPANPlus::Backend.
          This change makes module name resolvement better. (walf443++)
