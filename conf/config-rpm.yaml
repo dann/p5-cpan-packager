@@ -8,6 +8,7 @@ global:
     - module: mod_perl
     - module: CGI
     - module: Class::Accessor
+    - module: Class::Accessor::Fast
     - module: Compress::Zlib
     - module: Devel::PPPort
     - module: Encode
@@ -47,6 +48,9 @@ global:
     - module: Sub::Uplevel
     - module: Text::Exception
     - module: Test::Simple
+    - module: UNIVERSAL::can
+    - module: UNIVERSAL::isa
+
   skip_name_resolve_modules: []
 
 modules:
