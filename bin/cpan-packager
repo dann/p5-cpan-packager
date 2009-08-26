@@ -21,7 +21,7 @@ case1: build a module
 
 case2: build multiple modules at a time 
 
-    sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml 
+    sudo cpan-packager --modulelist modules.list --builder RPM --conf conf/config.yaml 
 
 options
     --module         module name (required option)
@@ -77,11 +77,19 @@ package out of a perl package. This works for most simple packages and is also
 useful for getting started with packaging perl modules. Given a perl package name, 
 it can also automatically download it from CPAN. 
 
+=head1 BUGS
+
+Please report any bugs or feature requests to "<bug-CPAN-Packagerat rt.cpan.org>", or through
+the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=CPAN-Packager>.  I will be
+notified, and then you’ll automatically be notified of progress on your bug as I make changes.
+
 =head1 AUTHOR
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
 
 =head1 SEE ALSO
+
+"CPAN::Packager" development takes place at <http://github.com/dann/p5-cpan-packager/tree/master>
 
 =head1 LICENSE
 

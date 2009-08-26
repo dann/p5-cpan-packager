@@ -2,18 +2,18 @@
 global:
   cpan_mirrors:
     - file:///home/dann/.cpanpackager/minicpan/
-  fix_module_name:
-    - from: Template::Toolkit
-      to:   Template
+  fix_module_name: []
   fix_package_depends: []
   no_depends:
     - module: mod_perl
     - module: CGI
     - module: Class::Accessor
+    - module: Class::Accessor::Fast
     - module: Compress::Zlib
     - module: Devel::PPPort
     - module: Encode
     - module: ExtUtils::MakeMaker
+    - module: Cwd
     - module: File::Copy
     - module: File::Spec
     - module: File::Spec::Functions
@@ -22,13 +22,19 @@ global:
     - module: File::Spec::Unix
     - module: File::Spec::Win32
     - module: File::Temp
+    - module: File::chdir
     - module: 'Filter # brokes?'
     - module: HTTP::Request
     - module: HTTP::Response
     - module: IO::stringy
+    - module: IO::Compress
+    - module: IO::Compress::Gzip
+    - module: IO::Compress::Bzip2
     - module: IO::Compress::Base
+    - module: IO::Compress::Zlib
+    - module: Compress::Raw::Zlib
+    - module: IO::Zlib
     - module: kurila
-    - module: LWP::UserAgent
     - module: List::Util
     - module: Module::Install
     - module: Module::Install::AuthorTests
@@ -41,6 +47,11 @@ global:
     - module: version
     - module: Sub::Uplevel
     - module: Text::Exception
+    - module: Test::Simple
+    # apply cpanflute2 patch to build UNIVERSAL::can and UNIVERSAL::isa  because they use BUILD.PL
+    - module: UNIVERSAL::can
+    - module: UNIVERSAL::isa
+
   skip_name_resolve_modules: []
 
 modules:
@@ -66,10 +77,11 @@ modules:
     skip_build: 1
   - module: Scalar::List::Utils
     skip_build: 1
-  - module: Module::Setup 
+  - module: Module::Setup
     no_depends:
       - module: Module::Install::AuthorTests
   - module: Catalyst::Runtime
     no_depends:
       - module: HTTP::Request::AsCGI
-      - module: Test::Exception 
+      - module: Test::Exception
+

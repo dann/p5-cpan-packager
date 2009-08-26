@@ -86,10 +86,26 @@ after that you just use cpan-packager ;)
       cpan_mirrors:
         - file:///home/dann/minicpan
 
-Author
-======
+DESCRIPTION
+===========
+cpan-packager will create the files required to build a debian or redhat source 
+package out of a perl package. This works for most simple packages and is also 
+useful for getting started with packaging perl modules. Given a perl package name, 
+it can also automatically download it from CPAN. 
 
-Takatoshi Kitano
-techmemo@gmail.com
+BUGS
+====
+Please report any bugs or feature requests to "<bug-CPAN-Packagerat rt.cpan.org>", or through
+the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=CPAN-Packager>.  I will be
+notified, and then you’ll automatically be notified of progress on your bug as I make changes.
+
+AUTHOR
+======
+Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
 
 special thanks: walf443
+
+SEE ALSO
+========
+"CPAN::Packager" development takes place at <http://github.com/dann/p5-cpan-packager/tree/master>
+
