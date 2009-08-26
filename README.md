@@ -23,15 +23,6 @@ Then install it:
 
     % make install
 
-Patches
-==========
-CPAN::Packager uses cpanflute2 to build rpm.
-but it has the bug which cpanflute2 doesnt build the module which use Build.PL.
-Please apply the patch below if you need to build the module which uses Build.PL
-
-    github.com/dann/p5-cpan-packager/master
-      patches/cpanflute2_module_build.patch
-
 How to use
 ===========
 case1: build a module

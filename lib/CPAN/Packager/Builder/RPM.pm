@@ -7,6 +7,7 @@ use IPC::System::Simple qw(system capture EXIT_ANY);
 use File::Temp qw(tempdir);
 use LWP::Simple;
 use File::Copy;
+use CPAN::Packager::Builder::RPM::Spec;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
@@ -29,6 +30,13 @@ has 'build_dir' => (
         %opt = ( DIR => '/tmp' ) if &CPAN::Packager::DEBUG;
         my $tmpdir = tempdir(%opt);
         dir($tmpdir);
+    }
+);
+
+has 'spec_builder' => (
+    is      => 'rw',
+    default => sub {
+        CPAN::Packager::Builder::RPM::Spec->new;
     }
 );
 
@@ -78,17 +86,21 @@ sub generate_spec_with_cpanflute {
     my $tgz = $module->{tgz};
     $self->log( info => '>>> generate specfile with cpanflute2 for ' . $tgz );
 
-    # TODO Should we specify build_arch in spec file?
-    my $build_arch = $self->get_default_build_arch();
-    my $opts = "--just-spec --noperlreqs --installdirs='vendor' --release "
-        . $self->release;
     my $module_name = $module->{module};
     my $version     = $module->{version};
     my $copy_to = file( $self->build_dir, "$module_name-$version.tar.gz" );
     copy( $module->{tgz}, $copy_to );
-    my $spec = capture("LANG=C cpanflute2 $opts $copy_to");
-    $self->log( info => '>>> generated specfile for ' . $tgz );
 
+    $ENV{LANG} = 'C';
+    my $opts = {
+        'just-spec'   => 1,
+        'noperlreqs'  => 1,
+        'installdirs' => 'vendor',
+        'release'     => $self->release
+    };
+    my $spec = $self->spec_builder->build( $opts, $copy_to );
+
+    $self->log( info => '>>> generated specfile for ' . $tgz );
     $spec;
 }
 
@@ -153,8 +165,8 @@ sub _filter_module_requires_for_spec {
     for my $no_depend_module (
         @{ $self->config( modules => $module )->{no_depends} || () } )
     {
-        $spec_content
-            = $self->_filter_requires( $spec_content, $no_depend_module->{module} );
+        $spec_content = $self->_filter_requires( $spec_content,
+            $no_depend_module->{module} );
     }
     $spec_content;
 
@@ -174,7 +186,8 @@ sub _filter_global_requires_for_rpmbuild {
 sub _filter_global_requires_for_spec {
     my ( $self, $spec_content ) = @_;
     foreach my $ignore ( @{ $self->config( global => 'no_depends' ) } ) {
-        $spec_content = $self->_filter_requires( $spec_content, $ignore->{module} );
+        $spec_content
+            = $self->_filter_requires( $spec_content, $ignore->{module} );
     }
     $spec_content;
 }
@@ -191,7 +204,7 @@ sub _fix_requires {
     my $fix_package_depends
         = $self->config( global => 'fix_package_depends' );
 
-    foreach my $module (@$fix_package_depends ) {
+    foreach my $module (@$fix_package_depends) {
         $spec_content
             =~ s/^Requires: perl\($module->{from}\).*?$/Requires: perl\($module->{to}\)/mg;
     }
@@ -305,7 +318,8 @@ sub build_rpm_package {
         "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
 
     $self->log( debug => $result ) if &CPAN::Packager::DEBUG;
-    $self->log( info => '>>> finished builidng rpm pacckage for ' . $spec_file_name );
+    $self->log(
+        info => '>>> finished builidng rpm pacckage for ' . $spec_file_name );
     $result;
 }
 

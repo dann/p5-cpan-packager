@@ -17,12 +17,18 @@ requires(
     'Mouse'               => '0.17',
     'MouseX::Getopt'      => '0.04',
     'Path::Class'         => 0,
-    'RPM::Specfile'       => 0,
     'UNIVERSAL::require'  => 0,
     'YAML'                => 0,
     'Pod::POM'            => 0,
     'Class::Inspector'    => 0,
     'Kwalify'             => '1.20',
+    'File::Basename'      => 0,
+    'File::Copy'          => 0,
+    'Archive::Tar'        => 0,
+    'File::Temp'          => 0,
+    'URI::Escape'         => 0,
+    'Cwd'                 => 0,
+    'RPM::Specfile'       => 0,
 );
 
 test_requires(
