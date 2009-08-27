@@ -9,4 +9,12 @@ global:
   no_depends:
     - module: mod_perl
   skip_name_resolve_modules: []
-modules: []
+modules:
+  - module: IO::Compress
+    skip_build: 1
+  - module: IO::Compress::Zlib
+    skip_test: 1
+  - module: Compress::Raw::Zlib
+    skip_test: 1
+  - module: HTTP::Engine
+    skip_test: 1
