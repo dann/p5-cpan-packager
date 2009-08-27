@@ -77,6 +77,11 @@ after that you just use cpan-packager ;)
       cpan_mirrors:
         - file:///home/dann/minicpan
 
+Additional setup (For debian users)
+===================================
+Copy conf/debian/rules* to ~/.dh-make-perl directory.
+copying perllocal.pod is conflited  if you dont do that. 
+
 DESCRIPTION
 ===========
 cpan-packager will create the files required to build a debian or redhat source 

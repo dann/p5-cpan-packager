@@ -22,6 +22,7 @@ requires(
     'Pod::POM'            => 0,
     'Class::Inspector'    => 0,
     'Kwalify'             => '1.20',
+    #TODO:  modules to build RPM
     'File::Basename'      => 0,
     'File::Copy'          => 0,
     'Archive::Tar'        => 0,
