@@ -1,4 +1,13 @@
 use inc::Module::Install;
+
+{
+    no warnings 'redefine';
+    *recommends_hack
+        = $Module::Install::VERSION > 0.70
+        ? sub { recommends(@_); $_[0] }
+        : \&recommends;
+}
+
 name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
 
@@ -22,14 +31,19 @@ requires(
     'Pod::POM'            => 0,
     'Class::Inspector'    => 0,
     'Kwalify'             => '1.20',
-    #TODO:  modules to build RPM
-    'File::Basename'      => 0,
-    'File::Copy'          => 0,
-    'Archive::Tar'        => 0,
-    'File::Temp'          => 0,
-    'URI::Escape'         => 0,
-    'Cwd'                 => 0,
-    'RPM::Specfile'       => 0,
+);
+
+features(
+    'build RPM package?' => [
+        -default => 0,
+        recommends_hack( 'RPM::Specfile'  => 0 ),
+        recommends_hack( 'File::Basename' => 0 ),
+        recommends_hack( 'File::Copy'     => 0 ),
+        recommends_hack( 'Archive::Tar'   => 0 ),
+        recommends_hack( 'File::Temp'     => 0 ),
+        recommends_hack( 'URI::Escape'    => 0 ),
+        recommends_hack( 'Cwd'            => 0 ),
+    ],
 );
 
 test_requires(
@@ -57,5 +71,6 @@ author_tests('xt');
 install_script('bin/cpan-packager');
 use_test_base;
 auto_include;
+
 #auto_set_repository;
 WriteAll;
