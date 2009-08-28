@@ -4,13 +4,14 @@ use Carp;
 use IPC::System::Simple qw(system);
 use Path::Class;
 use List::MoreUtils qw(any);
+use CPAN::Packager::Home;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
 has 'package_output_dir' => (
     +default => sub {
         my $self = shift;
-        dir( '/', 'tmp', 'cpanpackager', 'deb' );
+        dir( CPAN::Packager::Home->detect, 'deb' );
     },
 );
 

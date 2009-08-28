@@ -7,6 +7,7 @@ use IPC::System::Simple qw(system capture EXIT_ANY);
 use File::Temp qw(tempdir);
 use LWP::Simple;
 use File::Copy;
+use CPAN::Packager::Home;
 use CPAN::Packager::Builder::RPM::Spec;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
@@ -19,7 +20,7 @@ has 'release' => (
 has 'package_output_dir' => (
     +default => sub {
         my $self = shift;
-        dir( '/', 'tmp', 'cpanpackager', 'rpm' );
+        dir( CPAN::Packager::Home->detect, 'rpm' );
     },
 );
 
