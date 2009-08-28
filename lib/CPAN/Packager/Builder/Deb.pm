@@ -81,7 +81,8 @@ sub _build_dh_make_perl_command {
     my $depends = join ',', @depends;
     $self->log( debug => "depends: $depends" );
     my $dh_make_perl_cmd
-        = "dh-make-perl --build --depends '$depends' $module->{src} --package $package ";
+    # = "dh-make-perl --build --depends '$depends' $module->{src} --package $package "; # hmm. etch's dh-make-perl don't have --package option.
+        = "dh-make-perl --build --depends '$depends' $module->{src}";
     if ( $module->{skip_test} ) {
         $dh_make_perl_cmd .= " --notest";
     }
