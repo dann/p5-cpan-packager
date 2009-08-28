@@ -77,10 +77,10 @@ after that you just use cpan-packager ;)
       cpan_mirrors:
         - file:///home/dann/minicpan
 
-Additional setup (For debian users)
+Additional setup (For debian and ubuntu users)
 ===================================
 Copy conf/debian/rules* to ~/.dh-make-perl directory.
-copying perllocal.pod is conflited  if you dont do that. 
+copying perllocal.pod is conflited if you dont do that. 
 
 DESCRIPTION
 ===========
