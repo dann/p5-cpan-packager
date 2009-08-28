@@ -1,7 +1,8 @@
 package CPAN::Packager::Builder::RPM::Spec;
 
 # stealed from cpanflute2 because cpanflute2 isn't updated all recently.
-# so I copied it and patched.
+# so I just copied it and patched.
+# cpanflute2 code looks ugly, so we need to refactor it later.
 
 use Mouse;
 use File::Basename;
@@ -374,7 +375,6 @@ fi
     }
 
     if ( $options{'just-spec'} ) {
-        warn '#############aaaaaaaaaaaaaaaaa';
         return $spec->generate_specfile;
     }
 

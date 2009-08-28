@@ -9,7 +9,7 @@ use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.063';
+our $VERSION = '0.064';
 
 BEGIN {
     if ( !defined &DEBUG ) {

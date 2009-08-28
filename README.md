@@ -40,7 +40,7 @@ options
     --always-build   always build cpan modules if module is aready installed (optional)
     --modulelist     File containing a list of modules that should be built. (optional)
 
-RPM/Deb Packages are generated at /tmp/cpanpackager/{deb or rpm}
+RPM/Deb Packages are generated at ~/.cpanpackager/{deb or rpm}
 
 config.yaml is located at github repo.
 
