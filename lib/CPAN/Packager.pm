@@ -171,6 +171,13 @@ CPAN::Packager - Create packages(rpm, deb) from perl modules
 =head1 SYNOPSIS
 
   use CPAN::Packager;
+  my $packager = CPAN::Packager->new(
+        builder      => 'RPM',
+        conf         => '/home/dann/config-rpm.yaml',
+        always_build => 1,
+        dry_run      => 0,
+  );
+  $packager->make('Mouse');
 
 =head1 DESCRIPTION
 

@@ -30,6 +30,8 @@ sub _extract_to_default_dir {
     return $extractor->extract_path;
 }
 
+no Mouse;
+__PACKAGE__->meta->make_immutable;
 1;
 __END__
 

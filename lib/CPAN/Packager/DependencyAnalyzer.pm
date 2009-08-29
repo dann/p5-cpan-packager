@@ -253,6 +253,7 @@ __END__
 
 =head1 NAME
 
+CPAN::Packager::DependencyAnalyzer - analyze module dependencies 
 
 =head1 SYNOPSIS
 
