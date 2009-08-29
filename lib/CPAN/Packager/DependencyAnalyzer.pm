@@ -61,15 +61,14 @@ sub analyze_dependencies {
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
-# try to download unresolved name because resolver sometimes return wrong name.
-
+   # try to download unresolved name because resolver sometimes return wrong name.
     my $module_info = $self->download_module( $module, $config );
 
     my $resolved_module = $module_info->{dist_name};
     $resolved_module = $self->fix_module_name( $module, $config );
     unless ( $module_info->{dist_name} ) {
 
-# try to download unresolved name because resolver sometimes return wrong name.
+       # try to download unresolved name because resolver sometimes return wrong name.
         $module_info = $self->download_module( $resolved_module, $config );
         $resolved_module = $module_info->{dist_name};
     }
