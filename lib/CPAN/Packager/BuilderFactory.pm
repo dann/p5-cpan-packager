@@ -18,6 +18,7 @@ __END__
 
 =head1 NAME
 
+CPAN::Packager::BuilderFactory - package builder factory
 
 =head1 SYNOPSIS
 
