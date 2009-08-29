@@ -32,6 +32,7 @@ requires(
     'Pod::POM'            => 0,
     'Class::Inspector'    => 0,
     'Kwalify'             => '1.20',
+    'URI'                 => 0,
 );
 
 features(
@@ -51,6 +52,7 @@ test_requires(
     'Test::More'           => '0.92',
     'Test::Base'           => 0,
     'Test::LoadAllModules' => '0.02',
+    'Test::Class'          => 0,
     'Test::Requires'       => 0,
 );
 
