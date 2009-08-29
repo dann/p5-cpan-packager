@@ -85,4 +85,8 @@ modules:
     no_depends:
       - module: HTTP::Request::AsCGI
       - module: Test::Exception
-
+  - module: Acme
+    custom:
+      tgz_path: ~/.cpanpackager/custom_module/Acme-1.11111.tar.gz
+      dist_name: Acme
+      version: 1.2

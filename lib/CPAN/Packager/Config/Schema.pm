@@ -116,10 +116,21 @@ CPAN::Packager::Config::Schema - configuration schema
                 type: bool
               "force_build":
                 type: bool
-              "custom_src":
-                type: seq
-                sequence:
-                  - type: any
+              "custom":
+                type: map
+                mapping:
+                  "tgz_path":
+                    type: str
+                    required: true
+                  "src_dir":
+                    type: str
+                  "version":
+                    type: any
+                    required: true
+                  "dist_name":
+                    type: str
+                    required: true
+                    unique: yes
               "version":
                 type: any
 

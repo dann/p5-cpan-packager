@@ -7,6 +7,8 @@ use CPAN::Packager::Downloader;
 use CPAN::Packager::ModuleNameResolver;
 use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
+use CPAN::Packager::Config::Replacer;
+use CPAN::Packager::Extractor;
 use List::MoreUtils qw(uniq any);
 with 'CPAN::Packager::Role::Logger';
 
@@ -14,6 +16,13 @@ has 'downloader' => (
     is      => 'rw',
     default => sub {
         CPAN::Packager::Downloader->new;
+    }
+);
+
+has 'extractor' => (
+    is      => 'rw',
+    default => sub {
+        CPAN::Packager::Extractor->new;
     }
 );
 
@@ -52,38 +61,48 @@ sub analyze_dependencies {
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
-    # try to download unresolved name because resolver sometimes return wrong name.
-    my ( $tgz, $src, $version, $dist ) = $self->download_module($module, $config);
+# try to download unresolved name because resolver sometimes return wrong name.
 
-    my $resolved_module = $dist;
+    my $module_info = $self->download_module( $module, $config );
+
+    my $resolved_module = $module_info->{dist_name};
     $resolved_module = $self->fix_module_name( $module, $config );
-    unless ( $dist ) {
-        # try to download unresolved name because resolver sometimes return wrong name.
-        ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
-        $resolved_module = $dist;
+    unless ( $module_info->{dist_name} ) {
+
+# try to download unresolved name because resolver sometimes return wrong name.
+        $module_info = $self->download_module( $resolved_module, $config );
+        $resolved_module = $module_info->{dist_name};
     }
 
-    $resolved_module = $dist;
-    unless ( $dist ) {
-        $resolved_module = $self->resolve_module_name( $module, $config ) ;
+    $resolved_module = $module_info->{dist_name};
+    unless ( $module_info->{dist_name} ) {
+        $resolved_module = $self->resolve_module_name( $module, $config );
     }
 
-    return $resolved_module unless $self->_is_needed_to_analyze_dependencies($resolved_module, $config);
+    return $resolved_module
+        unless $self->_is_needed_to_analyze_dependencies( $resolved_module,
+        $config );
 
-    unless ( $dist ) {
-        ( $tgz, $src, $version, $dist ) = $self->download_module($resolved_module, $config);
-        $resolved_module = $dist ? $dist : $resolved_module;
+    unless ( $module_info->{dist_name} ) {
+        $module_info = $self->download_module( $resolved_module, $config );
+        $resolved_module
+            = $module_info->{dist_name}
+            ? $module_info->{dist_name}
+            : $resolved_module;
     }
 
-    my @depends = $self->get_dependencies( $resolved_module, $src, $config);
+    my @depends
+        = $self->get_dependencies( $resolved_module, $module_info->{src_dir},
+        $config );
     $self->modules->{$resolved_module} = {
         module               => $resolved_module,
         original_module_name => $module,
-        skip_name_resolve    => $self->_does_skip_resolve_module_name($module, $config),
-        version              => $version,
-        tgz                  => $tgz,
-        src                  => $src,
-        depends              => \@depends,
+        skip_name_resolve =>
+            $self->_does_skip_resolve_module_name( $module, $config ),
+        version => $module_info->{version},
+        tgz     => $module_info->{tgz_path},
+        src     => $module_info->{src_dir},
+        depends => \@depends,
     };
 
     my @new_depends;
@@ -92,8 +111,9 @@ sub analyze_dependencies {
         push @new_depends, $new_name;
     }
 
-    @new_depends 
-        = $self->dependency_filter->filter_dependencies( $resolved_module, \@new_depends, $config );
+    @new_depends
+        = $self->dependency_filter->filter_dependencies( $resolved_module,
+        \@new_depends, $config );
 
     # fix depends to resolved module name.
     $self->modules->{$resolved_module}->{depends} = \@new_depends;
@@ -103,42 +123,51 @@ sub analyze_dependencies {
 
 sub download_module {
     my ( $self, $module, $config ) = @_;
+
     # REFACTOR
     # move to this to BUILD method after implementing config as singleton
     # class
-    if(defined $config->{global}->{cpan_mirrors} && $config->{global}->{cpan_mirrors}) {
-        $self->downloader->set_cpan_mirrors($config->{global}->{cpan_mirrors}); 
+    if ( defined $config->{global}->{cpan_mirrors}
+        && $config->{global}->{cpan_mirrors} )
+    {
+        $self->downloader->set_cpan_mirrors(
+            $config->{global}->{cpan_mirrors} );
     }
 
     $self->{__downloaded} ||= {};
 
     unless ( $self->{__downloaded}->{$module} ) {
-        my $custom_src = $config->{modules}->{$module}->{custom_src};
-        if ( $custom_src ) {
-            $self->{__downloaded}->{$module} = [
-                map { 
-                    my $mod = $_; 
-                    $mod =~ s/^~/$ENV{HOME}/; 
-                    $mod; 
-                } @{ $custom_src }
-            ];
-        } else {
+        my $custom_src = $config->{modules}->{$module}->{custom};
+        if ($custom_src) {
+            $custom_src->{tgz_path}
+                = CPAN::Packager::Config::Replacer->replace_variable($custom_src->{tgz_path} );
+            $custom_src->{src_dir}
+                = $custom_src->{src_dir}
+                ? $custom_src->{src_dir}
+                : $self->extractor->extract( $custom_src->{tgz_path} );
+            $self->{__downloaded}->{$module} = $custom_src;
+        }
+        else {
             if ( my $version = $config->{modules}->{$module}->{version} ) {
                 my $dist_with_version = "$module-$version";
                 $dist_with_version =~ s/::/-/g;
-                $self->{__downloaded}->{$module} = [ $self->downloader->download($dist_with_version) ];
-            } else {
-                $self->{__downloaded}->{$module} = [ $self->downloader->download($module) ];
+                $self->{__downloaded}->{$module}
+                    = $self->downloader->download($dist_with_version);
+            }
+            else {
+                $self->{__downloaded}->{$module}
+                    = $self->downloader->download($module);
             }
         }
     }
 
-    return @{ $self->{__downloaded}->{$module} } if $self->{__downloaded}->{$module};
+    return $self->{__downloaded}->{$module}
+        if $self->{__downloaded}->{$module};
 
 }
 
 sub _is_needed_to_analyze_dependencies {
-    my ($self, $resolved_module, $config) = @_;
+    my ( $self, $resolved_module, $config ) = @_;
     return 0 if $self->is_added($resolved_module);
     return 0 if $self->is_core($resolved_module);
     return 0 if $resolved_module eq 'perl';
@@ -148,11 +177,11 @@ sub _is_needed_to_analyze_dependencies {
 }
 
 sub _does_skip_resolve_module_name {
-    my ($self, $module, $config) = @_;
+    my ( $self, $module, $config ) = @_;
     my @skip_name_resolve_modules
-        = @{ $config->{global}->{skip_name_resolve_modules}
-            || () };
-    my $skip_name_resolve = any { $_->{module} eq $module } @skip_name_resolve_modules;
+        = @{ $config->{global}->{skip_name_resolve_modules} || () };
+    my $skip_name_resolve
+        = any { $_->{module} eq $module } @skip_name_resolve_modules;
     return $skip_name_resolve;
 }
 
@@ -172,20 +201,28 @@ sub is_core {
 
 sub get_dependencies {
     my ( $self, $module, $src, $config ) = @_;
-    if ( $config->{modules} && $config->{modules}->{$module} && $config->{modules}->{$module}->{depends} ) {
-        return map { $_->{module} } @{ $config->{modules}->{$module}->{depends} };
+    if (   $config->{modules}
+        && $config->{modules}->{$module}
+        && $config->{modules}->{$module}->{depends} )
+    {
+        return
+            map { $_->{module} }
+            @{ $config->{modules}->{$module}->{depends} };
     }
 
-    my $make_yml_generate_fg = any { $_ eq $module } @{ $config->{global}->{fix_meta_yml_modules} || [] };
+    my $make_yml_generate_fg = any { $_ eq $module }
+    @{ $config->{global}->{fix_meta_yml_modules} || [] };
 
-    my $depends_mod = $make_yml_generate_fg ? "Module::Depends::Intrusive" : "Module::Depends";
+    my $depends_mod
+        = $make_yml_generate_fg
+        ? "Module::Depends::Intrusive"
+        : "Module::Depends";
     my $deps = $depends_mod->new->dist_dir($src)->find_modules;
 
     return grep { !$self->is_added($_) }
-        grep    { !$self->is_core($_) }
-        uniq(
-            keys %{ $deps->requires || {} },
-            keys %{ $deps->build_requires || {} }
+        grep    { !$self->is_core($_) } uniq(
+        keys %{ $deps->requires || {} },
+        keys %{ $deps->build_requires || {} }
         );
 }
 
@@ -193,7 +230,8 @@ sub resolve_module_name {
     my ( $self, $module, $config ) = @_;
 
     return $self->resolved->{$module} if $self->resolved->{$module};
-    return $module if $self->_does_skip_resolve_module_name($module, $config);
+    return $module
+        if $self->_does_skip_resolve_module_name( $module, $config );
 
     my $resolved_module_name = $self->module_name_resolver->resolve($module);
     return $module unless $resolved_module_name;

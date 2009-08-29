@@ -52,6 +52,10 @@ sub run {
     }
     die 'conf is required param' unless $self->conf;
 
+    unless( $self->builder eq "Deb" || $self->builder eq "RPM") {
+        die 'builder option value must be Deb or RPM';
+    }
+
     my $packager = CPAN::Packager->new(
         builder      => $self->builder,
         conf         => $self->conf,
