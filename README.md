@@ -60,7 +60,6 @@ CPAN::Packager downloads modules from cpan_mirrors
     ---
     global:
       cpan_mirrors:
-        - file:///home/dann/minicpan
         - http://ftp.funet.fi/pub/languages/perl/CPAN/
 
 Use cpan-packager with minicpan (Optional)

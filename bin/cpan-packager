@@ -52,8 +52,8 @@ if you set CPAN mirror uri in your config.
     ---
     global:
       cpan_mirrors:
-        - file:///home/dann/minicpan
         - http://ftp.funet.fi/pub/languages/perl/CPAN/
+        - file:///home/dann/minicpan
 
 =head2 Use cpan-packager with minicpan
 
