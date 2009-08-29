@@ -27,3 +27,5 @@ use YAML;
     ok(!( CPAN::Packager::DependencyAnalyzer->_does_skip_resolve_module_name('Foo::Baz', $config) ), 'it should not be skipped')
         or diag(YAML::Dump($config));
 };
+
+done_testing;

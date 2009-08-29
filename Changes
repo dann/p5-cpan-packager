@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.071 Aug 29  14:30:00 2009
+      * added Archive::Extract to dependency 
+
 0.07 Aug 29  14:14:00 2009
       * support custom src and changed custom_src schema 
 

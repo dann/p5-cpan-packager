@@ -26,6 +26,7 @@ requires(
     'Mouse'               => '0.17',
     'MouseX::Getopt'      => '0.04',
     'Path::Class'         => 0,
+    'Archive::Extract'    => 0,
     'UNIVERSAL::require'  => 0,
     'YAML'                => 0,
     'Pod::POM'            => 0,
@@ -47,9 +48,8 @@ features(
 );
 
 test_requires(
-    'Test::More'           => 0,
+    'Test::More'           => '0.92',
     'Test::Base'           => 0,
-    'Test::Class'          => 0,
     'Test::LoadAllModules' => '0.02',
     'Test::Requires'       => 0,
 );
