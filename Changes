@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.07 Aug 29  14:14:00 2009
+      * support custom src and changed custom_src schema 
+
 0.064 Aug 29  01:07:00 2009
       * added dh-make-perl patched rules for debian.
       * can create more debian modules, like HTTP::Engine, Task::Catalyst,
