@@ -1,7 +1,7 @@
 package CPAN::Packager::Home;
 use strict;
 use warnings;
-use Path::Class;
+use Path::Class qw(dir);
 
 sub detect {
     my $class = shift;
