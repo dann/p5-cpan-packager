@@ -37,11 +37,13 @@ __END__
 
 =head1 NAME
 
-CPAN::Packager::Home - detect Home 
+CPAN::Packager::Extractor - extract src from archive
 
 =head1 SYNOPSIS
 
-  use CPAN::Packager::Util;
+  use CPAN::Packager::Extractor;
+  my $pe = CPAN::Packager::Extractor->new;
+  $pe->extract('/home/dann/.cpanpackager/custom_module/Acme-1.11.tar.gz');
 
 =head1 DESCRIPTION
 

@@ -260,6 +260,8 @@ CPAN::Packager::DependencyAnalyzer - analyze module dependencies
 
 =head1 DESCRIPTION
 
+CPAN::Packager::DependencyAnalyzer analyzes module dependencies 
+and fix it based on the given configuration
 
 =head1 AUTHOR
 

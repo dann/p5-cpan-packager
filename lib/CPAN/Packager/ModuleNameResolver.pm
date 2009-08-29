@@ -40,12 +40,18 @@ sub get_or_retry {
 __PACKAGE__->meta->make_immutable;
 1;
 
+__END__
+
 =head1 NAME
 
-CPAN::Packager::ModuleNameResolver - resolve CPAN module name
+CPAN::Packager::ModuleNameResolver - resolve CPAN module name from CPAN
 
 =head1 SYNOPSIS
 
+    use CPAN::Packager::ModuleNameResolver;
+    my $config = ...
+    my $resolver = CPAN::Packager::ModuleNameResolver->new;
+    $resolved_module = $resolver->resolve_module_name( 'Mouse', $config );
 
 =head1 DESCRIPTION
 

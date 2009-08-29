@@ -63,9 +63,13 @@ CPAN::Packager::Downloader - Download cpan module tarball from CPAN
 
 =head1 SYNOPSIS
 
+  use CPAN::Packager::Downloader;
+  my $d = CPAN::Packager::Downloader;
+  $d->download('HTTP::Engine');
 
 =head1 DESCRIPTION
 
+CPAN::Packager::Downloader fetches a cpan module tarball from CPAN.
 
 =head1 AUTHOR
 

@@ -85,13 +85,17 @@ __END__
 
 =head1 NAME
 
+CPAN::Packager::Script - CUI for CPAN::Packager
 
 =head1 SYNOPSIS
 
   use CPAN::Packager::Script;
+  my $script = CPAN::Packager::Script->new_with_options;
+  $script->run;
 
 =head1 DESCRIPTION
 
+CPAN::Packager::Script is a CUI for CPAN::Packager.
 
 =head1 AUTHOR
 
