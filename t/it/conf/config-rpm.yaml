@@ -1,176 +1,92 @@
 ---
 global:
-  fix_meta_yml_modules:
-    - Any::Moose
-    - HTTP::Request::AsCGI
-    - MooseX::MethodAttributes
-  fix_module_name:
-    IO::Compress: IO::Compress::Base
-    Scalar::Util: Scalar::List::Utils
-    libwww-perl: LWP::UserAgent
-    podlators: Pod::Man
-  fix_package_depends: ~
+  cpan_mirrors:
+    - file:///home/dann/.cpanpackager/minicpan/
+  fix_module_name: []
+  fix_package_depends: []
   no_depends:
-    - CGI
-    - Class::Accessor
-    - Devel::PPPort
-    - Encode
-    - ExtUtils::MakeMaker
-    - File::Copy
-    - File::Spec
-    - File::Spec::Functions
-    - File::Spec::Mac
-    - File::Spec::OS2
-    - File::Spec::Unix
-    - File::Spec::Win32
-    - File::Temp
-    - 'Filter # brokes?'
-    - HTTP::Request
-    - HTTP::Response
-    - IO::stringy
-    - LWP::UserAgent
-    - List::Util
-    - Module::Install
-    - Module::Install::AuthorTests
-    - PathTools
-    - Pod::Parser
-    - Pod::Parser
-    - Scalar::List::Utils
-    - Scalar::Util
-    - Test::Harness
-    - kurila
-    - perl
-    - version
-    - IO::Compress::Base
-    - Compress::Zlib
-  skip_name_resolve_modules:
-    - Class::DBI
-    - Class::DBI::AbstractSearch
-    - Date::Parse
-    - HTTP::Request
-    - HTTP::Response
-    - IO::Scalar
-    - IO::stringy
-    - LWP::UserAgent
-    - PathTools
-    - PerlInterp
-    - Template
-    - perl
+    # default
+    - module: perl
+    - module: mod_perl
+    - module: version
+    # PathTools
+    - module: File::Copy
+    - module: File::Spec
+    - module: File::Spec::Functions
+    - module: File::Spec::Mac
+    - module: File::Spec::OS2
+    - module: File::Spec::Unix
+    - module: File::Spec::Win32
+    - module: File::Temp
+    - module: File::chdir
+    - module: PathTools
+    # IO Compress
+    - module: IO::Compress
+    - module: IO::Compress::Gzip
+    - module: IO::Compress::Bzip2
+    - module: IO::Compress::Base
+    - module: IO::Compress::Zlib
+    - module: Compress::Raw::Zlib
+    - module: Compress::Zlib
+    - module: IO::Zlib
+    # Testing
+    - module: Text::Exception
+    - module: Test::Simple
+    - module: Test::Harness
+    # other
+    - module: CGI
+    - module: Class::Accessor
+    - module: Class::Accessor::Fast
+    - module: Cwd
+    - module: Devel::PPPort
+    - module: Encode
+    - module: ExtUtils::MakeMaker
+    - module: 'Filter # brokes?'
+    - module: HTTP::Request
+    - module: HTTP::Response
+    - module: IO::stringy
+    - module: kurila
+    - module: List::Util
+    - module: Module::Install
+    - module: Module::Install::AuthorTests
+    - module: Pod::Parser
+    - module: Scalar::List::Utils
+    - module: Scalar::Util
+    - module: Sub::Uplevel
+  skip_name_resolve_modules: []
 
 modules:
-  CGI::Ajax:
+  - module: CGI::Simple
     no_depends:
-      - CGI::Ajax
-  CPAN::Packager:
+     - module: IO::Scalar
+  - module: Test::Exception
     depends:
-      - CPANPLUS::Backend
-      - FindBin::libs
-      - IPC::System::Simple
-      - LWP::UserAgent
-      - Module::Depends
-      - Module::CoreList
-      - Mouse
-      - Path::Class
-      - RPM::Specfile
-      - UNIVERSAL::require
-      - File::Copy
-      - Hash::Merge
-      - List::MoreUtils
-      - YAML
-      - MouseX::Getopt
-      - List::MoreUtils
-      - List::Compare
-  Class::Accessor:
-    depends:
-      - Class::Classgen::Attribute
+      - module: Test::Simple
     no_depends:
-      - Class::Classgen::classgen
-  Class::Classgen::classgen:
-    build_skip: 1
-  Class::DBI::AbstractSearch:
-    depends:
-      - Class::DBI # hmm.
-    no_depends:
-      - Class::DBI::AbstractSearch
-  Class::Trigger:
-    no_depends:
-      - IO::stringy
-      - IO::Scalar
-  DBIx::Class:
+      - module: Test::Builder::Tester
+  - module: FindBin::libs
     skip_test: 1
-  File::Spec:
-    build_skip: 1
-  File::Find::Rule::Perl:
+  - module: HTTP::Request::AsCGI
+    skip_build: 1
+  - module: IO::Compress::Base
+    skip_build: 1
+  - module: MooseX::MethodAttributes::Inheritable
+    skip_build: 1
+  - module: Perl::MinimumVersion
     skip_test: 1
-  FindBin::libs:
-    skip_test: 1
-  Getopt::Long::Descriptive:
+  - module: PathTools
+    skip_build: 1
+  - module: Scalar::List::Utils
+    skip_build: 1
+  - module: Module::Setup
     no_depends:
-      - IO::stringy
-      - IO::Scalar
-  HTTP::Engine:
+      - module: Module::Install::AuthorTests
+  - module: Catalyst::Runtime
     no_depends:
-      - URI
-      - IO::stringy
-      - IO::Scalar
-      - Any::Moose
-  HTTP::Server::Simple:
-    depends:
-      - URI
-    no_depends:
-      - ASNMTAP
-  IPC::System::Simple:
-    no_depends:
-      - Solaris::PerlGcc
-  JSON::Any:
-    depends:
-      - JSON
-      - JSON::XS
-  Log::Dispatch::Config:
-    no_depends:
-      - IO::stringy
-      - IO::Scalar
-  Module::Setup:
-    no_depends:
-      - Module::Install::AuthorTests
-  Mouse:
-    skip_test: 1
-  Perl::MinimumVersion:
-    skip_test: 1
-  PathTools:
-    build_skip: 1
-  Scalar::List::Utils:
-    build_skip: 1
-  Test::Exception:
-    depends:
-      - Test::Simple
-    no_depends:
-      - Test::Builder::Tester
-  YAML:
-    no_depends:
-      - Filter
-  # META.yml is broken...
-  HTTP::Request::AsCGI:
-    build_skip: 1
-  # META.yml is broken...
-  Any::Moose:
-    build_skip: 1
-  # META.yml is broken...
-  MooseX::MethodAttributes:
-    build_skip: 1
-  MooseX::MethodAttributes::Inheritable:
-    build_skip: 1
-  CGI::Simple:
-    no_depends:
-      - IO::Scalar
-  IO::Compress::Base:
-    build_skip: 1
-  Archive::Tar:
-    no_depends:
-      - Compress::Zlib
-      - IO::Compress::Bzip2
-      - IO::Compress::Gzip
-  Catalyst::Runtime:
-    no_depends:
-      - HTTP::Request::AsCGI
-      - MooseX::MethodAttributes::Inheritable
+      - module: HTTP::Request::AsCGI
+      - module: Test::Exception
+  - module: Acme
+    custom:
+      tgz_path: ~/.cpanpackager/custom_module/Acme-1.11111.tar.gz
+      dist_name: Acme
+      version: 1.2
