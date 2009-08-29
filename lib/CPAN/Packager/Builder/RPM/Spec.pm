@@ -463,7 +463,7 @@ __END__
 
 =head1 NAME
 
-CPAN::Package::Builder::RPM::Spec - RPM spec builder
+CPAN::Packager::Builder::RPM::Spec - RPM spec builder
 
 =head1 SYNOPSIS
 
