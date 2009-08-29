@@ -17,7 +17,6 @@ requires(
     'FindBin::libs'       => 0,
     'Hash::Merge'         => 0,
     'IPC::System::Simple' => 0,
-    'LWP::Simple'         => 0,
     'LWP::UserAgent'      => 0,
     'List::Compare'       => 0,
     'List::MoreUtils'     => 0,

@@ -21,6 +21,8 @@ CPAN::Packager::Config::Schema - configuration schema
 
 =head1 DESCRIPTION
 
+CPAN::Packager::Config::Schema's SCHEMA section is the schema for configuration 
+which is passed to cpan-packager script.
 
 =head1 SCHEMA
 

@@ -1,11 +1,12 @@
 CPAN::Packager - CPAN::Packager is yet another packager
-======================================================
+=======================================================
 
 What is CPAN::Packager
 =======================
 CPAN::Packager is a tool to help you make packages from perl modules on CPAN.
 This makes it so easy to make a perl module into a Redhat/Debian package
-
+This packager analyzes module dependencies and automatically fetches prereq modules
+and build RPM or Deb packages. 
 
 INSTALLATION
 ============
@@ -42,11 +43,11 @@ options
 
 RPM/Deb Packages are generated at ~/.cpanpackager/{deb or rpm}
 
-config.yaml is located at github repo.
+config-{rpm, deb}.yaml is located at github repo.
 
     See http://github.com/dann/cpan-packager/tree/master
 
-Please see the configuration schema if you want to write config your self.
+Please see the configuration schema if you want to write the config by yourself.
 You can see schema like below.
 
     perldoc CPAN::Packager::Config::Schema
@@ -78,9 +79,12 @@ after that you just use cpan-packager ;)
         - file:///home/dann/minicpan
 
 Additional setup (For debian and ubuntu users)
-===================================
+===============================================
 Copy conf/debian/rules* to ~/.dh-make-perl directory.
-copying perllocal.pod is conflited if you dont do that. 
+Copying perllocal.pod in building packages is conflited if you dont do this.
+
+Debian (lenny) doesnt need this step because dh-make-perl of lenny
+has already patched rules.
 
 DESCRIPTION
 ===========
