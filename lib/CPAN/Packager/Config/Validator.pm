@@ -26,6 +26,8 @@ sub _validate_config {
 
 1;
 
+__END__
+
 =head1 NAME
 
 CPAN::Packager::Config::Validator - validates configration
