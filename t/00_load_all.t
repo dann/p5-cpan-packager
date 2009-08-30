@@ -5,8 +5,12 @@ use Test::LoadAllModules;
 BEGIN {
     all_uses_ok(
         search_path => 'CPAN::Packager',
-        except      => [ 'CPAN::Packager::Role::Logger', 'CPAN::Packager::Role' ]
+        except      => [
+            'CPAN::Packager::Role::Logger',
+            'CPAN::Packager::Role',
+            'CPAN::Packager::Builder::RPM',
+            'CPAN::Packager::Builder::RPM::Spec'
+        ]
     );
 }
-
 

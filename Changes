@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
+0.073 Aug 31  02:09:00 2009
+      * added Japanese POD 
+      * fixed failing test when RPM::Spec file isn't installed 
+
 0.072 Aug 29  18:59:00 2009
       * updated POD and documentation 
       * fixed Makefile.PL dependencies
