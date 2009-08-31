@@ -134,6 +134,11 @@ sub package_name {
 
 sub is_installed {
     my ( $self, $package ) = @_;
+
+    if ( $package !~ /^lib.+-perl/ ) {
+        $package = $self->package_name($package);
+    }
+
     my $already_installed;
     eval { $already_installed = system("dpkg -L $package > /dev/null"); };
     if ( defined $already_installed && $already_installed == 0 ) {
