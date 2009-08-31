@@ -5,6 +5,8 @@ global:
   fix_module_name:
     - from: Template::Toolkit
       to:   Template
+    - from: Class::Classgen::classgen
+      to: Class::Classgen::Attribute
   fix_package_depends: []
   no_depends:
     - module: mod_perl
