@@ -99,8 +99,8 @@ sub analyze_dependencies {
         skip_name_resolve =>
             $self->_does_skip_resolve_module_name( $module, $config ),
         version => $module_info->{version},
-        tgz     => $module_info->{tgz_path},
-        src     => $module_info->{src_dir},
+        tgz     => ( $module_info->{tgz_path} || undef ),
+        src     => ( $module_info->{src_dir} || undef ),
         depends => \@depends,
     };
 
@@ -138,11 +138,13 @@ sub download_module {
     unless ( $self->{__downloaded}->{$module} ) {
         my $custom_src = $config->{modules}->{$module}->{custom};
         if ($custom_src) {
-            $custom_src->{tgz_path}
-                = CPAN::Packager::Config::Replacer->replace_variable($custom_src->{tgz_path} );
+            if ( $custom_src->{tgz_path} ) {
+                $custom_src->{tgz_path}
+                    = CPAN::Packager::Config::Replacer->replace_variable($custom_src->{tgz_path} );
+            }
             $custom_src->{src_dir}
                 = $custom_src->{src_dir}
-                ? $custom_src->{src_dir}
+                ? CPAN::Packager::Config::Replacer->replace_variable($custom_src->{src_dir})
                 : $self->extractor->extract( $custom_src->{tgz_path} );
             $self->{__downloaded}->{$module} = $custom_src;
         }

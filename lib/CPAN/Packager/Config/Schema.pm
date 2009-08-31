@@ -123,7 +123,6 @@ which is passed to cpan-packager script.
                 mapping:
                   "tgz_path":
                     type: str
-                    required: true
                   "src_dir":
                     type: str
                   "version":
