@@ -131,6 +131,11 @@ sub build_modules {
             if $builder->is_installed( $module->{module} )
                 && !$self->always_build;
 
+        # FIXME: RPM is not consider force_build setting.
+        if ( $self->always_build ) {
+            $module->{force_build} = 1; # afffect force_build flag.
+        }
+
         local $@;
         my $package = $builder->build($module);
 
