@@ -41,7 +41,7 @@ sub _build_package_with_dh_make_perl {
     my $package_output_dir = $self->package_output_dir;
 
     if ( !$module->{force_build} ) {
-        if ( $self->_is_already_installed($package) ) {
+        if ( $self->is_installed($package) ) {
             return $package;
         }
     }
@@ -60,20 +60,6 @@ sub _build_package_with_dh_make_perl {
         die;
     }
     $package;
-}
-
-sub _is_already_installed {
-    my ( $self, $package ) = @_;
-    my $already_installed;
-    eval { $already_installed = system("dpkg -L $package > /dev/null"); };
-    if ( defined $already_installed && $already_installed == 0 ) {
-        $self->log( info => "$package already installed. skip building" );
-        return 1;
-    }
-    if ($@) {
-        $@ = undef;    # ok. skiped.
-    }
-    return 0;
 }
 
 sub _build_dh_make_perl_command {
@@ -147,10 +133,17 @@ sub package_name {
 }
 
 sub is_installed {
-    my ( $self, $module ) = @_;
-    die 'module is required' unless $module;
-    my $pkg = $self->package_name($module);
-    grep { $_ =~ /^$pkg/ } $self->installed_packages;
+    my ( $self, $package ) = @_;
+    my $already_installed;
+    eval { $already_installed = system("dpkg -L $package > /dev/null"); };
+    if ( defined $already_installed && $already_installed == 0 ) {
+        $self->log( info => "$package already installed. skip building" );
+        return 1;
+    }
+    if ($@) {
+        $@ = undef;    # ok. skiped.
+    }
+    return 0;
 }
 
 sub installed_packages {
