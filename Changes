@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.074 Aug 31  23:14:00 2009
+      * tgz_path is now optional 
+
 0.073 Aug 31  02:09:00 2009
       * added Japanese POD 
       * fixed failing test when RPM::Spec file isn't installed 
