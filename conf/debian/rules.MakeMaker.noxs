@@ -11,38 +11,23 @@
 # always return the default without waiting for user input.
 export PERL_MM_USE_DEFAULT=1
 
-PACKAGE=$(shell dh_listpackages)
-
-ifndef PERL
-PERL = /usr/bin/perl
-endif
-
-TMP     =$(CURDIR)/debian/$(PACKAGE)
+PERL   ?= /usr/bin/perl
+PACKAGE = $(shell dh_listpackages)
+TMP     = $(CURDIR)/debian/$(PACKAGE)
 
 build: build-stamp
 build-stamp:
 	dh_testdir
-
-	# As this is a architecture independent package, we are not
-	# supposed to install stuff to /usr/lib. MakeMaker creates
-	# the dirs, we prevent this by setting the INSTALLVENDORARCH
-	# and VENDORARCHEXP environment variables.
-
 	# Add commands to compile the package here
-	$(PERL) Makefile.PL INSTALLDIRS=vendor \
-		INSTALLVENDORARCH=/usr/share/perl5/ \
-		VENDORARCHEXP=/usr/share/perl5/
+	$(PERL) Makefile.PL INSTALLDIRS=vendor
 	$(MAKE)
 	#TEST#
-
 	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
-
 	dh_clean build-stamp install-stamp
-
 	# Add commands to clean up after the build process here
 	[ ! -f Makefile ] || $(MAKE) realclean
 
@@ -51,10 +36,11 @@ install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-
-	# Add commands to install the package into debian/$PACKAGE_NAME here
+	# Add commands to install the package into $(TMP) here
 	$(MAKE) install DESTDIR=$(TMP) PREFIX=/usr
-
+	[ ! -d $(TMP)/usr/lib/perl5 ] || \
+		rmdir --ignore-fail-on-non-empty --parents --verbose \
+		$(TMP)/usr/lib/perl5
 	touch $@
 
 binary-arch:
@@ -63,7 +49,7 @@ binary-arch:
 binary-indep: build install
 	dh_testdir
 	dh_testroot
-	dh_installexamples
+	dh_installexamples #EXAMPLES#
 	dh_installdocs #DOCS#
 	dh_installchangelogs #CHANGES#
 	dh_perl
@@ -72,11 +58,7 @@ binary-indep: build install
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
-	rm -rfv $(TMP)/usr/lib 
 	dh_builddeb
 
-source diff:
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary
+.PHONY: build clean binary-indep binary-arch binary install

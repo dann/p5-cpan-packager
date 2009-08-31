@@ -1,0 +1,39 @@
+# override file for dh-make-perl
+# chdir is set to the module dir while executing the code in the override hashes
+# you can have your own overrides to this overrides in a similar file
+# in ~/.dh-make-perl/overrides
+# Please contribute back the fixes that may be needed for some modules
+# to lupus@debian.org.
+
+# sample overrides entry
+$overrides{'Strange'} = {
+	pkgname => 'libstrange-perl',
+	srcname => 'libstrange-perl',
+	section => 'misc',
+	priority => 'Extra',
+	depends => 'perl6',
+	# build depends
+	bdepends => 'perl6, xlib-dev',
+	desc => 'A really ugly module to test dh-make-perl',
+	longdesc => "A really ugly long description\nfor a really ugly perl module.",
+	arch => 'all',
+	# starting from version 2 it's an xs module
+	checkver => sub {return 'v2-' if (($version || "") =~ /^[2-9]\./);return '';},
+	'v2-arch' => 'any',
+	'v2-version' => sub {
+		if (($version || "") =~ /^\d+\.(\d+)/ && length($1) < 3) {
+			return $version.("0"x(3-length($1))); # maitain 3 digits after the dot
+		} else {
+			return $version;
+		} },
+	# Note the \n in pfield and sfields (extra fields for the source and package section)
+	pfields => "Conflicts: ba-ba-buma\n",
+
+};
+
+$overrides{'Crypt::SSLeay'} = {
+	finish => sub {
+		my @a=("perl", "-pi", "-e", 's,(Makefile\.PL),$1 /usr,', "debian/rules");
+		system(@a);},
+};
+

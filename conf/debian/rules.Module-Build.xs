@@ -11,15 +11,11 @@
 # always return the default without waiting for user input.
 export PERL_MM_USE_DEFAULT=1
 
-PACKAGE=$(shell dh_listpackages)
+PERL   ?= /usr/bin/perl
+PACKAGE = $(shell dh_listpackages)
+TMP     = $(CURDIR)/debian/$(PACKAGE)
 
-ifndef PERL
-PERL = /usr/bin/perl
-endif
-
-TMP     =$(CURDIR)/debian/$(PACKAGE)
-
-# Allow disabling build optimation by setting noopt in
+# Allow disabling build optimisation by setting noopt in
 # $DEB_BUILD_OPTIONS
 CFLAGS = -Wall -g
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
@@ -31,32 +27,26 @@ endif
 build: build-stamp
 build-stamp:
 	dh_testdir
-
 	# Add commands to compile the package here
-	$(PERL) Build.PL installdirs=vendor
+	$(PERL) Build.PL installdirs=vendor config=optimize="$(CFLAGS)"
 	OPTIMIZE="$(CFLAGS)" $(PERL) Build
 	#TEST#
-
 	touch $@
 
 clean:
 	dh_testdir
 	dh_testroot
-
 	dh_clean build-stamp install-stamp
-
 	# Add commands to clean up after the build process here
-	[ ! -f Build ] || $(PERL) Build distclean
+	[ ! -f Build ] || $(PERL) Build --allow_mb_mismatch 1 distclean
 
 install: install-stamp
 install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-
-	# Add commands to install the package into debian/$PACKAGE_NAME here
+	# Add commands to install the package into $(TMP) here
 	$(PERL) Build install destdir=$(TMP) create_packlist=0
-
 	touch $@
 
 # Build architecture-independent files here.
@@ -68,7 +58,7 @@ binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installdocs #DOCS#
-	dh_installexamples 
+	dh_installexamples #EXAMPLES#
 	dh_installchangelogs #CHANGES#
 	dh_shlibdeps
 	dh_strip
@@ -78,11 +68,7 @@ binary-arch: build install
 	dh_installdeb
 	dh_gencontrol
 	dh_md5sums
-	rm -rfv $(TMP)/usr/lib 
 	dh_builddeb
 
-source diff:
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary
+.PHONY: build clean binary-indep binary-arch binary install
