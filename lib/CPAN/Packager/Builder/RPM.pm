@@ -65,6 +65,7 @@ sub build {
     $self->generate_rpmrc;
     $self->copy_module_sources_to_build_dir($module);
     $self->build_rpm_package($spec_file_name);
+    $self->log( info => ">>> finished building rpm package ( $module->{module} )" );
     return $self->package_name( $module->{module} );
 }
 
