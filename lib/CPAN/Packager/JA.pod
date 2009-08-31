@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-cpan-packager -  PerlモジュールからRPMまたはDebianのパッケージを作るツール 
+CPAN::Packager::JA.pod - cpan-packagerの日本語マニュアル
 
 =head1 SYNOPSIS
 

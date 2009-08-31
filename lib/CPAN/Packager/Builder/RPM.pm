@@ -318,8 +318,6 @@ sub build_rpm_package {
         "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
 
     $self->log( debug => $result ) if &CPAN::Packager::DEBUG;
-    $self->log(
-        info => '>>> finished builidng rpm pacckage for ' . $spec_file_name );
     $result;
 }
 
