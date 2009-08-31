@@ -129,7 +129,7 @@ sub build_modules {
         next if $module->{build_status};
         next
             if $builder->is_installed( $module->{module} )
-                && !$self->always_build;
+                && !$self->always_build && !$module->{force_build};
 
         # FIXME: RPM is not consider force_build setting.
         if ( $self->always_build ) {
