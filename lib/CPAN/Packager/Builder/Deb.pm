@@ -51,7 +51,7 @@ sub _build_package_with_dh_make_perl {
         my $dh_make_perl_cmd
             = $self->_build_dh_make_perl_command( $module, $package );
         system($dh_make_perl_cmd);
-        system("sudo dpkg -i $module->{src}/../$package*.deb");
+        system("sudo dpkg -i $module->{src}/../${package}_@{[ $module->{version} ]}*.deb");
         system("sudo cp $module->{src}/../$package*.deb $package_output_dir");
 
     };
