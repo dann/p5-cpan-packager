@@ -3,7 +3,6 @@ use Mouse;
 use Module::Depends;
 use Module::Depends::Intrusive;
 use Module::CoreList;
-use CPAN::Packager::Downloader;
 use CPAN::Packager::ModuleNameResolver;
 use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
@@ -14,9 +13,6 @@ with 'CPAN::Packager::Role::Logger';
 
 has 'downloader' => (
     is      => 'rw',
-    default => sub {
-        CPAN::Packager::Downloader->new;
-    }
 );
 
 has 'extractor' => (

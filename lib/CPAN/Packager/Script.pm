@@ -29,6 +29,14 @@ has 'builder' => (
     default => 'Deb',
 );
 
+has 'downloader' => (
+    is      => 'rw',
+    isa     => 'Str',
+    default => 'CPANPLUS',
+);
+
+
+
 has 'conf' => (
     is  => 'rw',
     isa => 'Str',
@@ -58,6 +66,7 @@ sub run {
 
     my $packager = CPAN::Packager->new(
         builder      => $self->builder,
+        downloader   => $self->downloader,
         conf         => $self->conf,
         always_build => $self->always_build,
         dry_run      => $self->dry_run,

@@ -1,9 +1,10 @@
-package CPAN::Packager::Downloader;
+package CPAN::Packager::Downloader::CPANPLUS;
 use Mouse;
 use CPANPLUS::Backend;
 use Path::Class qw(file dir);
 use URI;
 with 'CPAN::Packager::Role::Logger';
+with 'CPAN::Packager::Downloader::Role';
 
 has 'fetcher' => (
     is      => 'rw',

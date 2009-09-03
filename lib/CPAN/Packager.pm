@@ -4,6 +4,7 @@ use Mouse;
 use List::MoreUtils qw/uniq/;
 use CPAN::Packager::DependencyAnalyzer;
 use CPAN::Packager::BuilderFactory;
+use CPAN::Packager::DownloaderFactory;
 use CPAN::Packager::Config::Merger;
 use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
@@ -25,6 +26,11 @@ BEGIN {
 has 'builder' => (
     is      => 'rw',
     default => 'Deb',
+);
+
+has 'downloader' => (
+    is      => 'rw',
+    default => 'CPANPLUS',
 );
 
 has 'dry_run' => (
@@ -49,18 +55,31 @@ has 'config_loader' => (
     }
 );
 
-has 'dependency_analyzer' => (
-    is      => 'rw',
-    default => sub {
-        CPAN::Packager::DependencyAnalyzer->new;
-    }
-);
+has 'dependency_analyzer' => ( is => 'rw', );
 
 has 'always_build' => (
     is      => 'rw',
     isa     => 'Int',
     default => 0,
 );
+
+sub BUILD {
+    my $self = shift;
+    $self->_setup_dependencies();
+}
+
+sub _setup_dependencies {
+    my $self = shift;
+    $self->_build_dependency_analyzer;
+}
+
+sub _build_dependency_analyzer {
+    my $self = shift;
+    my $dependency_analyzer
+        = CPAN::Packager::DependencyAnalyzer->new( downloader =>
+            CPAN::Packager::DownloaderFactory->create( $self->downloader ) );
+    $self->dependency_analyzer($dependency_analyzer);
+}
 
 sub make {
     my ( $self, $module, $built_modules ) = @_;
@@ -70,9 +89,11 @@ sub make {
     $config->{modules} = $built_modules if $built_modules;
 
     $self->log( info => "### Analyzing dependencies for $module ... ###" );
-    my ( $modules, $resolved_module_name) = $self->analyze_module_dependencies( $module, $config );
+    my ( $modules, $resolved_module_name )
+        = $self->analyze_module_dependencies( $module, $config );
 
-    $modules->{$resolved_module_name}->{force_build} = 1; # always build target module.
+    $modules->{$resolved_module_name}->{force_build}
+        = 1;    # always build target module.
 
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
@@ -129,11 +150,12 @@ sub build_modules {
         next if $module->{build_status};
         next
             if $builder->is_installed( $module->{module} )
-                && !$self->always_build && !$module->{force_build};
+                && !$self->always_build
+                && !$module->{force_build};
 
         # FIXME: RPM is not consider force_build setting.
         if ( $self->always_build ) {
-            $module->{force_build} = 1; # afffect force_build flag.
+            $module->{force_build} = 1;    # afffect force_build flag.
         }
 
         local $@;
@@ -151,7 +173,8 @@ sub build_modules {
             }
         }
     }
-    my %modules = map { exists $_->{module} ? { $_->{module} => $_ } : $_ => $_; }
+    my %modules
+        = map { exists $_->{module} ? { $_->{module} => $_ } : $_ => $_; }
         @{$modules};
     return \%modules;
 }
@@ -161,7 +184,7 @@ sub analyze_module_dependencies {
     $self->log( info => "Analyzing dependencies for $module ..." );
     my $analyzer = $self->dependency_analyzer;
     my $resolved_module = $analyzer->analyze_dependencies( $module, $config );
-    return ( $analyzer->modules, $resolved_module);
+    return ( $analyzer->modules, $resolved_module );
 }
 
 no Mouse;
