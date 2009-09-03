@@ -45,6 +45,10 @@ features(
         recommends_hack( 'URI::Escape'    => 0 ),
         recommends_hack( 'Cwd'            => 0 ),
     ],
+    'use App::CPAN::Fresh as a module downloader?' => [
+        -default => 0,
+        recommends_hack( 'App::CPAN::Fresh' => 0 ),
+    ],
 );
 
 test_requires(
