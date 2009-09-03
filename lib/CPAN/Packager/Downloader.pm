@@ -1,5 +1,6 @@
 package CPAN::Packager::Downloader;
 use Mouse;
+use CPAN;
 use App::CPAN::Fresh;
 use Path::Class qw(file dir);
 use URI;
