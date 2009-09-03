@@ -66,12 +66,12 @@ __END__
 
 =head1 NAME
 
-CPAN::Packager::Downloader - Download cpan module tarball from CPAN
+CPAN::Packager::Downloader::CPANPLUS - Download cpan module tarball from CPAN with CPANPLUS
 
 =head1 SYNOPSIS
 
-  use CPAN::Packager::Downloader;
-  my $d = CPAN::Packager::Downloader;
+  use CPAN::Packager::Downloader::CPANPLUS;
+  my $d = CPAN::Packager::Downloader::CPANPLUS->new;
   $d->download('HTTP::Engine');
 
 =head1 DESCRIPTION
