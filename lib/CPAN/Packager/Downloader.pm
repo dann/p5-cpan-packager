@@ -1,6 +1,6 @@
 package CPAN::Packager::Downloader;
 use Mouse;
-use CPANPLUS::Backend;
+use App::CPAN::Fresh;
 use Path::Class qw(file dir);
 use URI;
 with 'CPAN::Packager::Role::Logger';
@@ -8,38 +8,38 @@ with 'CPAN::Packager::Role::Logger';
 has 'fetcher' => (
     is      => 'rw',
     default => sub {
-        CPANPLUS::Backend->new;
+        # CPANPLUS::Backend->new;
     }
 );
 
 sub set_cpan_mirrors {
     my ( $self, $cpan_mirrors ) = @_;
-    my $hosts = [];
-    foreach my $mirror (@$cpan_mirrors) {
-        my $uri  = URI->new($mirror);
-        my $host = {
-            path   => $uri->path,
-            scheme => $uri->scheme,
-            host   => $uri->host,
-        };
-        push @{$hosts}, $host;
-    }
-    my $cpanp_conf = $self->fetcher->configure_object;
-    $cpanp_conf->set_conf( 'hosts' => $hosts );
+    # my $hosts = [];
+    # foreach my $mirror (@$cpan_mirrors) {
+    #     my $uri  = URI->new($mirror);
+    #     my $host = {
+    #         path   => $uri->path,
+    #         scheme => $uri->scheme,
+    #         host   => $uri->host,
+    #     };
+    #     push @{$hosts}, $host;
+    # }
+    # my $cpanp_conf = $self->fetcher->configure_object;
+    # $cpanp_conf->set_conf( 'hosts' => $hosts );
 }
 
 sub download {
     my ( $self, $module ) = @_;
     $self->log( info => "Downloading $module ..." );
-    my $dist = $self->fetcher->parse_module( module => $module );
+    my $distribution = App::CPAN::Fresh->inject($module);
+    my $mod = CPAN::Shell->expand("Module", $module);
+    my $dist = CPAN::Shell->expandany($distribution);
+    
+    return unless $mod;
     return unless $dist;
-
-    my ( $archive, $where );
-    my $is_force = $dist->is_uptodate ? 0 : 1;
-    eval {
-        $archive = $dist->fetch( force => $is_force ) or next;
-        $where = $dist->extract( force => $is_force ) or next;
-    };
+    $dist->get();
+    my $archive = $dist->{localfile}; # FIXME: old CPAN does't have method?
+    my $where = $dist->dir();
 
     return () unless $archive;
 

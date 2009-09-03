@@ -12,7 +12,8 @@ name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
 
 requires(
-    'CPANPLUS::Backend'   => 0,
+    # 'CPANPLUS::Backend'   => 0,
+    'App::CPAN::Fresh'    => 0,
     'File::Copy'          => 0,
     'FindBin::libs'       => 0,
     'Hash::Merge'         => 0,
