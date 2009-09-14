@@ -1,1 +1,0 @@
-sudo dpkg -l | grep '.*-perl' |grep -v 'dh-make-perl' | awk '{print $2}'| xargs sudo aptitude remove -y

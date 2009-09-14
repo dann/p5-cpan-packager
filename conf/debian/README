@@ -1,3 +1,0 @@
-you just need to copy rules files to ~/.dh-make-perl directory
-
-  cp -r rules* ~/.dh-make-perl

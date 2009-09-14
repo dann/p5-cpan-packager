@@ -1,2 +1,0 @@
-#!/bin/sh
-tools/validator.pl conf/config-rpm.yaml

@@ -1,1 +1,0 @@
-sudo yum list |grep cpanpackager | awk '{print $1}'| xargs sudo yum -y remove

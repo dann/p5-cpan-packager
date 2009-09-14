@@ -1,2 +1,0 @@
-#!/bin/sh
-prove -lv xt/extra/dependency.t | grep 'not ok' | awk '{print $5}'

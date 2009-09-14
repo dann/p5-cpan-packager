@@ -1,2 +1,0 @@
-#!/bin/sh
-perl bin/cpan-packager --module Linux::Smaps --builder RPM --conf conf/config-rpm.yaml 
