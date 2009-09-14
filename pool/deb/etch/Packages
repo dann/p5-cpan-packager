@@ -1,0 +1,1078 @@
+Package: libpod-pom-perl
+Priority: optional
+Section: perl
+Installed-Size: 260
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.2500-1
+Depends: libfile-slurp-perl, perl
+Filename: ./libpod-pom-perl_0.2500-1_all.deb
+Size: 72012
+MD5sum: 64d9be1774ebf951133189ff0f20bc9a
+SHA1: 5fb8ae1623f166e55ff3db4ff1bf72762aa3edf1
+SHA256: 77ba787643a618a237eb9e392b6dfe4a2555c286c7067aa645ecc45813afac52
+Description: POD Object Model
+ POD Object Model
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libarchive-tar-perl
+Priority: optional
+Section: perl
+Installed-Size: 204
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.5400-1
+Depends: libio-zlib-perl, libpackage-constants-perl, perl
+Filename: ./libarchive-tar-perl_1.5400-1_all.deb
+Size: 61356
+MD5sum: 5270931155ea70dac8d0c5491051b169
+SHA1: 899b4a4aa1b8d273f633833dd1ecd19376d65b57
+SHA256: 6d4dc9842f26183d08830d10a5f4b7dea16feb503812238501f260bc15c2c644
+Description: Manipulates TAR archives
+ Archive::Tar provides an object oriented mechanism for handling tar
+ files.  It provides class methods for quick and easy files handling
+ while also allowing for the creation of tar file objects for custom
+ manipulation.  If you have the IO::Zlib module installed,
+ Archive::Tar will also support compressed or gzipped tar files.
+ .
+ An object of class Archive::Tar represents a .tar(.gz) archive full
+ of files and things.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libtest-useallmodules-perl
+Priority: optional
+Section: perl
+Installed-Size: 68
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1200-1
+Depends: perl
+Filename: ./libtest-useallmodules-perl_0.1200-1_all.deb
+Size: 7872
+MD5sum: e2e2163d1c934c0de927a8872e4ee64f
+SHA1: 2e10b1c17d21aa39042b8c940a87cc45b5ff7371
+SHA256: bd33c550ca447b7f02e2c9b6e83c1c3eb0e6caaad33a3e5b63b485833f129790
+Description: do use_ok() for all the MANIFESTed modules
+ I'm sick of writing 00_load.t (or something like that) that'll do use_ok() for every module I write. I'm sicker of updating 00_load.t when I add another file to the distro. This module reads MANIFEST to find modules to be tested and does use_ok() for each of them. Now all you have to do is update MANIFEST. You don't have to modify the test any more (hopefully).
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmodule-load-conditional-perl
+Priority: optional
+Section: perl
+Installed-Size: 88
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.3000-1
+Depends: libmodule-load-perl, libparams-check-perl, libversion-perl, perl
+Filename: ./libmodule-load-conditional-perl_0.3000-1_all.deb
+Size: 15336
+MD5sum: e853d7ce4a074b962484b513e981a3d0
+SHA1: 5a5185ba4846274990b91d63626cb6fcede97183
+SHA256: eae6578f1b37ace12620223eb7c1daa747b3f7fee720e1e8c7ea3497f116cc22
+Description: Looking up module information / loading at runtime
+ Module::Load::Conditional provides simple ways to query and possibly load any of
+ the modules you have installed on your system during runtime.
+ .
+ It is able to load multiple modules at once or none at all if one of
+ them was not able to load. It also takes care of any error checking
+ and so forth.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libfile-slurp-perl
+Priority: optional
+Section: perl
+Installed-Size: 84
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 9999.1300-1
+Depends: perl
+Filename: ./libfile-slurp-perl_9999.1300-1_all.deb
+Size: 17100
+MD5sum: 7b0a06c330675af935c6e8591725cc83
+SHA1: a3c355cc47a31f817378cfbeb75f49f7c4f02f70
+SHA256: b0c2c37a7156ade4b13f7b28d9c86a7234564a07de3c59eac9465c780a2d1531
+Description: Efficient Reading/Writing of Complete Files
+ Efficient Reading/Writing of Complete Files
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libpathtools-perl
+Priority: optional
+Section: perl
+Installed-Size: 288
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: i386
+Version: 3.3000-1
+Depends: libc6 (>= 2.3.6-6), libextutils-cbuilder-perl, libmodule-build-perl, perl
+Filename: ./libpathtools-perl_3.3000-1_i386.deb
+Size: 94224
+MD5sum: d17f348cf128bb58556302b7efcb0720
+SHA1: e4467af9d5b3a00b9404eee45e8a47ab8cb143d9
+SHA256: 71f31e1ebc29368f5b889641b139ddddd6654d2c7c1e9810e44201cb59be130e
+Description: Tools for working with paths and file specs across platforms
+ This module provides functions for determining the pathname of the
+ current working directory.  It is recommended that getcwd (or another
+ *cwd() function) be used in all code to ensure portability.
+ .
+ By default, it exports the functions cwd(), getcwd(), fastcwd(), and
+ fastgetcwd() (and, on Win32, getdcwd()) into the caller's namespace.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libtest-deep-perl
+Priority: optional
+Section: perl
+Installed-Size: 292
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1060-1
+Depends: libtest-nowarnings-perl, libtest-tester-perl, perl
+Filename: ./libtest-deep-perl_0.1060-1_all.deb
+Size: 44442
+MD5sum: beb6fe7fbe88a7d0a4164264309baf32
+SHA1: bc5085f80bece01f124a5138b8dbee84fcfcbd2b
+SHA256: a18ae20924945dbf620e264340ed64be193e10a57b726c51ae2117d121f9ccf4
+Description: Extremely flexible deep comparison
+ .
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libsub-uplevel-perl
+Priority: optional
+Section: perl
+Installed-Size: 84
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.2002-1
+Depends: perl
+Filename: ./libsub-uplevel-perl_0.2002-1_all.deb
+Size: 11668
+MD5sum: 4946321ef49b362af6571dfea43d6049
+SHA1: 512dfe7e804f5f26912e266d3949b5e9572804f0
+SHA256: d40359b42bf6b19b7bf57a008928ecd61ba8a33b1be7f81c94953f1fe156deb5
+Description: apparently run a function in a higher stack frame
+ apparently run a function in a higher stack frame
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmodule-build-perl
+Priority: optional
+Section: perl
+Installed-Size: 708
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.3500-1
+Depends: perl
+Filename: ./libmodule-build-perl_0.3500-1_all.deb
+Size: 272718
+MD5sum: c1c75f405f1ece0c26686addc05574f4
+SHA1: 8fe2cf97a29b4a7413415c52dc705b2abce26494
+SHA256: d1ea2f24a5ff3e968338173c1b04748bab3bada125d11a7548428f565aa17f84
+Description: Build and install Perl modules
+ Module::Build is a system for building, testing, and installing
+ Perl modules.  It is meant to be an alternative to
+ ExtUtils::MakeMaker.  Developers may alter the behavior of the
+ module through subclassing in a much more straightforward way than
+ with MakeMaker.  It also does not require a make on your system
+ - most of the Module::Build code is pure-perl and written in a very
+ cross-platform way.  In fact, you don't even need a shell, so even
+ platforms like MacOS (traditional) can use it fairly easily.  Its only
+ prerequisites are modules that are included with perl 5.6.0, and it
+ works fine on perl 5.005 if you can install a few additional modules.
+ .
+ See "MOTIVATIONS" for more comparisons between ExtUtils::MakeMaker
+ and Module::Build.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libtest-tester-perl
+Priority: optional
+Section: perl
+Installed-Size: 120
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1070-1
+Depends: perl
+Filename: ./libtest-tester-perl_0.1070-1_all.deb
+Size: 27284
+MD5sum: 1cf4f767c130ded3f1e7b15deaf1cd92
+SHA1: 0c1c5f2c40c87622231a5e45d8c56e608dcb66bd
+SHA256: 868f82553af42d57603fa863b704211f739b39ab1f28993701079cb77377ea30
+Description: Ease testing test modules built with Test::Builder
+ If you have written a test module based on Test::Builder then Test::Tester
+ allows you to test it with the minimum of effort.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmodule-corelist-perl
+Priority: optional
+Section: perl
+Installed-Size: 596
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 2.1800-1
+Depends: perl
+Filename: ./libmodule-corelist-perl_2.1800-1_all.deb
+Size: 55352
+MD5sum: 1e30d6b902432f4937ab809307e886e9
+SHA1: f671697d5d4d0e24fd616ed8b58ef6d8e00eac98
+SHA256: ee9e8f742d1313b93032701a9fb5c949483056d097795f7dc3afd39da8158e16
+Description: what modules shipped with versions of perl
+ Module::CoreList contains the hash of hashes
+ %Module::CoreList::version, that is keyed on perl version as indicated
+ in $].  The second level hash is module => version pairs.
+ .
+ Note, it is possible for the version of a module to be unspecified,
+ whereby the value is undef, so use exists $version{$foo}{$bar} if
+ that's what you're testing for.
+ .
+ It also contains %Module::CoreList::released hash, which has ISO
+ formatted versions of the release dates, as gleaned from perlhist.
+ .
+ New, in 1.96 is also the %Module::CoreList::families hash, which
+ clusters known perl releases by their major versions.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libipc-system-simple-perl
+Priority: optional
+Section: perl
+Installed-Size: 100
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.1800-1
+Depends: perl
+Filename: ./libipc-system-simple-perl_1.1800-1_all.deb
+Size: 25272
+MD5sum: 68d794f92961bd0a836a2169c9e665da
+SHA1: 7cffbeded4ac0f94051902d19cfac7aee9477a88
+SHA256: 1064c825d9285c7e85d31e7d98ddb55dd4184d7b374d7455eb3572b9c86bbb5a
+Description: Run commands simply, with detailed diagnostics
+ Run commands simply, with detailed diagnostics
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libparams-check-perl
+Priority: optional
+Section: perl
+Installed-Size: 84
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.2600-1
+Depends: perl
+Filename: ./libparams-check-perl_0.2600-1_all.deb
+Size: 16420
+MD5sum: 972ae4d6b96ef14a0f407c0547daf1e1
+SHA1: 0da0713f37be77952539d7a26302d7ad5f4d6a9a
+SHA256: ed3058f46d33b72367db5ef9f115d34963daec206f422713b4fd042e5eea0703
+Description: A generic input parsing/checking mechanism.
+ Params::Check is a generic input parsing/checking mechanism.
+ .
+ It allows you to validate input via a template. The only requirement
+ is that the arguments must be named.
+ .
+ Params::Check can do the following things for you:
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libextutils-cbuilder-perl
+Priority: optional
+Section: perl
+Installed-Size: 156
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.260301-1
+Depends: perl
+Filename: ./libextutils-cbuilder-perl_0.260301-1_all.deb
+Size: 32286
+MD5sum: 766e01f5ef81fde14e9695911d880bbd
+SHA1: 166ac00f5b373a8d6325771cdea88abf0ee3eb06
+SHA256: ed0cc893d7b7788c5a6720e61073ab7f6af8adfd06fe89d39b925f445850bd4c
+Description: Compile and link C code for Perl modules
+ This module can build the C portions of Perl modules by invoking the
+ appropriate compilers and linkers in a cross-platform manner.  It was
+ motivated by the Module::Build project, but may be useful for other
+ purposes as well.  However, it is not intended as a general
+ cross-platform interface to all your C building needs.  That would
+ have been a much more ambitious goal!
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libclass-accessor-perl
+Priority: optional
+Section: perl
+Installed-Size: 104
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.3300-1
+Depends: perl
+Filename: ./libclass-accessor-perl_0.3300-1_all.deb
+Size: 23036
+MD5sum: b824db3ca2c75b03fe22dee04e15d1be
+SHA1: 1471534cba34e9802c3fc660aeedd9a8488b640f
+SHA256: 221acc5a15fbe71e614fa8c11240293218e1370f19484dd3b3b5b94a684cd502
+Description: Automated accessor generation
+ This module automagically generates accessors/mutators for your class.
+ .
+ Most of the time, writing accessors is an exercise in cutting and
+ pasting.  You usually wind up with a series of methods like this:
+ .
+ sub name {
+ my $self = shift;
+ if(@_) {
+ $self->{name} = $_[0];
+ }
+ return $self->{name};
+ }
+ .
+ sub salary {
+ my $self = shift;
+ if(@_) {
+ $self->{salary} = $_[0];
+ }
+ return $self->{salary};
+ }
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: liblist-moreutils-perl
+Priority: optional
+Section: perl
+Installed-Size: 224
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: i386
+Version: 0.2200-1
+Depends: libc6 (>= 2.3.6-6), perl
+Filename: ./liblist-moreutils-perl_0.2200-1_i386.deb
+Size: 58404
+MD5sum: b97ebc67e132af279edc1ae430b8a832
+SHA1: 779c47bb4066a0fc2f062b77b4787b30abdbbac5
+SHA256: d8a24d2d7da255ac29454ba5c41d5839ee2ced302f0bb5c9ed8089a6b408073a
+Description: Provide the stuff missing in List::Util
+ List::MoreUtils provides some trivial but commonly needed functionality on lists
+ which is not going to go into List::Util.
+ .
+ All of the below functions are implementable in only a couple of lines of Perl
+ code. Using the functions from this module however should give slightly better
+ performance as everything is implemented in C. The pure-Perl implementation of
+ these functions only serves as a fallback in case the C portions of this module
+ couldn't be compiled on this machine.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: librpm-specfile-perl
+Priority: optional
+Section: perl
+Installed-Size: 120
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.5100-1
+Depends: libarchive-tar-perl, liburi-perl, perl
+Filename: ./librpm-specfile-perl_1.5100-1_all.deb
+Size: 20490
+MD5sum: bf2133610906e6f7c7d0ea60d4caf84f
+SHA1: 9b9c2d692c6719052bb70c4460a52d7c41223648
+SHA256: 1ec8d63422f6d063e984ed6457f8df51529affff475c957218fd03fb79d399f5
+Description: Perl extension for creating RPM Specfiles
+ This is a simple module for creation of RPM Spec files.  Most of the methods in this
+ module are the same name as the RPM Spec file element they represent but in lower
+ case.  Furthermore the the methods are divided into two groups:
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libkwalify-perl
+Priority: optional
+Section: perl
+Installed-Size: 100
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.2000-1
+Depends: perl
+Filename: ./libkwalify-perl_1.2000-1_all.deb
+Size: 17658
+MD5sum: 096cc1508bdeb24979144e9f54139fa9
+SHA1: 34d360b55356c0e338cc1d19bd1fef1068b4e037
+SHA256: 875a7bbac990dee44c652fe7a9b3bfb33007acadeaa18a014367bc0bb0c556d6
+Description: Kwalify schema for data structures
+ Kwalify is a Perl implementation for validating data structures
+ against the Kwalify schema. For a schema definition, see
+ http://www.kuwata-lab.com/kwalify/ruby/users-guide.01.html, but see
+ also below /SCHEMA DEFINITION.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libhash-merge-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1100-1
+Depends: libclone-perl, perl
+Filename: ./libhash-merge-perl_0.1100-1_all.deb
+Size: 13694
+MD5sum: f00d9eb8ffdeca41d70eda43f51435ee
+SHA1: 18e05f7edd91766d6ac8bf9dc2ccf6cfe40e40ca
+SHA256: 102f8fa6642ca9e3b6e3655f39b32fcd0979bfa0fda5a921e3d30e98723181c9
+Description: Merges arbitrarily deep hashes into a single hash
+ Hash::Merge merges two arbitrarily deep hashes into a single hash.  That
+ is, at any level, it will add non-conflicting key-value pairs from one
+ hash to the other, and follows a set of specific rules when there are key
+ value conflicts (as outlined below).  The hash is followed recursively,
+ so that deeply nested hashes that are at the same level will be merged
+ when the parent hashes are merged.  Please note that self-referencing
+ hashes, or recursive references, are not handled well by this method.
+ .
+ Values in hashes are considered to be either ARRAY references,
+ HASH references, or otherwise are treated as SCALARs.  By default, the
+ data passed to the merge function will be cloned using the Clone module;
+ however, if necessary, this behavior can be changed to use as many of
+ the original values as possible.  (See set_clone_behavior).
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: liburi-perl
+Priority: optional
+Section: perl
+Installed-Size: 380
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.4000-1
+Depends: perl
+Filename: ./liburi-perl_1.4000-1_all.deb
+Size: 87838
+MD5sum: 216ed3a15f0d1d86103dc1b144f8db2b
+SHA1: 0f4ab2bdfc34cf0d5b3bf9cebf2bda528ad6feaf
+SHA256: 2f6e78ba27ab68378c22cac204735ce99097f399984ab67028f4ee06cbff69c6
+Description: Uniform Resource Identifiers (absolute and relative)
+ This module implements the URI class.  Objects of this class
+ represent "Uniform Resource Identifier references" as specified in RFC
+ 2396 (and updated by RFC 2732).
+ .
+ A Uniform Resource Identifier is a compact string of characters that
+ identifies an abstract or physical resource.  A Uniform Resource
+ Identifier can be further classified as either a Uniform Resource Locator
+ (URL) or a Uniform Resource Name (URN).  The distinction between URL
+ and URN does not matter to the URI class interface. A
+ "URI-reference" is a URI that may have additional information attached
+ in the form of a fragment identifier.
+ .
+ An absolute URI reference consists of three parts:  a scheme, a
+ scheme-specific part and a fragment identifier.  A subset of URI
+ references share a common syntax for hierarchical namespaces.  For
+ these, the scheme-specific part is further broken down into
+ authority, path and query components.  These URIs can also
+ take the form of relative URI references, where the scheme (and
+ usually also the authority) component is missing, but implied by the
+ context of the URI reference.  The three forms of URI reference
+ syntax are summarized as follows:
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libpath-class-perl
+Priority: optional
+Section: perl
+Installed-Size: 124
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1700-1
+Depends: perl
+Filename: ./libpath-class-perl_0.1700-1_all.deb
+Size: 34040
+MD5sum: 86b7022a74e417eba4add07f2853f03f
+SHA1: fc28da4656177ec41722d83a4987bfe60468561e
+SHA256: c0195fb7473d5bf0495eb8d47fa8d8882bf768d0e94d64d3bae838fca4b715b9
+Description: Cross-platform path specification manipulation
+ Path::Class is a module for manipulation of file and directory
+ specifications (strings describing their locations, like
+ '/home/ken/foo.txt' or 'C:\Windows\Foo.txt') in a cross-platform
+ manner.  It supports pretty much every platform Perl runs on,
+ including Unix, Windows, Mac, VMS, Epoc, Cygwin, OS/2, and NetWare.
+ .
+ The well-known module File::Spec also provides this service, but
+ it's sort of awkward to use well, so people sometimes avoid it, or use
+ it in a way that won't actually work properly on platforms
+ significantly different than the ones they've tested their code on.
+ .
+ In fact, Path::Class uses File::Spec internally, wrapping all
+ the unsightly details so you can concentrate on your application code.
+ Whereas File::Spec provides functions for some common path
+ manipulations, Path::Class provides an object-oriented model of the
+ world of path specifications and their underlying semantics.
+ File::Spec doesn't create any objects, and its classes represent
+ the different ways in which paths must be manipulated on various
+ platforms (not a very intuitive concept).  Path::Class creates
+ objects representing files and directories, and provides methods that
+ relate them to each other.  For instance, the following File::Spec
+ code:
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libyaml-perl
+Priority: optional
+Section: perl
+Installed-Size: 280
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.7000-1
+Depends: perl
+Filename: ./libyaml-perl_0.7000-1_all.deb
+Size: 83038
+MD5sum: 1124f31772b0801190c98398dbf2fb8f
+SHA1: 67cfb0cded0c13f600df5e60d3a81e33a5eb47b4
+SHA256: d124c2d7e85ba0acd0571a8a750f6d80c21c02295dc6b08e1125b2712e21beef
+Description: YAML Ain't Markup Language (tm)
+ YAML Ain't Markup Language (tm)
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmousex-getopt-perl
+Priority: optional
+Section: perl
+Installed-Size: 112
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.0600-1
+Depends: libany-moose-perl, libclass-method-modifiers-perl, libmouse-perl, libpath-class-perl, libtest-deep-perl, libtest-exception-perl, libtest-useallmodules-perl, perl
+Filename: ./libmousex-getopt-perl_0.0600-1_all.deb
+Size: 19300
+MD5sum: 4de8ae104ea446b8fde45efc6e87d280
+SHA1: e63ce63b091939ee88c403fa876bd5f6102e324a
+SHA256: 5cf5d73117341749ec8c10f9bb8e2c4aacde5ab4ec7a7bc5ecea3f4323e58c9d
+Description: A Mouse role for processing command line options
+ A Mouse role for processing command line options
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libclass-inspector-perl
+Priority: optional
+Section: perl
+Installed-Size: 96
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.2400-1
+Depends: perl
+Filename: ./libclass-inspector-perl_1.2400-1_all.deb
+Size: 20690
+MD5sum: 20162f0580976d39e82302117ba2cf53
+SHA1: c00f3175099503bc43b2fc946a4393e68eb64b99
+SHA256: 9aaf3130f2ae5bd32afee56aa0814a7571e35be0e13c7370570eab39d634fe52
+Description: Get information about a class and its structure
+ Get information about a class and its structure
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libtest-exception-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.2700-1
+Depends: libsub-uplevel-perl, perl
+Filename: ./libtest-exception-perl_0.2700-1_all.deb
+Size: 19884
+MD5sum: 13fae5e070ceece4b08c9efc83a68ad0
+SHA1: 38cb1fef8f2f0959ca51fe9d8385f2e876b983b0
+SHA256: e2317159b095db2d4e6ce9ed77a9b53d238665f23662b85f6bef18c03de021d7
+Description: Test exception based code
+ This module provides a few convenience methods for testing exception based code. It is built with
+ Test::Builder and plays happily with Test::More and friends.
+ .
+ If you are not already familiar with Test::More now would be the time to go take a look.
+ .
+ You can specify the test plan when you use Test::Exception in the same way as use Test::More.
+ See Test::More for details.
+ .
+ NOTE: Test::Exception only checks for exceptions. It will ignore other methods of stopping
+ program execution - including exit(). If you have an exit() in evalled code Test::Exception
+ will not catch this with any of its testing functions.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libany-moose-perl
+Priority: optional
+Section: perl
+Installed-Size: 68
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1000-1
+Depends: perl
+Filename: ./libany-moose-perl_0.1000-1_all.deb
+Size: 7098
+MD5sum: ba6167f25691ad2a0a9bb8d29c4695a4
+SHA1: b9105cfb7de45d806bca2b17337c0949c109ca04
+SHA256: a8e57c5fc5098593ffa40f57f39a3426b05e528fdc0e3da84f41c4937190a326
+Description: use Moose or Mouse modules
+ Actual documentation is forthcoming, once we solidify all the bits of the API.
+ The examples above are very likely to continue working.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libhtml-parser-perl
+Priority: optional
+Section: perl
+Installed-Size: 272
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: i386
+Version: 3.6200-1
+Depends: libc6 (>= 2.3.6-6), libhtml-tagset-perl, perl
+Filename: ./libhtml-parser-perl_3.6200-1_i386.deb
+Size: 102854
+MD5sum: da56d16efb4f590477a0dc5399b494f8
+SHA1: b62b1f60d2b1011a23f7e9a43350dc9c67557fd7
+SHA256: 140ce49e37b61b09425fe868e5afedbdf1d2d186db68532dfe75e42badebba26
+Description: HTML parser class
+ Objects of the HTML::Parser class will recognize markup and
+ separate it from plain text (alias data content) in HTML
+ documents.  As different kinds of markup and text are recognized, the
+ corresponding event handlers are invoked.
+ .
+ HTML::Parser is not a generic SGML parser.  We have tried to
+ make it able to deal with the HTML that is actually "out there", and
+ it normally parses as closely as possible to the way the popular web
+ browsers do it instead of strictly following one of the many HTML
+ specifications from W3C.  Where there is disagreement, there is often
+ an option that you can enable to get the official behaviour.
+ .
+ The document to be parsed may be supplied in arbitrary chunks.  This
+ makes on-the-fly parsing as documents are received from the network
+ possible.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libclass-accessor-chained-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.0100-1
+Depends: libclass-accessor-perl, perl
+Filename: ./libclass-accessor-chained-perl_0.0100-1_all.deb
+Size: 7760
+MD5sum: 289b283ee64c9f57220cf720e31ff9ca
+SHA1: 31dabf9e08ddb04009701abb6509f12efb0cb135
+SHA256: 03f2d86afc5d0ac64d247ed7d5bb5a404b75e78bd15dfbcb42637eee8eed0fa3
+Description: make chained accessors
+ A chained accessor is one that always returns the object when called
+ with parameters (to set), and the value of the field when called with
+ no arguments.
+ .
+ This module subclasses Class::Accessor in order to provide the same
+ mk_accessors interface.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libclass-method-modifiers-perl
+Priority: optional
+Section: perl
+Installed-Size: 76
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.0400-1
+Depends: perl
+Filename: ./libclass-method-modifiers-perl_1.0400-1_all.deb
+Size: 11200
+MD5sum: 2e2e22d8e994b91ab5ab9fd34b282ef8
+SHA1: 97d436945ffb18e7afca4acb8d2e184c80e66244
+SHA256: a130841a53e16e03426ccbff204c4a1589ae280a9179bd0fbd9e0874989d76f6
+Description: provides Moose-like method modifiers
+ provides Moose-like method modifiers
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libtest-nowarnings-perl
+Priority: optional
+Section: perl
+Installed-Size: 76
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.0840-1
+Depends: perl
+Filename: ./libtest-nowarnings-perl_0.0840-1_all.deb
+Size: 11636
+MD5sum: a2258595a4059afc5cbdba618d7fb48c
+SHA1: a8d424a4a614fda3efc6749def325d49e65a514b
+SHA256: 3f4056c77ff4ee115947c48fda4bc9eae093f35a8b1a6dfebfd0dfc5d8c8c375
+Description: Make sure you didn't emit any warnings while testing
+ In general, your tests shouldn't produce warnings. This modules causes any
+ warnings to be captured and stored. It automatically adds an extra test that
+ will run when your script ends to check that there were no warnings. If
+ there were any warings, the test will give a "not ok" and diagnostics of
+ where, when and what the warning was, including a stack trace of what was
+ going on when the it occurred.
+ .
+ If some of your tests are supposed to produce warnings then you should be
+ capturing and checking them with Test::Warn, that way Test::NoWarnings
+ will not see them and so not complain.
+ .
+ The test is run by an END block in Test::NoWarnings. It will not be run when
+ any forked children exit.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libcpanplus-perl
+Priority: optional
+Section: perl
+Installed-Size: 1024
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.8800-1
+Depends: perl
+Filename: ./libcpanplus-perl_0.8800-1_all.deb
+Size: 305026
+MD5sum: 4afc30142afff891f6a0c58f65f1c880
+SHA1: 6054e325833697139830c0b9c8d88343de37f18c
+SHA256: ff3d98836a48db1e9b49ff7bf5b4a3d9c69e8596368cf8994c7b17367c4e0a9f
+Description: Ameliorated interface to the CPAN
+ Ameliorated interface to the CPAN
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libclone-perl
+Priority: optional
+Section: perl
+Installed-Size: 84
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: i386
+Version: 0.3100-1
+Depends: libc6 (>= 2.3.6-6), perl
+Filename: ./libclone-perl_0.3100-1_i386.deb
+Size: 11938
+MD5sum: b4cac93556cbba986c2e8db1784922f7
+SHA1: 1c5b9e8ecc96f48f7c6ce14d50560c30c9b02e3d
+SHA256: 6d7cc0cc4d0cfac94a36ca71c41eb306e18cbc737322a02bd77278d3b3bef19b
+Description: recursively copy Perl datatypes
+ This module provides a clone() method which makes recursive
+ copies of nested hash, array, scalar and reference types,
+ including tied variables and objects.
+ . .
+ clone() takes a scalar argument and an optional parameter that
+ can be used to limit the depth of the copy. To duplicate lists,
+ arrays or hashes, pass them in by reference. e.g.
+ .
+ my $copy = clone (\@array);
+ .
+ # or
+ .
+ my %copy = %{ clone (\%hash) };
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libarchive-extract-perl
+Priority: optional
+Section: perl
+Installed-Size: 112
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.3400-1
+Depends: libipc-cmd-perl, liblocale-maketext-simple-perl, libmodule-load-conditional-perl, libparams-check-perl, perl
+Filename: ./libarchive-extract-perl_0.3400-1_all.deb
+Size: 24726
+MD5sum: 4faf322a3f20c4e0bf6cc6bd69a6928b
+SHA1: 7ee725ad438a44215026f589a02fbaf5a94ddf2b
+SHA256: e60ac82cef4e1945707423bc1775766dfd3c641b61da965f099eede0e68395a4
+Description: Generic archive extracting mechanism
+ Archive::Extract is a generic archive extraction mechanism.
+ .
+ It allows you to extract any archive file of the type .tar, .tar.gz,
+ .gz, .Z, tar.bz2, .tbz, .bz2, .zip or .lzma without having to worry how it
+ does so, or use different interfaces for each type by using either
+ perl modules, or commandline tools on your system.
+ .
+ See the HOW IT WORKS section further down for details.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libfindbin-libs-perl
+Priority: optional
+Section: perl
+Installed-Size: 96
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.4100-1
+Depends: perl
+Filename: ./libfindbin-libs-perl_1.4100-1_all.deb
+Size: 23304
+MD5sum: 96e88f6488ea26ad1b92debbeacc04d1
+SHA1: 9adb699a8aaa252b15b6f682e276cddacfc4756d
+SHA256: 347ec24eea041b8e1f5f98a2dd5c1d29b544ec24f80cf0004d3d3dd85488f9a2
+Description: Locate and 'use lib' directories along
+ Locate and 'use lib' directories along
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libwww-perl
+Priority: optional
+Section: perl
+Installed-Size: 1072
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 5.8310-1
+Depends: libhtml-parser-perl, libhtml-tagset-perl, liburi-perl, perl
+Filename: ./libwww-perl_5.8310-1_all.deb
+Size: 392664
+MD5sum: 9291484d46e6d7d9eda5c68550c0007b
+SHA1: 5df91848daa1a0a2ad19d77dbd9479b1b57bc1aa
+SHA256: 3e76dc658891c17e481fea3ed8407f24455ba3c19ee46c087121c145a7ffb5a4
+Description: The World-Wide Web library for Perl
+ LWP (short for "Library for WWW in Perl") is a very popular group of
+ Perl modules for accessing data on the Web. Like most Perl
+ module-distributions, each of LWP's component modules comes with
+ documentation that is a complete reference to its interface. However,
+ there are so many modules in LWP that it's hard to know where to start
+ looking for information on how to do even the simplest most common
+ things.
+ .
+ Really introducing you to using LWP would require a whole book -- a book
+ that just happens to exist, called Perl & LWP. But this article
+ should give you a taste of how you can go about some common tasks with
+ LWP.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libpackage-constants-perl
+Priority: optional
+Section: perl
+Installed-Size: 64
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.0200-1
+Depends: perl
+Filename: ./libpackage-constants-perl_0.0200-1_all.deb
+Size: 6022
+MD5sum: 2d60122cb86355d3de075cd0e35fc402
+SHA1: f75fc47df0a567bbc8d514eccb3857ad91cc9455
+SHA256: 61f19d1cd856b28743c00706588836d9f414083df2c1abe9f9c3628adde6f7c4
+Description: List all constants declared in a package
+ Package::Constants lists all the constants defined in a certain
+ package. This can be useful for, among others, setting up an
+ autogenerated @EXPORT/@EXPORT_OK for a Constants.pm file.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: liblist-compare-perl
+Priority: optional
+Section: perl
+Installed-Size: 300
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.3700-1
+Depends: perl
+Filename: ./liblist-compare-perl_0.3700-1_all.deb
+Size: 73682
+MD5sum: 7026ffdd5851b91162e175c433562ff6
+SHA1: c6a31872bffd2a70d460f499d0fa99d3b052435c
+SHA256: b702ada8ee764e3e83a2fc97096c98343541dd41bd3f3c732fff9bb58422ce5f
+Description: Compare elements of two or more lists
+ Compare elements of two or more lists
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmouse-perl
+Priority: optional
+Section: perl
+Installed-Size: 324
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.2800-1
+Depends: libtest-exception-perl, perl
+Filename: ./libmouse-perl_0.2800-1_all.deb
+Size: 72572
+MD5sum: 8702b97e87bffe21d640cfd154b1b4e3
+SHA1: a270886bdee093e77aebd990bfefdfd930b822cb
+SHA256: ab723cf0c7c2acfe07170979731ce67def7b484653bbaaf94ea1e2f2ca2cc037
+Description: Moose minus the antlers
+ Moose minus the antlers
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libio-zlib-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 1.1000-1
+Depends: perl
+Filename: ./libio-zlib-perl_1.1000-1_all.deb
+Size: 14034
+MD5sum: bce9bb5b3098c556f957077cae4fe664
+SHA1: d8d9d47eefe1bb0614a0f237b57b3a0411ef8805
+SHA256: 3bf1b656ae6e464b5dc3c7fafd4db8d320c5c3de53d300a0d240648f8c4804c3
+Description: IO:: style interface to Compress::Zlib
+ IO::Zlib provides an IO:: style interface to Compress::Zlib and
+ hence to gzip/zlib compressed files. It provides many of the same methods
+ as the IO::Handle interface.
+ .
+ Starting from IO::Zlib version 1.02, IO::Zlib can also use an
+ external gzip command.  The default behaviour is to try to use
+ an external gzip if no Compress::Zlib can be loaded, unless
+ explicitly disabled by
+ .
+ use IO::Zlib qw(:gzip_external 0);
+ .
+ If explicitly enabled by
+ .
+ use IO::Zlib qw(:gzip_external 1);
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: liblocale-maketext-simple-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.2100-1
+Depends: perl
+Filename: ./liblocale-maketext-simple-perl_0.2100-1_all.deb
+Size: 12694
+MD5sum: a2554e99fb77e2036fa7da778ed921e2
+SHA1: fbafe036f7a8ee0195d410de38319e4774f02afd
+SHA256: 5a50a55f2d5c40ee543bd1b36dc5bec5a24414b90f606575639493e1e1465ef4
+Description: Simple interface to Locale::Maketext::Lexicon
+ This module is a simple wrapper around Locale::Maketext::Lexicon,
+ designed to alleviate the need of creating Language Classes for
+ module authors.
+ .
+ The language used is chosen from the loc_lang call. If a lookup is not
+ possible, the i-default language will be used. If the lookup is not in the
+ i-default language, then the key will be returned.
+ .
+ If Locale::Maketext::Lexicon is not present, it implements a
+ minimal localization function by simply interpolating [_1] with
+ the first argument, [_2] with the second, etc.  Interpolated
+ function like [quant,_1] are treated as [_1], with the sole
+ exception of [tense,_1,X], which will append ing to _1 when
+ X is present, or appending ed to <_1> otherwise.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libversion-perl
+Priority: optional
+Section: perl
+Installed-Size: 180
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: i386
+Version: 0.7702-1
+Depends: libc6 (>= 2.3.6-6), perl
+Filename: ./libversion-perl_0.7702-1_i386.deb
+Size: 57466
+MD5sum: f0d364032751b6ca972691b40674ccb4
+SHA1: 25883f5d1157813fa49d6100a4398e8c5bd53f98
+SHA256: 12b7b8f1b76eacfd0f0e670b13fbdc9ec4fc10280f298bb125dd9e6a3d8c96d9
+Description: Perl extension for Version Objects
+ Perl extension for Version Objects
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libhtml-tagset-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 3.2000-1
+Depends: perl
+Filename: ./libhtml-tagset-perl_3.2000-1_all.deb
+Size: 13010
+MD5sum: 567adec4d9a2cfb7c48d85a39f292b5e
+SHA1: cbaad5f9c3a4ed165fd446914bf5e2b2862d9a6c
+SHA256: 1ff8515e9ffb01372e2d8b55686b49089596d4e0fa7fa7360ed7af7a89e13c15
+Description: data tables useful in parsing HTML
+ This module contains several data tables useful in various kinds of
+ HTML parsing operations.
+ .
+ Note that all tag names used are lowercase.
+ .
+ In the following documentation, a "hashset" is a hash being used as a
+ set -- the hash conveys that its keys are there, and the actual values
+ associated with the keys are not significant.  (But what values are
+ there, are always true.)
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libipc-cmd-perl
+Priority: optional
+Section: perl
+Installed-Size: 100
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.5000-1
+Depends: perl
+Filename: ./libipc-cmd-perl_0.5000-1_all.deb
+Size: 24424
+MD5sum: f45a436da6d3566dfa1db05fb41b9a6a
+SHA1: f286c057a05162b39e27db9fcdac225bcff26482
+SHA256: 91fcd81a15aa90863a824d0f55545cfa2538617351d74363fe4e5f10e6056a1a
+Description: A cross platform way of running (interactive) commandline programs.
+ IPC::Cmd allows you to run commands, interactively if desired,
+ platform independent but have them still work.
+ .
+ The can_run function can tell you if a certain binary is installed
+ and if so where, whereas the run function can actually execute any
+ of the commands you give it and give you a clear return value, as well
+ as adhere to your verbosity settings.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmodule-load-perl
+Priority: optional
+Section: perl
+Installed-Size: 68
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1600-1
+Depends: perl
+Filename: ./libmodule-load-perl_0.1600-1_all.deb
+Size: 8298
+MD5sum: 316ed7e05b2afae062e3d261e0326169
+SHA1: 84628eeab53eb6eadd08c2e3d6c04c7316ca7e88
+SHA256: dcba1a3820a6795e21021506e4d64991b84a3510399c01d145eabe59ccc81cea
+Description: Load modules in a DWIM style
+ load eliminates the need to know whether you are trying to require
+ either a file or a module.
+ .
+ If you consult perldoc -f require you will see that require will
+ behave differently when given a bareword or a string.
+ .
+ In the case of a string, require assumes you are wanting to load a
+ file. But in the case of a bareword, it assumes you mean a module.
+ .
+ This gives nasty overhead when you are trying to dynamically require
+ modules at runtime, since you will need to change the module notation
+ (Acme::Comment) to a file notation fitting the particular platform
+ you are on.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
+Package: libmodule-depends-perl
+Priority: optional
+Section: perl
+Installed-Size: 80
+Maintainer: Yoshimi <walf443@gmail.com>
+Architecture: all
+Version: 0.1400-1
+Depends: libclass-accessor-chained-perl, libyaml-perl, perl
+Filename: ./libmodule-depends-perl_0.1400-1_all.deb
+Size: 10872
+MD5sum: aa8e7f098a1e44b34dabf31dcbcf45d1
+SHA1: e9b104aa99d400261623ac768473aa19f36a3375
+SHA256: 294ae6edf22eb15ef87c0f31426773ce773450b0d0af623d8ab768cd37a01074
+Description: identify the dependencies of a distribution
+ Module::Depends extracts module dependencies from an unpacked
+ distribution tree.
+ .
+ Module::Depends only evaluates the META.yml shipped with a
+ distribution.  This won't be effective until all distributions ship
+ META.yml files, so we suggest you take your life in your hands and
+ look at Module::Depends::Intrusive.
+ .
+ This description was automagically extracted from the module by dh-make-perl.
+
