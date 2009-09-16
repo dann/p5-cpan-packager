@@ -68,7 +68,7 @@ sub build {
     $self->generate_rpmrc;
     $self->copy_module_sources_to_build_dir($module);
     my $is_failed = $self->build_rpm_package($spec_file_name);
-    $self->install( $module->{module} ) unless $is_failed;
+    $self->install( $module ) unless $is_failed;
     $self->log(
         info => ">>> finished building rpm package ( $module->{module} )" );
     return $self->package_name( $module->{module} );
@@ -370,7 +370,8 @@ sub print_installed_packages {
 }
 
 sub install {
-    my ( $self, $module_name ) = @_;
+    my ( $self, $module ) = @_;
+    my $module_name = $module->{module};
     my $package_name = $self->package_name($module_name);
     $self->log( info => ">>> install $package_name" );
     my $rpm_path = file( $self->package_output_dir, $package_name );
