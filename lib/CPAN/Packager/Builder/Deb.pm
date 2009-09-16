@@ -32,6 +32,7 @@ sub check_executables_exist_in_path {
 sub build {
     my ( $self, $module ) = @_;
     $self->_build_package_with_dh_make_perl($module);
+    $self->install($module);
 }
 
 sub _build_package_with_dh_make_perl {
@@ -54,7 +55,6 @@ sub _build_package_with_dh_make_perl {
         my $dh_make_perl_cmd
             = $self->_build_dh_make_perl_command( $module, $package );
         CPAN::Packager::Util::run_command( $dh_make_perl_cmd, 1 );
-        $self->install($module);
         CPAN::Packager::Util::run_command(
             "sudo cp $module->{src}/../$package*.deb $package_output_dir",
             1 );
