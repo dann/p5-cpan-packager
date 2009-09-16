@@ -5,6 +5,7 @@ use Class::Inspector;
 use Pod::POM ();
 use List::Util qw/first/;
 use YAML;
+use IPC::Cmd qw(run);
 
 sub topological_sort {
     my ( $target, $modules ) = @_;
@@ -16,11 +17,13 @@ sub topological_sort {
             && @{ $modules->{$target}->{depends} } )
         {
             for my $mod ( @{ $modules->{$target}->{depends} } ) {
+
                 # ex) fix for List::AllUtils
-                if($mod eq $target) {
+                if ( $mod eq $target ) {
                     next;
                 }
-                my $result = CPAN::Packager::Util::topological_sort( $mod, $modules );
+                my $result = CPAN::Packager::Util::topological_sort( $mod,
+                    $modules );
                 push @results, @{$result};
             }
         }
@@ -37,14 +40,59 @@ sub get_schema_from_pod {
     my $proto = ref $target || $target;
 
     my $parser = Pod::POM->new;
-    my $pom = $parser->parse(Class::Inspector->resolved_filename($proto));
-    if (my $schema_node = first { $_->title eq 'SCHEMA' } $pom->head1) {
+    my $pom = $parser->parse( Class::Inspector->resolved_filename($proto) );
+    if ( my $schema_node = first { $_->title eq 'SCHEMA' } $pom->head1 ) {
         my $schema_content = $schema_node->content;
         $schema_content =~ s/^    //gm;
         my $schema = YAML::Load($schema_content);
         return $schema;
-    } else {
-        return; # 404 schema not found.
+    }
+    else {
+        return;    # 404 schema not found.
+    }
+}
+
+sub run_command {
+    my ( $cmd, $verbose ) = @_;
+
+    $verbose = 0 unless    #verbose;
+        my $buffer;
+    if (scalar run(
+            command => $cmd,
+            verbose => $verbose,
+            buffer  => \$buffer,
+            timeout => 20
+        )
+        )
+    {
+        print "success: $buffer\n";
+        return 0;
+    }
+    else {
+        print "failed: $buffer\n";
+        return 1;
+    }
+}
+
+sub capture_command {
+    my ( $cmd, $verbose ) = @_;
+
+    $verbose = 0 unless    #verbose;
+        my $buffer;
+    if (scalar run(
+            command => $cmd,
+            verbose => $verbose,
+            buffer  => \$buffer,
+            timeout => 20
+        )
+        )
+    {
+        print "success: $buffer\n";
+        return $buffer;
+    }
+    else {
+        print "failed: $buffer\n";
+        return $buffer;
     }
 }
 

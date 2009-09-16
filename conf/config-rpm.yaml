@@ -64,8 +64,12 @@ modules:
   - module: Test::Exception
     depends:
       - module: Test::Simple
+      - module: Sub::Uplevel
     no_depends:
       - module: Test::Builder::Tester
+    skip_test: 1
+  - module: Sub::Uplevel 
+    skip_test: 1
   - module: FindBin::libs
     skip_test: 1
   - module: HTTP::Request::AsCGI

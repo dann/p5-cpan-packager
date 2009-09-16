@@ -3,11 +3,11 @@ use Mouse;
 use Carp ();
 use Path::Class qw(file dir);
 use RPM::Specfile;
-use IPC::System::Simple qw(system capture EXIT_ANY);
 use File::Temp qw(tempdir);
 use File::Copy;
 use CPAN::Packager::Home;
 use CPAN::Packager::Builder::RPM::Spec;
+use CPAN::Packager::Util;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
@@ -48,9 +48,12 @@ sub BUILD {
 }
 
 sub check_executables_exist_in_path {
-    system("which cpanflute2");
-    system("which yum");
-    system("which rpm");
+    die "cpanflute2 doesn't exist in PATH"
+        if CPAN::Packager::Util::run_command("which cpanflute2");
+    die "yum doesn't  exist in PATH"
+        if CPAN::Packager::Util::run_command("which cpanflute2");
+    die "rpm doesn't  exist in PATH"
+        if CPAN::Packager::Util::run_command("which cpanflute2");
 }
 
 sub build {
@@ -64,8 +67,10 @@ sub build {
     $self->generate_macro;
     $self->generate_rpmrc;
     $self->copy_module_sources_to_build_dir($module);
-    $self->build_rpm_package($spec_file_name);
-    $self->log( info => ">>> finished building rpm package ( $module->{module} )" );
+    my $is_failed = $self->build_rpm_package($spec_file_name);
+    $self->install( $module->{module} ) unless $is_failed;
+    $self->log(
+        info => ">>> finished building rpm package ( $module->{module} )" );
     return $self->package_name( $module->{module} );
 }
 
@@ -97,8 +102,12 @@ sub generate_spec_with_cpanflute {
         'just-spec'   => 1,
         'noperlreqs'  => 1,
         'installdirs' => 'vendor',
-        'release'     => $self->release
+        'release'     => $self->release,
+        'test'        => 1,
     };
+
+    $opts->{test} = 0 if $module->{skip_test};
+
     my $spec = $self->spec_builder->build( $opts, $copy_to );
 
     $self->log( info => '>>> generated specfile for ' . $tgz );
@@ -228,7 +237,7 @@ sub _generate_module_filter_macro {
         print $fh "-e '/perl($mod->{module})/d' ";
     }
     print $fh "\n";
-    system("chmod 755 $filter_macro_file");
+    CPAN::Packager::Util::run_command("chmod 755 $filter_macro_file");
 }
 
 sub _generate_global_filter_macro {
@@ -246,7 +255,7 @@ sub _generate_global_filter_macro {
         print $fh "-e '/perl($mod->{module})/d' ";
     }
     print $fh "\n";
-    system("chmod 755 $filter_macro_file");
+    CPAN::Packager::Util::run_command("chmod 755 $filter_macro_file");
 }
 
 sub get_default_build_arch {
@@ -259,7 +268,7 @@ sub is_installed {
     my ( $self, $module ) = @_;
     my $package = $self->package_name($module);
 
-    my $return_value = capture( EXIT_ANY, "LANG=C rpm -q $package" );
+    my $return_value = CPAN::Packager::Util::capture_command("LANG=C rpm -q $package" );
     $self->log( info => ">>> $package is "
             . ( $return_value =~ /not installed/ ? 'not ' : '' )
             . "installed" );
@@ -308,18 +317,12 @@ sub build_rpm_package {
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
 
-#    my $build_opt
-#        = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path";
     my $build_opt
         = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path --nodeps";
-
     $build_opt = "--rcfile $rpmrc_file -ba $spec_file_path"
         if &CPAN::Packager::DEBUG;
-    my $result = capture( EXIT_ANY,
-        "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt" );
-
-    $self->log( debug => $result ) if &CPAN::Packager::DEBUG;
-    $result;
+    my $cmd = "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt";
+    return CPAN::Packager::Util::run_command( $cmd, 1 );
 }
 
 sub copy_module_sources_to_build_dir {
@@ -349,7 +352,7 @@ sub package_name {
 
 sub installed_packages {
     my @installed_pkg;
-    my $return_value = capture( EXIT_ANY,
+    my $return_value = CPAN::Packager::Util::run_command( 
         "LANG=C yum list installed|grep '^perl\-*' |awk '{print \$1}'" );
     my @packages = split /[\r\n]+/, $return_value;
     for my $package (@packages) {
@@ -364,6 +367,15 @@ sub print_installed_packages {
     my $fh = $installed_file->openw;
     print $fh "yum -y install $_\n" for $self->installed_packages;
     $fh->close;
+}
+
+sub install {
+    my ( $self, $module_name ) = @_;
+    my $package_name = $self->package_name($module_name);
+    $self->log( info => ">>> install $package_name" );
+    my $rpm_path = file( $self->package_output_dir, $package_name );
+    my $result = CPAN::Packager::Util::run_command("sudo rpm -Uvh $rpm_path-*.rpm", 1);
+    return $result;
 }
 
 no Mouse;
