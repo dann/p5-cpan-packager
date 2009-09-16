@@ -35,8 +35,6 @@ has 'downloader' => (
     default => 'CPANPLUS',
 );
 
-
-
 has 'conf' => (
     is  => 'rw',
     isa => 'Str',
@@ -53,6 +51,12 @@ has 'modulelist' => (
     isa => 'Str',
 );
 
+has 'verbose' => (
+    is      => 'rw',
+    isa     => 'Bool',
+    default => 0,
+);
+
 sub run {
     my $self = shift;
     if ( $self->help ) {
@@ -60,7 +64,7 @@ sub run {
     }
     die 'conf is required param' unless $self->conf;
 
-    unless( $self->builder eq "Deb" || $self->builder eq "RPM") {
+    unless ( $self->builder eq "Deb" || $self->builder eq "RPM" ) {
         die 'builder option value must be Deb or RPM';
     }
 
@@ -70,6 +74,7 @@ sub run {
         conf         => $self->conf,
         always_build => $self->always_build,
         dry_run      => $self->dry_run,
+        verbose      => $self->verbose,
     );
 
     if ( $self->modulelist ) {

@@ -39,6 +39,7 @@ options
     --conf           configuration file path (required)
     --always-build   always build cpan modules if module is aready installed (optional)
     --modulelist     File containing a list of modules that should be built. (optional)
+    --verbose        print command result (optional)
 
 RPM/Deb Packages are generated at ~/.cpanpackager/{deb or rpm}
 

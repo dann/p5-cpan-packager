@@ -63,6 +63,12 @@ has 'always_build' => (
     default => 0,
 );
 
+has 'verbose' => (
+    is      => 'rw',
+    isa     => 'Int',
+    default => 0,
+);
+
 sub BUILD {
     my $self = shift;
     $self->_setup_dependencies();
@@ -87,6 +93,7 @@ sub make {
     $self->log( info => "### Building packages for $module ... ###" );
     my $config = $self->config_loader->load( $self->conf );
     $config->{modules} = $built_modules if $built_modules;
+    $config->{global}->{verbose} = $self->verbose;
 
     $self->log( info => "### Analyzing dependencies for $module ... ###" );
     my ( $modules, $resolved_module_name )

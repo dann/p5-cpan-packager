@@ -49,15 +49,16 @@ sub _build_package_with_dh_make_perl {
         }
     }
 
+    my $verbose = $self->config( global => "verbose" );
     eval {
         CPAN::Packager::Util::run_command( "rm -rf $module->{src}/debian",
-            1 );
+            $verbose );
         my $dh_make_perl_cmd
             = $self->_build_dh_make_perl_command( $module, $package );
-        CPAN::Packager::Util::run_command( $dh_make_perl_cmd, 1 );
+        CPAN::Packager::Util::run_command( $dh_make_perl_cmd, $verbose );
         CPAN::Packager::Util::run_command(
             "sudo cp $module->{src}/../$package*.deb $package_output_dir",
-            1 );
+            $verbose );
 
     };
     if ($@) {
@@ -72,7 +73,7 @@ sub install {
     my $package = $self->package_name( $module->{module} );
     CPAN::Packager::Util::run_command(
         "sudo dpkg -i $module->{src}/../${package}_@{[ $module->{version} ]}*.deb",
-        1
+        $self->config( global => "verbose" )
     );
 
 }

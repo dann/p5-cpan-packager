@@ -55,7 +55,7 @@ sub get_schema_from_pod {
 sub run_command {
     my ( $cmd, $verbose ) = @_;
 
-    $verbose = 0 unless    #verbose;
+    $verbose = 0 unless $verbose;
     my $buffer;
     if (scalar run(
             command => $cmd,
@@ -87,11 +87,11 @@ sub capture_command {
         )
         )
     {
-        print "success: $buffer\n";
+        print "success: $buffer\n" if $verbose;
         return $buffer;
     }
     else {
-        print "failed: $buffer\n";
+        print "failed: $buffer\n" if $verbose;
         return $buffer;
     }
 }
