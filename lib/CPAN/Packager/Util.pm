@@ -7,6 +7,9 @@ use List::Util qw/first/;
 use YAML;
 use IPC::Cmd qw(run);
 
+our $DEFAULT_COMMAND_TIMEOUT = 30 * 60;
+our $DEFAULT_VERVOSE_MODE    = 0;
+
 sub topological_sort {
     my ( $target, $modules ) = @_;
     my @results;
@@ -53,15 +56,16 @@ sub get_schema_from_pod {
 }
 
 sub run_command {
-    my ( $cmd, $verbose ) = @_;
+    my ( $cmd, $verbose, $timeout ) = @_;
 
-    $verbose = 0 unless $verbose;
+    $verbose ||= $DEFAULT_VERVOSE_MODE;
+    $timeout ||= $DEFAULT_COMMAND_TIMEOUT;
     my $buffer;
     if (scalar run(
             command => $cmd,
             verbose => $verbose,
             buffer  => \$buffer,
-            timeout =>  30 * 60
+            timeout => $timeout,
         )
         )
     {
@@ -75,15 +79,16 @@ sub run_command {
 }
 
 sub capture_command {
-    my ( $cmd, $verbose ) = @_;
+    my ( $cmd, $verbose, $timeout ) = @_;
 
-    $verbose = 0 unless    #verbose;
-        my $buffer;
+    $verbose ||= $DEFAULT_VERVOSE_MODE;
+    $timeout ||= $DEFAULT_COMMAND_TIMEOUT;
+    my $buffer;
     if (scalar run(
             command => $cmd,
             verbose => $verbose,
             buffer  => \$buffer,
-            timeout => 30 * 60
+            timeout => $timeout,
         )
         )
     {
