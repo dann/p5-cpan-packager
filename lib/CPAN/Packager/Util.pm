@@ -56,7 +56,7 @@ sub run_command {
     my ( $cmd, $verbose ) = @_;
 
     $verbose = 0 unless    #verbose;
-        my $buffer;
+    my $buffer;
     if (scalar run(
             command => $cmd,
             verbose => $verbose,
@@ -65,7 +65,7 @@ sub run_command {
         )
         )
     {
-        print "success: $buffer\n";
+        print "success: $cmd\n";
         return 0;
     }
     else {
