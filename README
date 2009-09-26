@@ -27,11 +27,11 @@ How to use
 ===========
 case1: build a module
 
-    sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml 
+    sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml --verbose
 
 case2: build multiple modules at a time 
 
-    sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml 
+    sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml --verbose
 
 options
     --module         module name (required option)
