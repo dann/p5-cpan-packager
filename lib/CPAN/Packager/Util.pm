@@ -61,7 +61,7 @@ sub run_command {
             command => $cmd,
             verbose => $verbose,
             buffer  => \$buffer,
-            timeout => 20
+            timeout =>  30 * 60
         )
         )
     {
@@ -83,7 +83,7 @@ sub capture_command {
             command => $cmd,
             verbose => $verbose,
             buffer  => \$buffer,
-            timeout => 20
+            timeout => 30 * 60
         )
         )
     {
