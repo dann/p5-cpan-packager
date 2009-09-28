@@ -31,8 +31,9 @@ sub check_executables_exist_in_path {
 
 sub build {
     my ( $self, $module ) = @_;
-    $self->_build_package_with_dh_make_perl($module);
+    my $package = $self->_build_package_with_dh_make_perl($module);
     $self->install($module);
+    return $package;
 }
 
 sub _build_package_with_dh_make_perl {
