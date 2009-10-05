@@ -121,6 +121,7 @@ sub build {
 
     if ( my @files = Archive::Tar->list_archive("$tmpdir/$tarball") ) {
         $use_module_build = 1 if grep {/Build\.PL$/} @files;
+        $use_module_build = 0 if grep {/Makefile\.PL$/} @files;
 
         if ( not exists $options{noarch} ) {
             $noarch = 1;
