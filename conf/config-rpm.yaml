@@ -43,6 +43,7 @@ global:
     - module: Devel::PPPort
     - module: Encode
     - module: ExtUtils::MakeMaker
+    - module: ExtUtils::Install
     - module: 'Filter # brokes?'
     - module: HTTP::Request
     - module: HTTP::Response
