@@ -267,7 +267,13 @@ sub build {
     $spec->push_file( '%doc ' . join( ' ', sort @docs ) ) if @docs;
 
     if ( $options{test} ) {
-        $spec->check("make test");
+        if($use_module_build) {
+            $spec->check("perl Build.PL");
+            $spec->check("./Build test");
+        } else {
+            $spec->check("perl Makefile.PL");
+            $spec->check("make test");
+        }
     }
 
     my $installdirs = "";
