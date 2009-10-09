@@ -46,7 +46,7 @@ install-stamp: build-stamp
 	dh_testroot
 	dh_clean -k
 	# Add commands to install the package into $(TMP)
-	$(MAKE) install DESTDIR=$(TMP) PREFIX=/usr
+	$(MAKE) pure_install DESTDIR=$(TMP) PREFIX=/usr
 	[ ! -d $(TMP)/usr/share/perl5 ] || \
 		rmdir --ignore-fail-on-non-empty --parents --verbose \
 		$(TMP)/usr/share/perl5

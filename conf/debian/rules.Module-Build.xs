@@ -46,7 +46,7 @@ install-stamp: build-stamp
 	dh_testroot
 	dh_clean -k
 	# Add commands to install the package into $(TMP) here
-	$(PERL) Build install destdir=$(TMP) create_packlist=0
+	$(PERL) Build pure_install destdir=$(TMP) create_packlist=0
 	touch $@
 
 # Build architecture-independent files here.
