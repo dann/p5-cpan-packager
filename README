@@ -1,108 +1,83 @@
-CPAN::Packager - CPAN::Packager is yet another packager
-======================================================
+NAME
+    cpan-packager - create redhat/debian packages from perl modules
 
-What is CPAN::Packager
-=======================
-CPAN::Packager is a tool to help you make packages from perl modules on CPAN.
-This makes it so easy to make a perl module into a Redhat/Debian package
+SYNOPSIS
+    case1: build a module
 
+        sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml --verbose
 
-INSTALLATION
-============
-CPAN::Packager installation is straightforward. If your CPAN shell is set up,
-you should just be able to do
+    case2: build multiple modules at a time
 
-    % cpan CPAN::Packager
+        sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml --verbose
 
-Download it, unpack it, then build it as per the usual:
+    options --module module name (required option) --builder Deb or RPM
+    (optional. default is Deb) --conf configuration file path (required)
+    --always-build always build cpan modules if module is aready installed
+    (optional) --modulelist File containing a list of modules that should be
+    built. (optional) --verbose print command result (optional)
 
-    % perl Makefile.PL
-    % make && make test
+    RPM/Deb Packages are generated at ~/.cpanpackager/{deb or rpm}
 
-Then install it:
+  Configuration location and schema
+    config.yaml is located at github repo.
 
-    % make install
+        See http://github.com/dann/cpan-packager/tree/master
 
-How to use
-===========
-case1: build a module
+    Please see the configuration schema if you want to write config your
+    self. You can see schema like below.
 
-    sudo cpan-packager --module Test::Exception --builder Deb --conf conf/config.yaml --verbose
+        perldoc CPAN::Packager::Config::Schema
 
-case2: build multiple modules at a time 
+  Configure CPAN mirrors
+    CPAN::Packager downloads modules from cpan_mirrors if you set CPAN
+    mirror uri in your config.
 
-    sudo cpan-packager --modulelist modulelist.txt --builder RPM --conf conf/config.yaml --verbose
+        ---
+        global:
+          cpan_mirrors:
+            - http://ftp.funet.fi/pub/languages/perl/CPAN/
+            - file:///home/dann/minicpan
 
-options
-    --module         module name (required option)
-    --builder        Deb or RPM (optional. default is Deb)
-    --conf           configuration file path (required)
-    --always-build   always build cpan modules if module is aready installed (optional)
-    --modulelist     File containing a list of modules that should be built. (optional)
-    --verbose        print command result (optional)
+  Use cpan-packager with minicpan
+    You can use minicpan with CPAN::Packager. At first, you mirror CPAN
+    modules with minicpan.
 
-RPM/Deb Packages are generated at ~/.cpanpackager/{deb or rpm}
+        minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/minicpan
 
-config.yaml is located at github repo.
+    Set cpan mirrors uri in your config if you want to use minicpan. after
+    that you just use cpan-packager ;)
 
-    See http://github.com/dann/cpan-packager/tree/master
+        ---
+        global:
+          cpan_mirrors:
+            - file:///home/dann/minicpan
 
-Please see the configuration schema if you want to write config your self.
-You can see schema like below.
-
-    perldoc CPAN::Packager::Config::Schema
-
-Configure CPAN mirrors
-======================
-Set cpan mirror uri in your config.
-CPAN::Packager downloads modules from cpan_mirrors
-
-    ---
-    global:
-      cpan_mirrors:
-        - file:///home/dann/minicpan
-        - http://ftp.funet.fi/pub/languages/perl/CPAN/
-
-Use cpan-packager with minicpan (Optional)
-=============================================
-You can use minicpan with CPAN::Packager.
-At first, you mirror CPAN modules with minicpan.
-
-    minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/minicpan
-
-Set cpan mirrors uri in your config if you want to use minicpan.
-after that you just use cpan-packager ;)
-
-    ---
-    global:
-      cpan_mirrors:
-        - file:///home/dann/minicpan
-
-Additional setup (For debian users)
-===================================
-Copy conf/debian/rules* to ~/.dh-make-perl directory.
-copying perllocal.pod is conflited  if you dont do that. 
+  Additional setup (For debian users)
+    Copy conf/debian/rules* to ~/.dh-make-perl directory. copying
+    perllocal.pod is conflited if you dont do that.
 
 DESCRIPTION
-===========
-cpan-packager will create the files required to build a debian or redhat source 
-package out of a perl package. This works for most simple packages and is also 
-useful for getting started with packaging perl modules. Given a perl package name, 
-it can also automatically download it from CPAN. 
+    cpan-packager will create the files required to build a debian or redhat
+    source package out of a perl package. This works for most simple
+    packages and is also useful for getting started with packaging perl
+    modules. Given a perl package name, it can also automatically download
+    it from CPAN.
 
 BUGS
-====
-Please report any bugs or feature requests to "<bug-CPAN-Packagerat rt.cpan.org>", or through
-the web interface at <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=CPAN-Packager>.  I will be
-notified, and then you’ll automatically be notified of progress on your bug as I make changes.
+    Please report any bugs or feature requests to "<bug-CPAN-Packagerat
+    rt.cpan.org>", or through the web interface at
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=CPAN-Packager>. I will
+    be notified, and then you’ll automatically be notified of progress on
+    your bug as I make changes.
 
 AUTHOR
-======
-Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
-
-special thanks: walf443
+    Takatoshi Kitano <kitano.tk@gmail.com>
 
 SEE ALSO
-========
-"CPAN::Packager" development takes place at <http://github.com/dann/p5-cpan-packager/tree/master>
+    "CPAN::Packager" development takes place at
+    <http://github.com/dann/p5-cpan-packager/tree/master>
+
+LICENSE
+    This library is free software; you can redistribute it and/or modify it
+    under the same terms as Perl itself.
 

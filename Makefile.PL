@@ -1,3 +1,9 @@
+sub readme_from { }
+sub use_test_base { warn "You need to install Test::Base to run make test from git clone" }
+sub author_requires { warn "You need to install Module::Install::AuthorRequires to install modules author requires" }
+sub author_tests { }
+sub auto_set_repository { }
+
 use inc::Module::Install;
 
 {
@@ -10,6 +16,7 @@ use inc::Module::Install;
 
 name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
+readme_from 'bin/cpan-packager';
 
 requires(
     'CPANPLUS::Backend'  => 0,
@@ -60,14 +67,13 @@ test_requires(
 );
 
 # Module::Install::AuthorRequires
-#author_requires(
-#    'Module::Install::Repository'  => 0,
-#    'Module::Install::AuthorTests' => 0,
-#    'Test::Pod'                    => 0,
-#    'Test::NoTabs'                 => 0,
-#    'Test::Perl::Critic'           => 0,
-#    'Exception::Class'             => 0,
-#);
+author_requires(
+    'Module::Install::Repository'  => 0,
+    'Module::Install::AuthorTests' => 0,
+    'Test::Pod'                    => 0,
+    'Test::NoTabs'                 => 0,
+    'Test::Perl::Critic'           => 0,
+);
 
 tests( 't/*.t t/0*/*.t', );
 
@@ -76,6 +82,5 @@ author_tests('xt');
 install_script('bin/cpan-packager');
 use_test_base;
 auto_include;
-
-#auto_set_repository;
+auto_set_repository;
 WriteAll;
