@@ -94,10 +94,6 @@ notified, and then you’ll automatically be notified of progress on your bug as
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
 
-=head1 SEE ALSO
-
-"CPAN::Packager" development takes place at <http://github.com/dann/p5-cpan-packager/tree/master>
-
 =head1 LICENSE
 
 This library is free software; you can redistribute it and/or modify

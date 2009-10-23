@@ -73,10 +73,6 @@ BUGS
 AUTHOR
     Takatoshi Kitano <kitano.tk@gmail.com>
 
-SEE ALSO
-    "CPAN::Packager" development takes place at
-    <http://github.com/dann/p5-cpan-packager/tree/master>
-
 LICENSE
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
