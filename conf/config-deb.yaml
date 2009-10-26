@@ -10,6 +10,7 @@ global:
   fix_package_depends: []
   no_depends:
     - module: mod_perl
+    - module: IO::Compress
   skip_name_resolve_modules: []
 modules:
   - module: IO::Compress
