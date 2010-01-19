@@ -58,7 +58,7 @@ sub _build_package_with_dh_make_perl {
             = $self->_build_dh_make_perl_command( $module, $package );
         CPAN::Packager::Util::run_command( $dh_make_perl_cmd, $verbose );
         CPAN::Packager::Util::run_command(
-            "sudo cp $module->{src}/../$package*.deb $package_output_dir",
+            "cp $module->{src}/../$package*.deb $package_output_dir",
             $verbose );
 
     };
