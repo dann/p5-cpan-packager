@@ -13,7 +13,7 @@ with 'CPAN::Packager::Role::Logger';
 
 has 'release' => (
     is      => 'rw',
-    default => '1.cpanpackager',
+    default => 1,
 );
 
 has 'package_output_dir' => (
