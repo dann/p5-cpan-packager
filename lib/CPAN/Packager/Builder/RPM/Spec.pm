@@ -24,7 +24,7 @@ sub build {
 
     $defaults{'outdir'}      = './';
     $defaults{'tmpdir'}      = '/tmp';
-    $defaults{'release'}     = '8';
+    $defaults{'release'}     = 1;
     $defaults{'installdirs'} = "";
     {
         my ( $username, $fullname ) = ( getpwuid($<) )[ 0, 6 ];
