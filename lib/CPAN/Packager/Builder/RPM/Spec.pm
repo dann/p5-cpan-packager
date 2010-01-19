@@ -13,6 +13,8 @@ use URI::Escape qw(uri_escape);
 use Cwd;
 use YAML;
 use RPM::Specfile;
+use CPAN::DistnameInfo;
+use Archive::Zip;
 
 sub build {
     my ( $self, $args, $fullname ) = @_;
@@ -105,9 +107,15 @@ sub build {
 
     $build_switch = 'a' if ( defined( $options{'buildall'} ) );
 
-    $tarball =~ /^(.+)\-([^-]+)\.t(ar\.)?gz$/;
-    my $name = $options{name}    || $1;
-    my $ver  = $options{version} || $2;
+    my $local_tarball = $tarball;
+    $local_tarball    =~ s/::/-/g;
+    my $distro        = CPAN::DistnameInfo->new($local_tarball);
+    my $dist_name     = $distro->dist;
+    $dist_name        =~ s/-/::/g;
+    my $version       = $distro->version;
+    my $name          = $options{name}    || $dist_name;
+    my $ver           = $options{version} || $version;
+
     my $tarball_top_dir = "$name-%{version}";
 
     die "Module name/version not parsable from $tarball"
@@ -119,7 +127,17 @@ sub build {
         or die "copy $fullname: $!";
     utime( ( stat($fullname) )[ 8, 9 ], "$tmpdir/$tarball" );
 
-    if ( my @files = Archive::Tar->list_archive("$tmpdir/$tarball") ) {
+    my (@files, $zip);
+
+    if ($distro->extension eq 'zip') {
+        $zip = Archive::Zip::Archive->new("$tmpdir/$tarball");
+        @files = $zip->memberNames;
+    }
+    else {
+        @files = Archive::Tar->list_archive("$tmpdir/$tarball");
+    }
+
+    if ( @files ) {
         $use_module_build = 1 if grep {/Build\.PL$/} @files;
         $use_module_build = 0 if grep {/Makefile\.PL$/} @files;
 
@@ -134,9 +152,18 @@ sub build {
             $prefixes{ $path_components[0] }++;
 
             if ( $path_components[-1] eq 'META.yml' ) {
-                my $tar = new Archive::Tar;
-                $tar->read( "$tmpdir/$tarball", 1 );
-                my $contents = $tar->get_content($_);
+                my $contents;
+
+                if ($distro->extension eq 'zip') {
+                    my $member = $zip->memberNamed($_);
+                    $contents = $member->contents;
+                }
+                else {
+                    my $tar = new Archive::Tar;
+                    $tar->read( "$tmpdir/$tarball", 1 );
+                    $contents = $tar->get_content($_);
+                }
+
                 my $yaml;
                 eval { $yaml = Load($contents); };
 

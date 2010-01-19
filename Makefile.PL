@@ -39,6 +39,7 @@ requires(
     'Kwalify'            => '1.20',
     'URI'                => 0,
     'IPC::Cmd'           => 0,
+    'CPAN::DistnameInfo' => 0,
 );
 
 features(
@@ -51,6 +52,7 @@ features(
         recommends_hack( 'File::Temp'     => 0 ),
         recommends_hack( 'URI::Escape'    => 0 ),
         recommends_hack( 'Cwd'            => 0 ),
+        recommends_hack( 'Archive::Zip'   => 0 ),
     ],
     'use App::CPAN::Fresh as a module downloader?' => [
         -default => 0,

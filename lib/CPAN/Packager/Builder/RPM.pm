@@ -5,6 +5,8 @@ use Path::Class qw(file dir);
 use RPM::Specfile;
 use File::Temp qw(tempdir);
 use File::Copy;
+use File::Basename;
+use CPAN::DistnameInfo;
 use CPAN::Packager::Home;
 use CPAN::Packager::Builder::RPM::Spec;
 use CPAN::Packager::Util;
@@ -97,7 +99,10 @@ sub generate_spec_with_cpanflute {
 
     my $module_name = $module->{module};
     my $version     = $module->{version};
-    my $copy_to = file( $self->build_dir, "$module_name-$version.tar.gz" );
+    my $basename    = fileparse($tgz);
+    my $distro      = CPAN::DistnameInfo->new($basename);
+    my $ext         = $distro->extension;
+    my $copy_to = file( $self->build_dir, "$module_name-$version.$ext" );
     copy( $module->{tgz}, $copy_to );
 
     $ENV{LANG} = 'C';
@@ -335,12 +340,14 @@ sub copy_module_sources_to_build_dir {
     my $module_tarball = $module->{tgz};
     my $build_dir      = $self->build_dir;
     my $module_name    = $module->{module};
+    my $basename       = fileparse($module_tarball);
+    my $distro         = CPAN::DistnameInfo->new($basename);
+    my $ext            = $distro->extension;
 
     $module_name =~ s{::}{-}g;
     my $version = $module->{version};
     copy( $module_tarball,
-        file( $build_dir, "$module_name-$version.tar.gz" ) );
-    copy( $module_tarball, file( $build_dir, "$module_name-$version.tgz" ) );
+        file( $build_dir, "$module_name-$version.$ext" ) );
 }
 
 sub package_name {

@@ -4,6 +4,8 @@ use CPAN;
 use App::CPAN::Fresh;
 use Path::Class qw(file dir);
 use URI;
+use File::Basename;
+use CPAN::DistnameInfo;
 with 'CPAN::Packager::Role::Logger';
 with 'CPAN::Packager::Downloader::Role';
 
@@ -27,9 +29,10 @@ sub download {
 
     return () unless $archive;
 
-    $archive =~ /([^\/]+)\-([^-]+)\.t(ar\.)?gz$/;
-    my $dist_name = $1;
-    my $version   = $2;
+    my $basename  = fileparse($archive);
+    my $distro    = CPAN::DistnameInfo->new($basename);
+    my $dist_name = $distro->dist;
+    my $version   = $distro->version;
 
     $dist_name =~ s/-/::/g;
     $self->log( info => "Downloaded $module ! dist is $dist_name " );
