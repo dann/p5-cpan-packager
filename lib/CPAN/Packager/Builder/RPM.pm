@@ -62,6 +62,8 @@ sub build {
         "$module->{module} does't have tarball. we can't find $module->{module} in CPAN "
         unless $module->{tgz};
 
+    $self->release($module->{release}) if $module->{release};
+
     my ( $spec_file_name, $spec_content )
         = $self->generate_spec_file($module);
     $self->generate_macro;

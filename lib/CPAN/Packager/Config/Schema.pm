@@ -134,6 +134,8 @@ which is passed to cpan-packager script.
                     unique: yes
               "version":
                 type: any
+              "release":
+                type: int
 
 =head1 AUTHOR
 
