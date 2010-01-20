@@ -305,15 +305,6 @@ sub build {
     }
 
     my $installdirs = "";
-    if ( $options{'installdirs'} ) {
-
-        # perl 5.8 explicitly supports the INSTALLDIRS option.  in previous
-        # perls, it was a vendor added option.  Red Hat and Debian provide
-        # this for their perl 5.6.1, but the syntax for 5.8.0 is different,
-        # at least in the Red Hat case
-
-        $installdirs = "INSTALLDIRS=$options{'installdirs'}";
-    }
 
     my $makefile_pl
         = qq{CFLAGS="\$RPM_OPT_FLAGS" %{__perl} Makefile.PL < /dev/null};
@@ -321,6 +312,10 @@ sub build {
         = qq{make pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT};
     my $make;
     if ($use_module_build) {
+        if ( $options{'installdirs'} ) {
+            $installdirs = "--installdirs $options{'installdirs'}";
+        }
+
         $makefile_pl
             = qq{CFLAGS="\$RPM_OPT_FLAGS" %{__perl} Build.PL destdir=\$RPM_BUILD_ROOT $installdirs < /dev/null};
         $make_install
@@ -328,6 +323,10 @@ sub build {
         $make = "./Build OPTIMIZE=\"\$RPM_OPT_FLAGS\"";
     }
     else {
+        if ( $options{'installdirs'} ) {
+            $installdirs = "INSTALLDIRS=$options{'installdirs'}";
+        }
+
         $makefile_pl
             = qq{CFLAGS="\$RPM_OPT_FLAGS" %{__perl} Makefile.PL $installdirs};
         $make = "make %{?_smp_mflags} OPTIMIZE=\"\$RPM_OPT_FLAGS\"";
