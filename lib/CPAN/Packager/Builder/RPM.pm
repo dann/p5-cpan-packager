@@ -353,7 +353,6 @@ sub copy_module_sources_to_build_dir {
 sub package_name {
     my ( $self, $module_name ) = @_;
     $module_name =~ s{::}{-}g;
-    $module_name =~ s{_}{-}g;
     'perl-' . $module_name;
 }
 
