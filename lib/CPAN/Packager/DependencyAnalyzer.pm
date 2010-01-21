@@ -192,7 +192,16 @@ sub is_core {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
     my $corelist = $Module::CoreList::version{$]};
-    return 1 if exists $corelist->{$module};
+
+    # return true only if this is a dual life core module
+    if (exists $corelist->{$module}) {
+        my $mod = $self->downloader->fetcher->parse_module(module => $module);
+        return 1 unless defined $mod;
+
+        my $pkg = $mod->package;
+        return 1 if $pkg =~ /^perl-?\d\.\d/;
+    }
+
     return;
 }
 
