@@ -381,9 +381,10 @@ sub print_installed_packages {
 sub install {
     my ( $self, $module ) = @_;
     my $module_name  = $module->{module};
+    my $module_version = $module->{version};
     my $package_name = $self->package_name($module_name);
-    $self->log( info => ">>> install $package_name" );
-    my $rpm_path = file( $self->package_output_dir, $package_name );
+    $self->log( info => ">>> install $package_name-$module_version" );
+    my $rpm_path = file( $self->package_output_dir, "$package_name-$module_version" );
     my $result = CPAN::Packager::Util::run_command(
         "sudo rpm -Uvh $rpm_path-*.rpm",
         $self->config( global => "verbose" )
