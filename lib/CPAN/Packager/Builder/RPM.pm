@@ -13,11 +13,6 @@ use CPAN::Packager::Util;
 with 'CPAN::Packager::Builder::Role';
 with 'CPAN::Packager::Role::Logger';
 
-has 'release' => (
-    is      => 'rw',
-    default => 1,
-);
-
 has 'package_output_dir' => (
     +default => sub {
         my $self = shift;

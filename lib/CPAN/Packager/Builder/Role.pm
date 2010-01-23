@@ -16,6 +16,11 @@ has 'conf' => (
     required => 1
 );
 
+has 'release' => (
+    is      => 'rw',
+    default => 1,
+);
+
 sub config {
     my ( $self, $key, $value ) = @_;
     die 'key must be passed'   unless $key;
