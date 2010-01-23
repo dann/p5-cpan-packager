@@ -1,6 +1,6 @@
 Revision history for Perl extension CPAN::Packager
 
-0.08  Jan 23  23:29 2010
+0.08 Jan 24  2:40:00 2010
       
     * Tightened up support for an RPM's release number. This allows for an
       identically versioned package to be re-packaged. For example, if there
