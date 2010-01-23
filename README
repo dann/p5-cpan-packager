@@ -52,6 +52,27 @@ SYNOPSIS
           cpan_mirrors:
             - file:///home/dann/minicpan
 
+  Specify installation location (optional)
+    It is possible for a CPAN::Packager user to explicitly specify
+    installation locations for a distribution's libraries, documentation,
+    man pages, binaries, and scripts. Setting both of the below environment
+    variables, for example, will accomplish this.
+
+        PERL_MM_OPT="INSTALLVENDORMAN1DIR=/usr/local/share/man/man1
+        INSTALLVENDORMAN3DIR=/usr/local/share/man/man3
+        INSTALLVENDORBIN=/usr/local/bin INSTALLVENDORSCRIPT=/usr/local/bin"
+
+        PERL_MB_OPT="--config installvendorman1dir=/usr/local/share/man/man1
+        --config installvendorman3dir=/usr/local/share/man/man3 --config
+        installvendorbin=/usr/local/bin --config
+        installvendorscript=/usr/local/bin"
+
+    Additionally, for RPMs, you may specify the directory in which non-man
+    documentation (Changes, README, etc) are installed via adding an entry
+    to your ~/.rpmmacros file:
+
+    %_defaultdocdir /usr/local/share/doc
+
   Additional setup (For debian users)
     Copy conf/debian/rules* to ~/.dh-make-perl directory. copying
     perllocal.pod is conflited if you dont do that.
