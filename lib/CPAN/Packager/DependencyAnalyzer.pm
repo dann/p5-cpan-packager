@@ -9,6 +9,7 @@ use List::Compare;
 use CPAN::Packager::Config::Replacer;
 use CPAN::Packager::Extractor;
 use List::MoreUtils qw(uniq any);
+use FileHandle;
 with 'CPAN::Packager::Role::Logger';
 
 has 'downloader' => (
@@ -195,7 +196,12 @@ sub is_core {
 
     # return true only if this is a dual life core module
     if (exists $corelist->{$module}) {
+        my $devnull_fh = FileHandle->new('/dev/null', 'w');
+        my $real_fh = $CPANPLUS::Error::ERROR_FH;
+
+        $CPANPLUS::Error::ERROR_FH = $devnull_fh;
         my $mod = $self->downloader->fetcher->parse_module(module => $module);
+        $CPANPLUS::Error::ERROR_FH = $real_fh;
         return 1 unless defined $mod;
 
         my $pkg = $mod->package;
