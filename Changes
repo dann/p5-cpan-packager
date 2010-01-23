@@ -5,16 +5,16 @@ Revision history for Perl extension CPAN::Packager
     * Tightened up support for an RPM's release number. This allows for an
       identically versioned package to be re-packaged. For example, if there
       was an error in the initial packaging, or some of the original
-      packaging's meta data needs to be updated. (afoxon++)
+      packaging's meta data needs to be updated. (afoxson++)
 
-    * Distributions archived in formats other than tar.gz are now supported.(afoxon++)
+    * Distributions archived in formats other than tar.gz are now supported.(afoxson++)
 
     * Improved support for distributions that use Module::Build instead of
-      ExtUtils::MakeMaker.(afoxon++)
+      ExtUtils::MakeMaker.(afoxson++)
 
-    * Added support for the packaging of dual life core modules.(afoxon++)
+    * Added support for the packaging of dual life core modules.(afoxson++)
 
-    * Improved support for package installation.(afoxon++)
+    * Improved support for package installation.(afoxson++)
 
 0.074 Aug 31  23:14:00 2009
       * tgz_path is now optional 

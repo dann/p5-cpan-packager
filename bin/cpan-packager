@@ -88,6 +88,11 @@ this.
     installvendorbin=/usr/local/bin --config
     installvendorscript=/usr/local/bin"
 
+Additionally, for RPMs, you may specify the directory in which non-man
+documentation (Changes, README, etc) are installed via adding an entry
+to your ~/.rpmmacros file:
+
+%_defaultdocdir /usr/local/share/doc
 
 =head2 Additional setup (For debian users)
 
