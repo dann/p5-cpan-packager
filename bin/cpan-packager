@@ -71,6 +71,23 @@ after that you just use cpan-packager ;)
       cpan_mirrors:
         - file:///home/dann/minicpan
 
+=head2 Specify installation location (optional)
+
+It is possible for a CPAN::Packager user to explicitly specify 
+installation locations for a distribution's
+libraries, documentation, man pages, binaries, and scripts. Setting
+both of the below environment variables, for example, will accomplish
+this.
+
+    PERL_MM_OPT="INSTALLVENDORMAN1DIR=/usr/local/share/man/man1
+    INSTALLVENDORMAN3DIR=/usr/local/share/man/man3
+    INSTALLVENDORBIN=/usr/local/bin INSTALLVENDORSCRIPT=/usr/local/bin"
+
+    PERL_MB_OPT="--config installvendorman1dir=/usr/local/share/man/man1
+    --config installvendorman3dir=/usr/local/share/man/man3 --config
+    installvendorbin=/usr/local/bin --config
+    installvendorscript=/usr/local/bin"
+
 
 =head2 Additional setup (For debian users)
 
