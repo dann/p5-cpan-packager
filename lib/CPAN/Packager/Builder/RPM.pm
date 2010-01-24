@@ -107,7 +107,7 @@ sub generate_spec_with_cpanflute {
         'installdirs' => 'vendor',
         'release'     => $self->release,
         'test'        => 1,
-        'email'       => 'cpanpackager',
+        'packager'    => 'cpanpackager',
     };
 
     $opts->{test} = 0 if $module->{skip_test};
