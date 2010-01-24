@@ -241,8 +241,7 @@ sub build {
     $spec->summary("$name Perl module");
     $spec->group("Development/Libraries");
     $spec->license('GPL or Artistic');
-    $spec->packager($email)
-        if $defaults{'packager'};
+    $spec->packager($options{'packager'}) if $options{'packager'};
     my $clver = defined( $options{epoch} ) ? "$options{epoch}:" : '';
     $clver .= "$ver-$release";
     $spec->add_changelog_entry( $email,

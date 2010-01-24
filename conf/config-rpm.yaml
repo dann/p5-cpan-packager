@@ -1,7 +1,7 @@
 ---
 global:
   cpan_mirrors:
-    - file:///home/dann/.cpanpackager/minicpan/
+    - file:///home/dann/minicpan/
   fix_module_name:
     - from: Class::Classgen::classgen
       to: Class::Classgen::Attribute
