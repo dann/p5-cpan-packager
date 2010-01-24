@@ -1,98 +1,93 @@
 Revision history for Perl extension CPAN::Packager
 
 0.081 Jan 24  2:40:00 2010
-      
     * Tightened up support for an RPM's release number. This allows for an
       identically versioned package to be re-packaged. For example, if there
       was an error in the initial packaging, or some of the original
       packaging's meta data needs to be updated. (afoxson++)
-
-    * Distributions archived in formats other than tar.gz are now supported.(afoxson++)
-
+    * Distributions archived in formats other than tar.gz are now supported.
+      (afoxson++)
     * Improved support for distributions that use Module::Build instead of
-      ExtUtils::MakeMaker.(afoxson++)
-
-    * Added support for the packaging of dual life core modules.(afoxson++)
-
-    * Improved support for package installation.(afoxson++)
+      ExtUtils::MakeMaker. (afoxson++)
+    * Added support for the packaging of dual life core modules. (afoxson++)
+    * Improved support for package installation. (afoxson++)
 
 0.074 Aug 31  23:14:00 2009
-      * tgz_path is now optional 
+    * tgz_path is now optional.
 
 0.073 Aug 31  02:09:00 2009
-      * added Japanese POD 
-      * fixed failing test when RPM::Spec file isn't installed 
+    * Added Japanese POD.
+    * Fixed failing test when RPM::Spec file isn't installed.
 
 0.072 Aug 29  18:59:00 2009
-      * updated POD and documentation 
-      * fixed Makefile.PL dependencies
+    * Updated POD and documentation.
+    * Fixed Makefile.PL dependencies.
 
 0.071 Aug 29  14:30:00 2009
-      * added Archive::Extract to dependency 
+    * Added Archive::Extract as a dependency.
 
 0.07 Aug 29  14:14:00 2009
-      * support custom src and changed custom_src schema 
+    * Support for custom src added and changed custom_src schema.
 
 0.064 Aug 29  01:07:00 2009
-      * added dh-make-perl patched rules for debian.
-      * can create more debian modules, like HTTP::Engine, Task::Catalyst,
-        and Mouse.
-      * changed package output dir from /tmp/cpanpackager to
-        ~/.cpanpackager/
+    * Added dh-make-perl patched rules for debian.
+    * Can create more debian modules, like HTTP::Engine, Task::Catalyst, and
+      Mouse.
+    * Changed package output dir from /tmp/cpanpackager to ~/.cpanpackager/.
 
 0.063 Aug 27  22:29:00 2009
-      * support cpan mirros uri and remove minicpan setting
+    * Support cpan mirrors uri and removed minicpan setting.
 
 0.062 Aug 24  1:25:00 2009
-      * support minicpan
+    * Support for minicpan added.
 
 0.061 Aug 21 21:17:00 2009
-      * fixed filtering requires with each module's no_depends config
+    * Fixed filtering requires with each module's no_depends config.
 
 0.06 Aug 20 23:43:00 2009
-       * changed configuration schema to validate configuration schame.
-       * impolemented configuration schame validator
+    * Changed configuration schema to validate configuration scheme.
+    * Implemented configuration scheme validator.
 
 0.054 July 7 20:02:00 2009
-       * reslove module name after downloading module with CPANPlus::Backend.
-         This change makes module name resolvement better. (walf443++)
+    * Resolve module name after downloading module with CPANPLUS::Backend. This
+      change improves module name resolution. (walf443++)
 
 0.053 July 3 18:21:03 2009
-       * fixed deep recursion in topological sort
-       * added simple tests
+    * Fixed deep recursion in topological sort.
+    * Added simple tests.
 
 0.052 June 20 18 01:21:03 2009
-       * added some modules into config to build Catalyst 
-       * fixed the degrade of modulelistoption
+    * Added some modules into config to build Catalyst.
+    * Fixed the degrade of modulelist option.
 
 0.051 June 20 18 01:21:03 2009
-       * can build modules which module name and tarball  name is different.
-         ex) Template Toolkit
+    * Can now build modules in which the module name and tarball name are
+      different. For example: Template Toolkit.
 
 0.05 Thu June 20 00:21:03 2009
-       * added skip_test option for Deb package (walf443)
-       * use Module::Depends::Instrusive for broken META.yml (walf443) 
-       * added a setting for custom src of modules (walf443)
+    * Added skip_test option for Deb package. (walf443)
+    * Use Module::Depends::Instrusive for broken META.yml. (walf443) 
+    * Added a setting for custom src of modules. (walf443)
 
 0.041 Thu Apr 18 3:21:03 2009
-       * fixed pod bug
+    * Fixed POD bug.
 
 0.04 Thu Apr 4 3:56:00 2009
-       * fixed filtering require bugs 
-       * added fix_module_name config
+    * Fixed filtering require bugs.
+    * Added fix_module_name config.
 
 0.03 Thu Apr 4 14:40:00 2009
-       * build multiple modules with modulelist option
-       * added always_build option to build always if the module is aready
-         installed
+    * Multiple modules may now be built with the modulelist option.
+    * Added always_build option to build always if the module is already
+      installed.
 
 0.02 Thu Apr 3 21:47:06 2009
-       * Supportted an global dependency filter
-       * added the spec requires filter for cpanflute2
-       * skip module name resolve
+    * Support for a global dependency filter added.
+    * Added the spec requires filter for cpanflute2.
+    * Skip module name resolution.
 
 0.011 Thu Apr 2 23:11:46 2009
-        * filter List::Util from spec file
+    * Filter List::Util from spec file.
 
 0.01 Thu Apr 1 14:11:46 2009
-	* original version
+    * Original version.
