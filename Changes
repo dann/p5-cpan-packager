@@ -1,6 +1,10 @@
 Revision history for Perl extension CPAN::Packager
 
-0.081 Jan 24  2:40:00 2010
+0.082 Jan 25  21:30:00 2010
+    * fixed modules load test 
+    * set packager to spec file 
+
+0.081 Jan 24  02:40:00 2010
       
     * Tightened up support for an RPM's release number. This allows for an
       identically versioned package to be re-packaged. For example, if there

@@ -10,8 +10,8 @@ BEGIN {
             'CPAN::Packager::Role',
             'CPAN::Packager::Builder::RPM',
             'CPAN::Packager::Builder::RPM::Spec',
-            'CPAN::Packager::Builder::Downloader::Role',
-            'CPAN::Packager::Builder::Downloader::Fresh'
+            'CPAN::Packager::Downloader::Role',
+            'CPAN::Packager::Downloader::Fresh'
         ]
     );
 }
