@@ -144,6 +144,14 @@ sub download_module {
                 ? CPAN::Packager::Config::Replacer->replace_variable($custom_src->{src_dir})
                 : $self->extractor->extract( $custom_src->{tgz_path} );
             $self->{__downloaded}->{$module} = $custom_src;
+
+            if(defined $custom_src->{patches} ) {
+                my @expanded_patches = ();
+                foreach my $patch (@{$custom_src->{patches}}) {
+                   push @expanded_patches, CPAN::Packager::Config::Replacer->replace_variable($patch); 
+                }
+                $custom_src->{patches} = \@expanded_patches;
+            }
         }
         else {
             if ( my $version = $config->{modules}->{$module}->{version} ) {

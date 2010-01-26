@@ -95,5 +95,7 @@ modules:
   - module: Acme
     custom:
       tgz_path: ~/.cpanpackager/custom_module/Acme-1.11111.tar.gz
+      patches: 
+        - ~/.cpanpackager/custom_module/acme_test.patch
       dist_name: Acme
-      version: 1.2
+      version: 1.11111

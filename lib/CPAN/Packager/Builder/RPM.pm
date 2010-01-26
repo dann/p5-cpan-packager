@@ -108,11 +108,16 @@ sub generate_spec_with_cpanflute {
         'release'     => $self->release,
         'test'        => 1,
         'packager'    => 'cpanpackager',
+        'tmpdir'      => $self->build_dir,
     };
 
     $opts->{test} = 0 if $module->{skip_test};
 
-    my $spec = $self->spec_builder->build( $opts, $copy_to );
+    if(defined $module->{custom} and defined $module->{custom}->{patches}) {
+        $opts->{patch} = $module->{custom}->{patches};
+    }
+
+    my $spec = $self->spec_builder->build( $opts, $copy_to, $self->build_dir );
 
     $self->log( info => '>>> generated specfile for ' . $tgz );
     $spec;

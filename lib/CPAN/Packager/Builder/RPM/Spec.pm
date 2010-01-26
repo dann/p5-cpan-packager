@@ -84,8 +84,6 @@ sub build {
     my $use_module_build = 0;
     my @docs             = ();
 
-    $tmpdir = tempdir( CLEANUP => 1, DIR => $tmpdir );
-
     #
     # Set build arch - this is needed to find out where
     # the binary rpm was placed, and copy it back to the
@@ -210,6 +208,8 @@ sub build {
     if ( $options{patch} ) {
         for $patch ( @{ $options{'patch'} } ) { ## no critic
             copy( $patch, $tmpdir ) or die "copy ${patch}: $!";
+            warn $patch;
+            warn $tmpdir;
             utime(
                 ( stat( $options{patch} ) )[ 8, 9 ],
                 "$tmpdir/" . basename( $options{patch} )

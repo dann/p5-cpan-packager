@@ -132,6 +132,10 @@ which is passed to cpan-packager script.
                     type: str
                     required: true
                     unique: yes
+                  "patches":
+                    type: seq
+                    sequence:
+                      - type: str
               "version":
                 type: any
               "release":
