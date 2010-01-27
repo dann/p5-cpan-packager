@@ -140,6 +140,8 @@ which is passed to cpan-packager script.
                 type: any
               "release":
                 type: int
+              "pkg_name":
+                type: str
 
 =head1 AUTHOR
 

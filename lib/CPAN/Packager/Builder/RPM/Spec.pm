@@ -234,7 +234,12 @@ sub build {
     my $spec = new RPM::Specfile;
 
     # some basic spec fields
-    $spec->name("perl-$name");
+    if ( $options{pkg_name} ) {
+        $spec->name($options{pkg_name});
+    }
+    else {
+        $spec->name("perl-$name");
+    }
     $spec->version($ver);
     $spec->release($release);
     $spec->epoch( $options{epoch} );
