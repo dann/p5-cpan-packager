@@ -31,6 +31,7 @@ sub check_executables_exist_in_path {
 
 sub build {
     my ( $self, $module ) = @_;
+    $self->release($module->{release}) if $module->{release};
     my $package = $self->_build_package_with_dh_make_perl($module);
     $self->install($module);
     return $package;
@@ -105,7 +106,13 @@ sub _build_dh_make_perl_command {
             }
         }
 
-        $version          .= "-1";
+        if ($self->release) {
+            $version .= "-" . $self->release;
+        }
+        else {
+            $version .= "-1";
+        }
+
         $dh_make_perl_cmd .= " --version $version";
     }
 
