@@ -60,6 +60,7 @@ sub build {
         unless $module->{tgz};
 
     $self->release($module->{release}) if $module->{release};
+    $self->pkg_name($module->{pkg_name}) if $module->{pkg_name};
 
     my ( $spec_file_name, $spec_content )
         = $self->generate_spec_file($module);
@@ -70,13 +71,27 @@ sub build {
     $self->install($module) unless $is_failed;
     $self->log(
         info => ">>> finished building rpm package ( $module->{module} )" );
-    return $self->package_name( $module->{module} );
+
+    if ($self->pkg_name) {
+        return $self->pkg_name;
+    }
+    else {
+        return $self->package_name( $module->{module} );
+    }
 }
 
 sub generate_spec_file {
     my ( $self, $module ) = @_;
     my $spec_content   = $self->generate_spec_with_cpanflute($module);
-    my $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
+    my $spec_file_name;
+
+    if ($self->pkg_name) {
+        $spec_file_name = $self->pkg_name . ".spec";
+    }
+    else {
+        $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
+    }
+
     $spec_content
         = $self->filter_spec_file( $spec_content, $module->{module} );
 
@@ -109,6 +124,7 @@ sub generate_spec_with_cpanflute {
         'test'        => 1,
         'packager'    => 'cpanpackager',
         'tmpdir'      => $self->build_dir,
+        'pkg_name'    => $self->pkg_name,
     };
 
     $opts->{test} = 0 if $module->{skip_test};
@@ -275,7 +291,15 @@ sub get_default_build_arch {
 
 sub is_installed {
     my ( $self, $module ) = @_;
-    my $package = $self->package_name($module);
+    my $package;
+
+    if (   $self->config( modules => $module )
+        && $self->config( modules => $module )->{pkg_name} ) {
+        $package = $self->config( modules => $module )->{pkg_name};
+    }
+    else {
+        $package = $self->package_name($module);
+    }
 
     my $return_value
         = CPAN::Packager::Util::capture_command("LANG=C rpm -q $package");
@@ -383,7 +407,15 @@ sub install {
     my ( $self, $module ) = @_;
     my $module_name  = $module->{module};
     my $module_version = $module->{version};
-    my $package_name = $self->package_name($module_name);
+    my $package_name;
+
+    if ($self->pkg_name) {
+        $package_name = $self->pkg_name;
+    }
+    else {
+        $package_name = $self->package_name($module_name);
+    }
+
     $self->log( info => ">>> install $package_name-$module_version" );
     my $rpm_path = file( $self->package_output_dir, "$package_name-$module_version" );
     my $result = CPAN::Packager::Util::run_command(

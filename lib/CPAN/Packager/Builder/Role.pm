@@ -21,6 +21,11 @@ has 'release' => (
     default => 1,
 );
 
+has 'pkg_name' => (
+    is      => 'rw',
+    isa     => 'Str',
+);
+
 sub config {
     my ( $self, $key, $value ) = @_;
     die 'key must be passed'   unless $key;
