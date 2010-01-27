@@ -208,8 +208,6 @@ sub build {
     if ( $options{patch} ) {
         for $patch ( @{ $options{'patch'} } ) { ## no critic
             copy( $patch, $tmpdir ) or die "copy ${patch}: $!";
-            warn $patch;
-            warn $tmpdir;
             utime(
                 ( stat( $options{patch} ) )[ 8, 9 ],
                 "$tmpdir/" . basename( $options{patch} )
