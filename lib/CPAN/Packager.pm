@@ -166,10 +166,7 @@ sub build_modules {
         }
         else {
             $module->{build_status} = 'failed';
-            WARN ( "$module->{module} failed" );
-            if ($@) {
-                die "failed building module: $@";
-            }
+            die("$module->{module} failed");
         }
     }
     my %modules
