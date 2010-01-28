@@ -11,7 +11,7 @@ use CPAN::Packager::Home;
 use CPAN::Packager::Builder::RPM::Spec;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Builder::Role';
-with 'CPAN::Packager::Role::Logger';
+use Log::Log4perl qw(:easy);
 
 has 'package_output_dir' => (
     +default => sub {
@@ -69,8 +69,7 @@ sub build {
     $self->copy_module_sources_to_build_dir($module);
     my $is_failed = $self->build_rpm_package($spec_file_name);
     $self->install($module) unless $is_failed;
-    $self->log(
-        info => ">>> finished building rpm package ( $module->{module} )" );
+    INFO( ">>> finished building rpm package ( $module->{module} )" );
     return $self->get_package_name($module);
 }
 
@@ -89,7 +88,7 @@ sub generate_spec_file {
     $spec_content
         = $self->filter_spec_file( $spec_content, $module->{module} );
 
-    $self->log( info => ">>> generated specfile : \n $spec_content" )
+    INFO( ">>> generated specfile : \n $spec_content" )
         if $self->config( global => 'verbose' );
     $self->create_spec_file( $spec_content, $spec_file_name );
     ( $spec_file_name, $spec_content );
@@ -99,7 +98,7 @@ sub generate_spec_with_cpanflute {
     my ( $self, $module ) = @_;
 
     my $tgz = $module->{tgz};
-    $self->log( info => '>>> generate specfile with cpanflute2 for ' . $tgz );
+    INFO( '>>> generate specfile with cpanflute2 for ' . $tgz );
 
     my $module_name = $module->{module};
     my $version     = $module->{version};
@@ -130,7 +129,7 @@ sub generate_spec_with_cpanflute {
 
     my $spec = $self->spec_builder->build( $opts, $copy_to, $self->build_dir );
 
-    $self->log( info => '>>> generated specfile for ' . $tgz );
+    INFO( '>>> generated specfile for ' . $tgz );
     $spec;
 }
 
@@ -315,7 +314,7 @@ sub is_installed {
 
     my $return_value
         = CPAN::Packager::Util::capture_command("LANG=C rpm -q $package");
-    $self->log( info => ">>> $package is "
+    INFO( ">>> $package is "
             . ( $return_value =~ /not installed/ ? 'not ' : '' )
             . "installed" );
     return $return_value =~ /not installed/ ? 0 : 1;
@@ -350,6 +349,7 @@ sub generate_rpmrc {
     my $macrofiles = qx(rpm --showrc | grep ^macrofiles | cut -f2- -d:);
     chomp $macrofiles;
     my $build_dir = $self->build_dir;
+    (-r '/usr/lib/rpm/rpmrc') or die('File "/usr/lib/rpm/rpmrc" does not exist or is not readable. cannot proceed');
     print $fh qq{
 include: /usr/lib/rpm/rpmrc
 macrofiles: $macrofiles:$build_dir/macros
@@ -359,7 +359,7 @@ macrofiles: $macrofiles:$build_dir/macros
 
 sub build_rpm_package {
     my ( $self, $spec_file_name ) = @_;
-    $self->log( info => '>>> build rpm package with rpmbuild' );
+    INFO( '>>> build rpm package with rpmbuild' );
     my $rpmrc_file     = file( $self->build_dir, 'rpmrc' );
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
 
@@ -421,7 +421,7 @@ sub install {
     my $module_version = $module->{version};
     my $package_name = $self->get_package_name($module_name);
 
-    $self->log( info => ">>> install $package_name-$module_version" );
+    INFO( ">>> install $package_name-$module_version" );
     my $rpm_path = file( $self->package_output_dir, "$package_name-$module_version" );
     my $result = CPAN::Packager::Util::run_command(
         "sudo rpm -Uvh $rpm_path-*.rpm",

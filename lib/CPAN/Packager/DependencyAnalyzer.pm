@@ -10,7 +10,7 @@ use CPAN::Packager::Config::Replacer;
 use CPAN::Packager::Extractor;
 use List::MoreUtils qw(uniq any);
 use FileHandle;
-with 'CPAN::Packager::Role::Logger';
+use Log::Log4perl qw(:easy);
 
 has 'downloader' => (
     is      => 'rw',

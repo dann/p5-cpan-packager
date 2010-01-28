@@ -3,7 +3,7 @@ use Mouse;
 use CPANPLUS::Backend;
 use Path::Class qw(file dir);
 use URI;
-with 'CPAN::Packager::Role::Logger';
+use Log::Log4perl qw(:easy);
 with 'CPAN::Packager::Downloader::Role';
 
 has 'fetcher' => (
@@ -31,7 +31,7 @@ sub set_cpan_mirrors {
 
 sub download {
     my ( $self, $module ) = @_;
-    $self->log( info => "Downloading $module ..." );
+    INFO( "Downloading $module ..." );
     my $dist = $self->fetcher->parse_module( module => $module );
     return unless $dist;
 
@@ -43,7 +43,7 @@ sub download {
     };
 
     return () unless $archive;
-    $self->log( info => "Downloaded $module" );
+    INFO( "Downloaded $module" );
 
     return $self->analyze_distname_info($archive, $where);
 }

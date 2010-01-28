@@ -40,6 +40,7 @@ requires(
     'URI'                => 0,
     'IPC::Cmd'           => 0,
     'CPAN::DistnameInfo' => 0,
+    'Log::Log4perl'      => '1.26',
 );
 
 features(

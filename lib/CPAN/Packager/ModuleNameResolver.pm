@@ -2,7 +2,7 @@ package CPAN::Packager::ModuleNameResolver;
 use Mouse;
 use LWP::UserAgent;
 use List::MoreUtils qw(any);
-with 'CPAN::Packager::Role::Logger';
+use Log::Log4perl qw(:easy);
 
 has 'ua' => (
     is      => 'rw',
@@ -25,8 +25,7 @@ sub resolve {
 
     return unless $resolved_module;
     $resolved_module =~ s/-/::/g unless $resolved_module eq 'libwww-perl';
-    $self->log( debug =>
-            ">>> resolved module name is ${resolved_module} and original module name is ${module}"
+    DEBUG( ">>> resolved module name is ${resolved_module} and original module name is ${module}"
     );
     return $resolved_module;
 }

@@ -3,6 +3,15 @@ use strict;
 use warnings;
 use FindBin::libs;
 use CPAN::Packager::Script;
+use Log::Log4perl qw(:easy);
+
+my $level = $ENV{CPAN_PACKAGER_DEBUG} ? $DEBUG : $INFO;
+
+my $layout = '%p: %m{chomp}%n'; #INFO Level
+$layout = '%p %d{HH:mm:ss} [%c:%L]: %m{chomp}%n' if($level == $DEBUG);
+
+Log::Log4perl->easy_init({ level => $level,
+                           layout => $layout });
 
 my $script = CPAN::Packager::Script->new_with_options;
 $script->run;

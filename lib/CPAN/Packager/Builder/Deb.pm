@@ -6,7 +6,7 @@ use List::MoreUtils qw(any);
 use CPAN::Packager::Home;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Builder::Role';
-with 'CPAN::Packager::Role::Logger';
+use Log::Log4perl qw(:easy);
 
 has 'package_output_dir' => (
     +default => sub {
@@ -66,7 +66,7 @@ sub _build_package_with_dh_make_perl {
 
     };
     if ($@) {
-        $self->log( info => $@ );
+        INFO( $@ );
         die;
     }
     $package;
@@ -87,7 +87,7 @@ sub _build_dh_make_perl_command {
     my ( $self, $module, $package ) = @_;
     my @depends = $self->depends($module);
     my $depends = join ',', @depends;
-    $self->log( debug => "depends: $depends" );
+    DEBUG( "depends: $depends" );
     my $dh_make_perl_cmd
 
 # = "dh-make-perl --build --depends '\${shlibs:Depends},$depends' $module->{src} --package $package "; # hmm. etch's dh-make-perl don't have --package option.
@@ -180,7 +180,7 @@ sub is_installed {
     my $already_installed;
     eval { $already_installed = system("dpkg -L $package > /dev/null"); };
     if ( defined $already_installed && $already_installed == 0 ) {
-        $self->log( info => "$package already installed. skip building" );
+        INFO( "$package already installed. skip building" );
         return 1;
     }
     if ($@) {

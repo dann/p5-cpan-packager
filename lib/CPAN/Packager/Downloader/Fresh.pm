@@ -4,7 +4,7 @@ use CPAN;
 use App::CPAN::Fresh;
 use Path::Class qw(file dir);
 use URI;
-with 'CPAN::Packager::Role::Logger';
+use Log::Log4perl qw(:easy);
 with 'CPAN::Packager::Downloader::Role';
 
 sub set_cpan_mirrors {
@@ -14,7 +14,7 @@ sub set_cpan_mirrors {
 
 sub download {
     my ( $self, $module ) = @_;
-    $self->log( info => "Downloading $module ..." );
+    INFO( "Downloading $module ..." );
     my $distribution = App::CPAN::Fresh->inject($module);
     my $mod          = CPAN::Shell->expand( "Module", $module );
     my $dist         = CPAN::Shell->expandany($distribution);
