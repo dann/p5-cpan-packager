@@ -96,7 +96,7 @@ sub make {
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
 
-    $self->_dump_modules( $config->{modules} );
+    $self->_dump_modules("config modules",  $config->{modules} );
 
     my $sorted_modules = [
         uniq reverse @{
@@ -104,7 +104,7 @@ sub make {
                 $config->{modules} )
             }
     ];
-    $self->_dump_modules($sorted_modules);
+    $self->_dump_modules("sorted modules", $sorted_modules);
 
     local $@;
     unless ( $self->dry_run ) {
@@ -114,7 +114,7 @@ sub make {
     }
 
     if ($@) {
-        $self->_dump_modules($sorted_modules);
+        $self->_dump_modules("Sorted modules", $sorted_modules);
     	LOGDIE("### Built packages for $module faied :-( ###" . $@);
     }
     INFO( "### Built packages for $module :-) ### " );
@@ -122,10 +122,12 @@ sub make {
 }
 
 sub _dump_modules {
-    my ( $self, $modules ) = @_;
+    my ( $self, $dump_type, $modules ) = @_;
 
     return if(!$self->is_debug);
+    return if($ENV{CPAN_PACKAGER_DISABLE_DUMP});
     require Data::Dumper;
+    DEBUG("$dump_type: ");
     DEBUG( Data::Dumper::Dumper $modules );
 }
 
