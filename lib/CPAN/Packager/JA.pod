@@ -27,7 +27,7 @@ RPM/Deb パッケージは ~/.cpanpackager/{deb or rpm} に生成されます。
 
 config.yamlはgithubにあります。 
 
-    See http://github.com/dann/cpan-packager/tree/master
+    See http://github.com/dann/p5-cpan-packager
 
 設定ファイルのスキーマは、以下のように見る事ができます。
 
@@ -81,7 +81,7 @@ Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
 
 =head1 SEE ALSO
 
-"CPAN::Packager" の開発はgithubで行っています <http://github.com/dann/p5-cpan-packager/tree/master>
+"CPAN::Packager" の開発はgithubで行っています <http://github.com/dann/p5-cpan-packager>
 
 =head1 LICENSE
 
