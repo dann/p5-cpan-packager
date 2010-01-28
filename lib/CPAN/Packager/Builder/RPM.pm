@@ -20,11 +20,13 @@ has 'package_output_dir' => (
     },
 );
 
+has 'is_debug' => ( is => 'rw', lazy => 1, default => sub{get_logger('')->level() == $DEBUG});
+
 has 'build_dir' => (
     is      => 'rw',
     default => sub {
         my %opt = ( CLEANUP => 1, DIR => '/tmp' );
-        %opt = ( DIR => '/tmp' ) if &CPAN::Packager::DEBUG;
+        %opt = ( DIR => '/tmp' ) if(shift->is_debug);
         my $tmpdir = tempdir(%opt);
         dir($tmpdir);
     }
@@ -366,7 +368,7 @@ sub build_rpm_package {
     my $build_opt
         = "--rcfile $rpmrc_file -ba --rmsource --rmspec --clean $spec_file_path --nodeps";
     $build_opt = "--rcfile $rpmrc_file -ba $spec_file_path"
-        if &CPAN::Packager::DEBUG;
+        if($self->is_debug);
     my $cmd = "env PERL_MM_USE_DEFAULT=1 LANG=C rpmbuild $build_opt";
     return CPAN::Packager::Util::run_command( $cmd,
         $self->config( global => "verbose" ) );

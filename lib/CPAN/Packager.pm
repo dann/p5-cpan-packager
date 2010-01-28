@@ -37,6 +37,8 @@ has 'dependency_config_merger' => (
     }
 );
 
+has 'is_debug' => ( is => 'rw', lazy => 1, default => sub{get_logger('')->level() == $DEBUG});
+
 has 'config_loader' => (
     is      => 'rw',
     default => sub {
@@ -122,7 +124,7 @@ sub make {
 sub _dump_modules {
     my ( $self, $modules ) = @_;
 
-    return if(get_logger('')->level() != $DEBUG);
+    return if(!$self->is_debug);
     require Data::Dumper;
     DEBUG( Data::Dumper::Dumper $modules );
 }
