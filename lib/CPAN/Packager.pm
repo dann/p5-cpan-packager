@@ -115,7 +115,7 @@ sub make {
 
     if ($@) {
         $self->_dump_modules($sorted_modules);
-        die "### Built packages for $module faied :-( ###" . $@;
+    	LOGDIE("### Built packages for $module faied :-( ###" . $@);
     }
     INFO( "### Built packages for $module :-) ### " );
     $built_modules;
@@ -165,7 +165,7 @@ sub build_modules {
         }
         else {
             $module->{build_status} = 'failed';
-            INFO( "$module->{module} failed" );
+            WARN ( "$module->{module} failed" );
             if ($@) {
                 die "failed building module: $@";
             }

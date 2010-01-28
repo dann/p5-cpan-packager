@@ -15,6 +15,7 @@ use YAML;
 use RPM::Specfile;
 use CPAN::DistnameInfo;
 use Archive::Zip;
+use Log::Log4perl qw(:easy);
 
 sub build {
     my ( $self, $args, $fullname ) = @_;
@@ -30,7 +31,7 @@ sub build {
     $defaults{'installdirs'} = "";
     {
         my ( $username, $fullname ) = ( getpwuid($<) )[ 0, 6 ];
-        $fullname = ( split /,/, $fullname )[0];
+        $fullname = ( split /,/, $fullname )[0]; #/
         $defaults{'email'} = $fullname ? $fullname . ' ' : '';
         $defaults{'email'} .= '<';
         $defaults{'email'} .= $ENV{REPLYTO} || $username . '@redhat.com';
@@ -57,14 +58,12 @@ sub build {
     # If we were given a description file, make sure it exists
     if ( $options{'descfile'} ) {
         if ( !-e $options{'descfile'} ) {
-            print STDERR "Description file given does not exist!\n";
-            print STDERR "File:  ${options{'descfile'}}\n";
-            exit(1);
+            FATAL("Description file given does not exist!");
+            LOGEXIT("File:  ${options{'descfile'}}");
         }
         if ( !-r $options{'descfile'} ) {
-            print STDERR "Description file given is not readable!\n";
-            print STDERR "File:  ${options{'descfile'}}\n";
-            exit(1);
+    	    FATAL("Description file given is not readable!");
+            LOGEXIT("File:  ${options{'descfile'}}");
         }
     }
 
@@ -101,8 +100,7 @@ sub build {
     else {
         $build_arch = get_default_build_arch();
         if ( $build_arch eq '' ) {
-            print STDERR "Could not get default build arch!\n";
-            exit(1);
+            LOGEXIT("Could not get default build arch!");
         }
     }
 

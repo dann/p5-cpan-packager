@@ -6,6 +6,7 @@ use Pod::POM ();
 use List::Util qw/first/;
 use YAML;
 use IPC::Cmd qw(run);
+use Log::Log4perl qw(:easy);
 
 our $DEFAULT_COMMAND_TIMEOUT = 30 * 60;
 our $DEFAULT_VERVOSE_MODE    = 0;
@@ -69,11 +70,11 @@ sub run_command {
         )
         )
     {
-        print "success: $cmd\n";
+        INFO("success running: `$cmd`");
         return 0;
     }
     else {
-        print "failed: $buffer\n";
+        WARN("running `$cmd` failed: $buffer");
         return 1;
     }
 }
@@ -84,21 +85,20 @@ sub capture_command {
     $verbose ||= $DEFAULT_VERVOSE_MODE;
     $timeout ||= $DEFAULT_COMMAND_TIMEOUT;
     my $buffer;
-    if (scalar run(
+    my $success = run(
             command => $cmd,
             verbose => $verbose,
             buffer  => \$buffer,
             timeout => $timeout,
-        )
-        )
-    {
-        print "success: $buffer\n" if $verbose;
-        return $buffer;
+        );
+    
+    $buffer = '' if(!defined $buffer);
+    if($success) {
+        DEBUG("0 exit code from '$cmd': $buffer")
+    } else {
+        DEBUG("non-zero exit code from '$cmd': $buffer")
     }
-    else {
-        print "failed: $buffer\n" if $verbose;
-        return $buffer;
-    }
+    return $buffer;
 }
 
 1;

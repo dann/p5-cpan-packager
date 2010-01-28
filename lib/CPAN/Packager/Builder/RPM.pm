@@ -14,8 +14,8 @@ with 'CPAN::Packager::Builder::Role';
 use Log::Log4perl qw(:easy);
 
 has 'package_output_dir' => (
-    +default => sub {
-        my $self = shift;
+    is => 'rw',
+    default => sub {
         dir( CPAN::Packager::Home->detect, 'rpm' );
     },
 );
@@ -49,10 +49,10 @@ sub BUILD {
 sub check_executables_exist_in_path {
     die "cpanflute2 doesn't exist in PATH"
         if CPAN::Packager::Util::run_command("which cpanflute2");
-    die "yum doesn't  exist in PATH"
-        if CPAN::Packager::Util::run_command("which cpanflute2");
-    die "rpm doesn't  exist in PATH"
-        if CPAN::Packager::Util::run_command("which cpanflute2");
+    die "yum doesn't exist in PATH"
+        if CPAN::Packager::Util::run_command("which yum");
+    die "rpm doesn't exist in PATH"
+        if CPAN::Packager::Util::run_command("which rpm");
 }
 
 sub build {
@@ -90,9 +90,8 @@ sub generate_spec_file {
     $spec_content
         = $self->filter_spec_file( $spec_content, $module->{module} );
 
-    INFO( ">>> generated specfile : \n $spec_content" )
-        if $self->config( global => 'verbose' );
     $self->create_spec_file( $spec_content, $spec_file_name );
+    DEBUG( "Generated specfile:\n-----\n$spec_content" );
     ( $spec_file_name, $spec_content );
 }
 
@@ -100,7 +99,7 @@ sub generate_spec_with_cpanflute {
     my ( $self, $module ) = @_;
 
     my $tgz = $module->{tgz};
-    INFO( '>>> generate specfile with cpanflute2 for ' . $tgz );
+    INFO('generating specfile with cpanflute2 for ' . $tgz);
 
     my $module_name = $module->{module};
     my $version     = $module->{version};
@@ -130,9 +129,8 @@ sub generate_spec_with_cpanflute {
     }
 
     my $spec = $self->spec_builder->build( $opts, $copy_to, $self->build_dir );
-
-    INFO( '>>> generated specfile for ' . $tgz );
     $spec;
+    
 }
 
 sub filter_spec_file {
@@ -155,7 +153,7 @@ sub create_spec_file {
     $fh->close;
     copy( $spec_file_path,
         file( $self->package_output_dir, $spec_file_name ) );
-
+    DEBUG("Wrote out: " . $self->package_output_dir . "/$spec_file_name");
 }
 
 sub filter_requires_for_rpmbuild {
@@ -316,10 +314,12 @@ sub is_installed {
 
     my $return_value
         = CPAN::Packager::Util::capture_command("LANG=C rpm -q $package");
-    INFO( ">>> $package is "
-            . ( $return_value =~ /not installed/ ? 'not ' : '' )
-            . "installed" );
-    return $return_value =~ /not installed/ ? 0 : 1;
+    if($return_value =~ /not installed/) {
+      DEBUG( "$package is not installed");
+      return 0;
+    }
+    INFO( "$package is installed:");
+    return 1;
 }
 
 sub generate_macro {
@@ -402,7 +402,7 @@ sub installed_packages {
         = CPAN::Packager::Util::run_command(
         "LANG=C yum list installed|grep '^perl\-*' |awk '{print \$1}'",
         $self->config( global => "verbose" ) );
-    my @packages = split /[\r\n]+/, $return_value;
+    my @packages = split /[\r\n]+/, $return_value; #/
     for my $package (@packages) {
         push @installed_pkg, $package;
     }
