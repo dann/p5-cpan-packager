@@ -156,7 +156,6 @@ sub build_modules {
             $module->{force_build} = 1;    # afffect force_build flag.
         }
 
-        local $@;
         my $package = $builder->build($module);
 
         if ($package) {
