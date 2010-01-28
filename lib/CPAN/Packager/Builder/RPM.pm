@@ -125,6 +125,7 @@ sub generate_spec_with_cpanflute {
         'packager'    => 'cpanpackager',
         'tmpdir'      => $self->build_dir,
         'pkg_name'    => $self->pkg_name,
+        'epoch'       => $module->{epoch},
     };
 
     $opts->{test} = 0 if $module->{skip_test};

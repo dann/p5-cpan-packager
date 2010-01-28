@@ -142,6 +142,8 @@ which is passed to cpan-packager script.
                 type: int
               "pkg_name":
                 type: str
+              "epoch":
+                type: int
 
 =head1 AUTHOR
 
