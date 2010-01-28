@@ -142,6 +142,17 @@ which is passed to cpan-packager script.
                 type: int
               "pkg_name":
                 type: str
+              "epoch":
+                type: int
+              "obsoletes":
+                type: seq
+                sequence:
+                  - type: map
+                    mapping:
+                      "package":
+                        type: str
+                        unique: yes
+                        required: true
 
 =head1 AUTHOR
 

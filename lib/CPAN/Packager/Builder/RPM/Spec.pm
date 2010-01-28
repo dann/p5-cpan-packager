@@ -84,6 +84,9 @@ sub build {
     my $use_module_build = 0;
     my @docs             = ();
 
+    # FIXME: this line breaks supporting Patch RPM spec field.
+    $tmpdir = tempdir( CLEANUP => 1, DIR => $tmpdir );
+
     #
     # Set build arch - this is needed to find out where
     # the binary rpm was placed, and copy it back to the

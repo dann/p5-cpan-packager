@@ -10,7 +10,7 @@ use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Role::Logger';
 
-our $VERSION = '0.082';
+our $VERSION = '0.09';
 
 BEGIN {
     if ( !defined &DEBUG ) {
@@ -231,7 +231,7 @@ Many people have contributed ideas, inspiration, fixes and features to
 the Angelos.  Their efforts continue to be very much appreciated.
 Please let me know if you think anyone is missing from this list.
 
-   walf443, afoxson
+   walf443, afoxson, toddr
 
 =head1 SEE ALSO
 
