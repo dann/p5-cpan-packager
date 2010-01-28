@@ -165,6 +165,7 @@ sub create_spec_file {
 
 sub filter_requires_for_rpmbuild {
     my ( $self, $module, $spec_content ) = @_;
+    $spec_content = $self->_prefix_obsoletes( $spec_content, $module );
     $spec_content
         = $self->_filter_module_requires_for_rpmbuild( $spec_content,
         $module );
@@ -206,6 +207,22 @@ sub _filter_module_requires_for_spec {
     }
     $spec_content;
 
+}
+
+sub _prefix_obsoletes {
+    my ( $self, $spec_content, $module ) = @_;
+    if (   $self->config( modules => $module )
+        && $self->config( modules => $module )->{obsoletes} )
+    {
+        for my $obsolete (
+            @{ $self->config( modules => $module )->{obsoletes} || () } )
+        {
+            $spec_content
+                = "Obsoletes: $obsolete->{package}\n"
+                . $spec_content;
+        }
+    }
+    $spec_content;
 }
 
 sub _filter_global_requires_for_rpmbuild {
