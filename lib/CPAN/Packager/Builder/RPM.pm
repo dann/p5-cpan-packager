@@ -71,26 +71,20 @@ sub build {
     $self->install($module) unless $is_failed;
     $self->log(
         info => ">>> finished building rpm package ( $module->{module} )" );
+    return $self->get_package_name($module);
+}
 
-    if ($self->pkg_name) {
-        return $self->pkg_name;
-    }
-    else {
-        return $self->package_name( $module->{module} );
-    }
+sub get_spec_name {
+    my ($self, $module) = @_; 
+    my $package_name = $self->get_package_name($module);
+    my $spec_name = $package_name . ".spec";
+    return $spec_name;
 }
 
 sub generate_spec_file {
     my ( $self, $module ) = @_;
     my $spec_content   = $self->generate_spec_with_cpanflute($module);
-    my $spec_file_name;
-
-    if ($self->pkg_name) {
-        $spec_file_name = $self->pkg_name . ".spec";
-    }
-    else {
-        $spec_file_name = $self->package_name( $module->{module} ) . ".spec";
-    }
+    my $spec_file_name = $self->get_spec_name($module);
 
     $spec_content
         = $self->filter_spec_file( $spec_content, $module->{module} );
@@ -425,14 +419,7 @@ sub install {
     my ( $self, $module ) = @_;
     my $module_name  = $module->{module};
     my $module_version = $module->{version};
-    my $package_name;
-
-    if ($self->pkg_name) {
-        $package_name = $self->pkg_name;
-    }
-    else {
-        $package_name = $self->package_name($module_name);
-    }
+    my $package_name = $self->get_package_name($module_name);
 
     $self->log( info => ">>> install $package_name-$module_version" );
     my $rpm_path = file( $self->package_output_dir, "$package_name-$module_version" );
