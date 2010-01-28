@@ -1,8 +1,15 @@
 Revision history for Perl extension CPAN::Packager
 
+0.09  Jan 28  22:03:00 2010
+    * Added support for 'Patch' RPM spec field.
+    * Added support for RPM "Obsoletes" (afoxson++)
+    * Added support for 'Epoch' RPM spec field. (afoxson++)
+    * Added support for overriding a .rpm or .deb's package name via the 
+      'pkg_name' in config. (afoxson++)
+
 0.082 Jan 25  21:30:00 2010
     * Fixed modules load test.
-    * Set packager to spec file.
+    * Added support for 'Packager' RPM spec field.
 
 0.081 Jan 24  02:40:00 2010
     * Tightened up support for an RPM's release number. This allows for an
