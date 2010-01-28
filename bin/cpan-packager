@@ -37,7 +37,7 @@ RPM/Deb Packages are generated at ~/.cpanpackager/{deb or rpm}
 
 config.yaml is located at github repo.
 
-    See http://github.com/dann/cpan-packager/tree/master
+    See http://github.com/dann/p5-cpan-packager
 
 Please see the configuration schema if you want to write config your self.
 You can see schema like below.
