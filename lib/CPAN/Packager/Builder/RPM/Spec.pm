@@ -83,6 +83,8 @@ sub build {
     my $use_module_build = 0;
     my @docs             = ();
 
+    my $patchdir         = $options{patchdir};
+
     # FIXME: this line breaks supporting Patch RPM spec field.
     $tmpdir = tempdir( CLEANUP => 1, DIR => $tmpdir );
 
@@ -208,10 +210,10 @@ sub build {
     my $patch      = '';
     if ( $options{patch} ) {
         for $patch ( @{ $options{'patch'} } ) { ## no critic
-            copy( $patch, $tmpdir ) or die "copy ${patch}: $!";
+            copy( $patch, $patchdir ) or die "copy ${patch}: $!";
             utime(
                 ( stat( $options{patch} ) )[ 8, 9 ],
-                "$tmpdir/" . basename( $options{patch} )
+                "$patchdir/" . basename( $options{patch} )
             );
             push @patchfiles, ( basename($patch) );
         }
