@@ -37,7 +37,11 @@ has 'dependency_config_merger' => (
     }
 );
 
-has 'is_debug' => ( is => 'rw', lazy => 1, default => sub{get_logger('')->level() == $DEBUG});
+has 'is_debug' => (
+    is      => 'rw',
+    lazy    => 1,
+    default => sub { get_logger('')->level() == $DEBUG }
+);
 
 has 'config_loader' => (
     is      => 'rw',
@@ -81,12 +85,12 @@ sub _build_dependency_analyzer {
 sub make {
     my ( $self, $module, $built_modules ) = @_;
     die 'module must be passed' unless $module;
-    INFO( "### Building packages for $module ... ###" );
+    INFO("### Building packages for $module ... ###");
     my $config = $self->config_loader->load( $self->conf );
     $config->{modules} = $built_modules if $built_modules;
     $config->{global}->{verbose} = $self->verbose;
 
-    INFO( "### Analyzing dependencies for $module ... ###" );
+    INFO("### Analyzing dependencies for $module ... ###");
     my ( $modules, $resolved_module_name )
         = $self->analyze_module_dependencies( $module, $config );
 
@@ -96,7 +100,7 @@ sub make {
     $config = $self->merge_config( $modules, $config )
         if $self->conf;
 
-    $self->_dump_modules("config modules",  $config->{modules} );
+    $self->_dump_modules( "config modules", $config->{modules} );
 
     my $sorted_modules = [
         uniq reverse @{
@@ -104,7 +108,7 @@ sub make {
                 $config->{modules} )
             }
     ];
-    $self->_dump_modules("sorted modules", $sorted_modules);
+    $self->_dump_modules( "sorted modules", $sorted_modules );
 
     local $@;
     unless ( $self->dry_run ) {
@@ -114,18 +118,18 @@ sub make {
     }
 
     if ($@) {
-        $self->_dump_modules("Sorted modules", $sorted_modules);
-    	LOGDIE("### Built packages for $module faied :-( ###" . $@);
+        $self->_dump_modules( "Sorted modules", $sorted_modules );
+        LOGDIE( "### Built packages for $module faied :-( ###" . $@ );
     }
-    INFO( "### Built packages for $module :-) ### " );
+    INFO("### Built packages for $module :-) ### ");
     $built_modules;
 }
 
 sub _dump_modules {
     my ( $self, $dump_type, $modules ) = @_;
 
-    return if(!$self->is_debug);
-    return if($ENV{CPAN_PACKAGER_DISABLE_DUMP});
+    return if ( !$self->is_debug );
+    return if ( $ENV{CPAN_PACKAGER_DISABLE_DUMP} );
     require Data::Dumper;
     DEBUG("$dump_type: ");
     DEBUG( Data::Dumper::Dumper $modules );
@@ -162,7 +166,7 @@ sub build_modules {
 
         if ($package) {
             $module->{build_status} = 'success';
-            INFO( "$module->{module} created ($package)" );
+            INFO("$module->{module} created ($package)");
         }
         else {
             $module->{build_status} = 'failed';
@@ -177,7 +181,7 @@ sub build_modules {
 
 sub analyze_module_dependencies {
     my ( $self, $module, $config ) = @_;
-    INFO( "Analyzing dependencies for $module ..." );
+    INFO("Analyzing dependencies for $module ...");
     my $analyzer = $self->dependency_analyzer;
     my $resolved_module = $analyzer->analyze_dependencies( $module, $config );
     return ( $analyzer->modules, $resolved_module );

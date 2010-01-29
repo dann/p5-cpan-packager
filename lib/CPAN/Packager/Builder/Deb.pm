@@ -31,8 +31,8 @@ sub check_executables_exist_in_path {
 
 sub build {
     my ( $self, $module ) = @_;
-    $self->release($module->{release}) if $module->{release};
-    $self->pkg_name($module->{pkg_name}) if $module->{pkg_name};
+    $self->release( $module->{release} )   if $module->{release};
+    $self->pkg_name( $module->{pkg_name} ) if $module->{pkg_name};
     my $package = $self->_build_package_with_dh_make_perl($module);
     $self->install($module);
     return $package;
@@ -66,7 +66,7 @@ sub _build_package_with_dh_make_perl {
 
     };
     if ($@) {
-        INFO( $@ );
+        INFO($@);
         die;
     }
     $package;
@@ -87,7 +87,7 @@ sub _build_dh_make_perl_command {
     my ( $self, $module, $package ) = @_;
     my @depends = $self->depends($module);
     my $depends = join ',', @depends;
-    DEBUG( "depends: $depends" );
+    DEBUG("depends: $depends");
     my $dh_make_perl_cmd
 
 # = "dh-make-perl --build --depends '\${shlibs:Depends},$depends' $module->{src} --package $package "; # hmm. etch's dh-make-perl don't have --package option.
@@ -109,7 +109,7 @@ sub _build_dh_make_perl_command {
             }
         }
 
-        if ($self->release) {
+        if ( $self->release ) {
             $version .= "-" . $self->release;
         }
         else {
@@ -169,7 +169,8 @@ sub is_installed {
 
     if ( $package !~ /^lib.+-perl/ ) {
         if (   $self->config( modules => $package )
-            && $self->config( modules => $package )->{pkg_name} ) {
+            && $self->config( modules => $package )->{pkg_name} )
+        {
             $package = $self->config( modules => $package )->{pkg_name};
         }
         else {
@@ -180,7 +181,7 @@ sub is_installed {
     my $already_installed;
     eval { $already_installed = system("dpkg -L $package > /dev/null"); };
     if ( defined $already_installed && $already_installed == 0 ) {
-        INFO( "$package already installed. skip building" );
+        INFO("$package already installed. skip building");
         return 1;
     }
     if ($@) {

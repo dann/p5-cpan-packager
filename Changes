@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.1   JAN 29  22::00:00 2010
+    * Used Log::Log4perl as a logger (toddr++).
+
 0.09  Jan 28  22:03:00 2010
     * Added support for 'Patch' RPM spec field.
     * Added support for RPM "Obsoletes" (afoxson++)
