@@ -124,6 +124,7 @@ sub generate_spec_with_cpanflute {
         'tmpdir'      => $self->build_dir,
         'pkg_name'    => $self->pkg_name,
         'epoch'       => $module->{epoch},
+        'patchdir'    => $self->build_dir,
     };
 
     $opts->{test} = 0 if $module->{skip_test};
@@ -429,7 +430,7 @@ sub install {
     my ( $self, $module ) = @_;
     my $module_name    = $module->{module};
     my $module_version = $module->{version};
-    my $package_name   = $self->get_package_name($module_name);
+    my $package_name = $self->get_package_name($module);
 
     INFO(">>> install $package_name-$module_version");
     my $rpm_path
