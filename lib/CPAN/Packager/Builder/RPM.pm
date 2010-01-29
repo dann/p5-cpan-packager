@@ -421,7 +421,7 @@ sub install {
     my ( $self, $module ) = @_;
     my $module_name  = $module->{module};
     my $module_version = $module->{version};
-    my $package_name = $self->get_package_name($module_name);
+    my $package_name = $self->get_package_name($module);
 
     INFO( ">>> install $package_name-$module_version" );
     my $rpm_path = file( $self->package_output_dir, "$package_name-$module_version" );
