@@ -35,17 +35,6 @@ sub config {
     return $self->conf->{$key}->{$value} || ();
 }
 
-sub get_package_name {
-    my ($self, $module) = @_;
-
-    if ($self->pkg_name) {
-        return $self->pkg_name;
-    }
-    else {
-        return $self->package_name( $module->{module} );
-    }
-}
-
 no Mouse::Role;
 
 1;

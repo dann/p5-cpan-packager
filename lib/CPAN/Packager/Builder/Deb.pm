@@ -43,7 +43,14 @@ sub _build_package_with_dh_make_perl {
     die "module param must have module name" unless $module->{module};
     die "Can't find source for package"      unless $module->{src};
 
-    my $package = $self->get_package_name($module);
+    my $package;
+
+    if ($self->pkg_name) {
+        $package = $self->pkg_name;
+    }
+    else {
+        $package = $self->package_name( $module->{module} );
+    }
 
     my $package_output_dir = $self->package_output_dir;
 
@@ -74,7 +81,14 @@ sub _build_package_with_dh_make_perl {
 
 sub install {
     my ( $self, $module ) = @_;
-    my $package = $self->get_package_name($module);
+    my $package;
+
+    if ($self->pkg_name) {
+        $package = $self->pkg_name;
+    }
+    else {
+        $package = $self->package_name( $module->{module} );
+    }
 
     CPAN::Packager::Util::run_command(
         "sudo dpkg -i $module->{src}/../${package}_@{[ $module->{version} ]}*.deb",
