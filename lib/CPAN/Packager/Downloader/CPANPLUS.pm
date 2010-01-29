@@ -43,8 +43,6 @@ sub download {
     };
 
     return () unless $archive;
-    INFO( "Downloaded $module" );
-
     return $self->analyze_distname_info($archive, $where);
 }
 
