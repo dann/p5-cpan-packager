@@ -90,12 +90,12 @@ sub _build_dependency_analyzer {
 sub make {
     my ( $self, $module, $built_modules ) = @_;
     die 'module must be passed' unless $module;
-    INFO("### Building packages for $module ... ###");
+    INFO("### Building packages for $module ...");
     my $config = $self->config_loader->load( $self->conf );
     $config->{modules} = $built_modules if $built_modules;
     $config->{global}->{verbose} = $self->verbose;
 
-    INFO("### Analyzing dependencies for $module ... ###");
+    INFO("### Analyzing dependencies for $module ...");
     my ( $modules, $resolved_module_name )
         = $self->analyze_module_dependencies( $module, $config );
 
@@ -124,9 +124,9 @@ sub make {
 
     if ($@) {
         $self->_dump_modules( "Sorted modules", $sorted_modules );
-        LOGDIE( "### Built packages for $module faied :-( ###" . $@ );
+        LOGDIE( "### Built packages for $module faied :-(" . $@ );
     }
-    INFO("### Built packages for $module :-) ### ");
+    INFO("### Built packages for $module :-)");
     $built_modules;
 }
 
