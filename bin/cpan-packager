@@ -80,6 +80,16 @@ after that you just use cpan-packager ;)
       cpan_mirrors:
         - file:///home/dann/minicpan
 
+=head2 How to use the config
+
+Fix broken MEATA.yml of some modules like:
+
+  global:
+    fix_meta_yml_modules:
+      - YAML 
+      - Class::Member
+      - HTTP::Request::AsCGI
+
 =head2 Specify installation location (optional)
 
 It is possible for a CPAN::Packager user to explicitly specify 
