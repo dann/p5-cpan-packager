@@ -51,8 +51,6 @@ sub BUILD {
 }
 
 sub check_executables_exist_in_path {
-    die "cpanflute2 doesn't exist in PATH"
-        if CPAN::Packager::Util::run_command("which cpanflute2");
     die "yum doesn't exist in PATH"
         if CPAN::Packager::Util::run_command("which yum");
     die "rpm doesn't exist in PATH"

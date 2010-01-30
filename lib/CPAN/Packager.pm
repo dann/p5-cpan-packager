@@ -67,6 +67,11 @@ has 'verbose' => (
 sub BUILD {
     my $self = shift;
     $self->_setup_dependencies();
+    $self->_enable_debug if $self->verbose;
+}
+
+sub _enable_debug {
+    get_logger->level($DEBUG);
 }
 
 sub _setup_dependencies {
