@@ -1,19 +1,11 @@
-package CPAN::Packager::Test;
-use base qw/Test::Class/;
+use strict;
+use warnings;
 use Test::More;
-use IPC::System::Simple qw(system);
+use t::Util;
 
-our $BUILD_SUCCESS = 0;
+subtest "install simple module" => sub {
+    build_ok 'Acme::Bleach';
+    done_testing;
+};
 
-sub test_build_simple_module : Test {
-    my $self = shift;
-    my $build_status
-        = system(
-        'sudo perl bin/cpan-packager --module Mojo --builder RPM --conf t/it/conf/config-rpm.yaml'
-        );
-    is $BUILD_SUCCESS, $build_status, 'build mojo suceded';
-}
-
-__PACKAGE__->runtests;
-
-1;
+done_testing;
