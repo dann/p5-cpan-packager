@@ -148,6 +148,14 @@ to your ~/.rpmmacros file:
 Copy conf/debian/rules* to ~/.dh-make-perl directory.
 copying perllocal.pod is conflited  if you dont do that. 
 
+=head1 ENVIRONMENT VARIABLES
+
+Environment variable C<CPAN_PACKAGER_TEST_LIVE> can be used to execute live
+tests. 
+
+Environment variable C<CPAN_PACKAGER_ENABLE_DUMP> can be used to dump
+variables.
+
 =head1 DESCRIPTION
 
 cpan-packager will create the files required to build a debian or redhat source 
