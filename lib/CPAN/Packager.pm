@@ -133,8 +133,8 @@ sub make {
 sub _dump_modules {
     my ( $self, $dump_type, $modules ) = @_;
 
-    return if ( !$self->is_debug );
-    return if ( $ENV{CPAN_PACKAGER_DISABLE_DUMP} );
+    return unless $self->is_debug;
+    return unless $ENV{CPAN_PACKAGER_ENABLE_DUMP};
     require Data::Dumper;
     DEBUG("$dump_type: ");
     DEBUG( Data::Dumper::Dumper $modules );
