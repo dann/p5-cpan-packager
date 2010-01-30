@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use t::Util;
+use t::Util::RPM;
 
 unless ( $ENV{CPAN_PACKAGER_TEST_LIVE} ) {
     plan skip_all => "You need to set CPAN_PACKAGER_TEST_LIVE environment variable to execute live tests\n";
