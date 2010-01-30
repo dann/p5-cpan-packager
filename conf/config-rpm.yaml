@@ -88,6 +88,10 @@ modules:
   - module: Module::Setup
     no_depends:
       - module: Module::Install::AuthorTests
+  - module: YAML 
+    no_depends:
+      - module: Test::Base 
+      - module: Test::Base::Filter
   - module: Catalyst::Runtime
     no_depends:
       - module: HTTP::Request::AsCGI
