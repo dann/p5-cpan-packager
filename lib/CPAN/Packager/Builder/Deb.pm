@@ -7,6 +7,7 @@ use CPAN::Packager::Home;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Builder::Role';
 use Log::Log4perl qw(:easy);
+use Try::Tiny;
 
 has 'package_output_dir' => (
     +default => sub {
@@ -54,7 +55,7 @@ sub _build_package_with_dh_make_perl {
     }
 
     my $verbose = $self->config( global => "verbose" );
-    eval {
+    try {
         CPAN::Packager::Util::run_command( "rm -rf $module->{src}/debian",
             $verbose );
         my $dh_make_perl_cmd
@@ -64,11 +65,10 @@ sub _build_package_with_dh_make_perl {
             "cp $module->{src}/../$package*.deb $package_output_dir",
             $verbose );
 
-    };
-    if ($@) {
-        INFO($@);
+    } catch {
+        INFO($_);
         die;
-    }
+    };
     $package;
 }
 

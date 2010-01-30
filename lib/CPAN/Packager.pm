@@ -9,8 +9,9 @@ use CPAN::Packager::Config::Merger;
 use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 use Log::Log4perl qw(:easy);
+use Try::Tiny;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 has 'builder' => (
     is      => 'rw',
@@ -115,18 +116,17 @@ sub make {
     ];
     $self->_dump_modules( "sorted modules", $sorted_modules );
 
-    local $@;
     unless ( $self->dry_run ) {
-        eval {
+        try {
             $built_modules = $self->build_modules( $sorted_modules, $config );
+            INFO("### Built packages for $module :-)");
+
+        } catch {
+            $self->_dump_modules( "Sorted modules", $sorted_modules );
+            LOGDIE( "### Built packages for $module faied :-(" . $@ );
         };
     }
 
-    if ($@) {
-        $self->_dump_modules( "Sorted modules", $sorted_modules );
-        LOGDIE( "### Built packages for $module faied :-(" . $@ );
-    }
-    INFO("### Built packages for $module :-)");
     $built_modules;
 }
 
