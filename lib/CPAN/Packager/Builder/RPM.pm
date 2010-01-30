@@ -73,7 +73,7 @@ sub build {
     $self->copy_module_sources_to_build_dir($module);
     my $is_failed = $self->build_rpm_package($spec_file_name);
     $self->install($module) unless $is_failed;
-    INFO(">>> finished building rpm package ( $module->{module} )");
+    INFO(">>> Finished building rpm package ( $module->{module} )");
     return $self->get_package_name($module);
 }
 

@@ -41,6 +41,7 @@ requires(
     'IPC::Cmd'           => 0,
     'CPAN::DistnameInfo' => 0,
     'Log::Log4perl'      => '1.26',
+    'Try::Tiny'          => '0.04',
 );
 
 features(
