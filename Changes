@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
+0.11  JAN 30  18::00:00 2010
+    * implemented integration test util
+    * verbose mode now works
+
 0.1   JAN 29  22::00:00 2010
     * Used Log::Log4perl as a logger (toddr++).
     * Fixed patch support

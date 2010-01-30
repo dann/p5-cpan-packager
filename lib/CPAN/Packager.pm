@@ -10,7 +10,7 @@ use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 use Log::Log4perl qw(:easy);
 
-our $VERSION = '0.1';
+our $VERSION = '0.11';
 
 has 'builder' => (
     is      => 'rw',
