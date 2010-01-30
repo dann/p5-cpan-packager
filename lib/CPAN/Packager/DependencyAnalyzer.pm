@@ -221,6 +221,7 @@ sub is_core {
 
 sub get_dependencies {
     my ( $self, $module, $src, $config ) = @_;
+    INFO("Analyzing dependencies for $module");
     if (   $config->{modules}
         && $config->{modules}->{$module}
         && $config->{modules}->{$module}->{depends} )
@@ -233,11 +234,13 @@ sub get_dependencies {
     my $make_yml_generate_fg = any { $_ eq $module }
     @{ $config->{global}->{fix_meta_yml_modules} || [] };
 
+    DEBUG("Start analyzing dependencies with Module::Depends");
     my $depends_mod
         = $make_yml_generate_fg
         ? "Module::Depends::Intrusive"
         : "Module::Depends";
     my $deps = $depends_mod->new->dist_dir($src)->find_modules;
+    DEBUG("Finish analyzing dependencies with Module::Depends");
 
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) } uniq(

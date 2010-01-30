@@ -9,7 +9,7 @@ unless ( $ENV{CPAN_PACKAGER_TEST_LIVE} ) {
 }
 
 subtest "install complex module (HTTP::Engine)" => sub {
-    build_ok 'Mouse';
+    build_ok 'HTTP::Engine';
     done_testing;
 };
 

@@ -2,6 +2,10 @@
 global:
   cpan_mirrors:
     - file:///home/dann/minicpan/
+  fix_meta_yml_modules:
+    - YAML 
+    - Class::Member
+    - HTTP::Request::AsCGI
   fix_module_name:
     - from: Class::Classgen::classgen
       to: Class::Classgen::Attribute
