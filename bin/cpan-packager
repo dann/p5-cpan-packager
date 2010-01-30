@@ -80,7 +80,7 @@ after that you just use cpan-packager ;)
       cpan_mirrors:
         - file:///home/dann/minicpan
 
-=head2 How to use the config
+=head2 How to use the config (Advanced)
 
 =head3 Fix broken MEATA.yml of some modules like:
 
