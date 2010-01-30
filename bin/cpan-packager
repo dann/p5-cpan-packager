@@ -82,13 +82,43 @@ after that you just use cpan-packager ;)
 
 =head2 How to use the config
 
-Fix broken MEATA.yml of some modules like:
+=head3 Fix broken MEATA.yml of some modules like:
 
   global:
     fix_meta_yml_modules:
       - YAML 
       - Class::Member
       - HTTP::Request::AsCGI
+
+=head3 Apply patches to tarball when you build rpms
+
+You need to write the configuration like:
+
+  - module: Acme
+    custom:
+      tgz_path: ~/.cpanpackager/custom_module/Acme-1.11111.tar.gz
+      patches: 
+        - ~/.cpanpackager/custom_module/acme_test.patch
+      dist_name: Acme
+      version: 1.11111
+
+The patch is like:
+
+    --- Acme-1.11111/t/acme.t.orig	2010-01-26 22:26:51.000000000 +0900
+    +++ Acme-1.11111/t/acme.t	2010-01-26 22:26:39.000000000 +0900
+    @@ -1,8 +1,10 @@
+     use lib 't', 'lib';
+     use strict;
+     use warnings;
+    -use Test::More tests => 2;
+    +use Test::More tests => 3;
+     use Acme;
+     
+     ok(acme->is_acme);
+     ok(acme->is_perfect);
+    +ok 1;
+    +
+       
 
 =head2 Specify installation location (optional)
 
