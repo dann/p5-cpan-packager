@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
+0.12  JAN 30  18::25:00 2010
+    * added documentation for patches to tarball and fixing broke META.yml
+    * added configuration for some modules that META.yaml is broken
+
 0.11  JAN 30  18::00:00 2010
     * implemented integration test util
     * verbose mode now works
