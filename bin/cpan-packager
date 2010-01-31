@@ -9,16 +9,7 @@ main();
 exit;
 
 sub main {
-    setup_logger();
     run();
-}
-
-sub setup_logger {
-    my $level = $ENV{CPAN_PACKAGER_DEBUG} ? $DEBUG : $INFO;
-    my $layout = '%p: %m{chomp}%n'; #INFO Level
-    $layout = '%p %d{HH:mm:ss} [%c:%L]: %m{chomp}%n' if($level == $DEBUG);
-    Log::Log4perl->easy_init({ level => $level,
-                           layout => $layout });
 }
 
 sub run {
