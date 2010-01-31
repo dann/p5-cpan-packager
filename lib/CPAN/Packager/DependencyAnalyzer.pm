@@ -239,16 +239,12 @@ sub get_dependencies {
             @{ $config->{modules}->{$module}->{depends} };
     }
 
-    DEBUG("Start analyzing dependencies with Module::Depends");
-
     my $deps;
     try {
         $deps = Module::Depends->new->dist_dir($src)->find_modules;
     } catch {
         $deps = Module::Depends::Intrusive->new->dist_dir($src)->find_modules;
     };
-
-    DEBUG("Finish analyzing dependencies with Module::Depends");
 
     return grep { !$self->is_added($_) }
         grep    { !$self->is_core($_) } uniq(
