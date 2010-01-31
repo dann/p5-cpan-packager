@@ -86,6 +86,7 @@ information, visit: http://github.com/dann/p5-cpan-packager/issues#issue/3
 =back
 
 =head2 User Manual
+
 See L<CPAN::Packager::Manual>. 
 
 =head1 DESCRIPTION
