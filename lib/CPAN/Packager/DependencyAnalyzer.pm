@@ -205,6 +205,13 @@ sub is_core {
 
     # return true only if this is a dual life core module
     if (exists $corelist->{$module}) {
+        # FIXME Dual lived module support
+        # we need to consider dual lived modules carefully
+        # The packages built by cpan-packager should not be conflicted with
+        # the default perl rpm package by default
+        # The environment variable like PERL_MMB_OPT should be optional thing.
+        return 1 unless $ENV{CPAN_PACKAGER_BUILD_DUAL_LIVED};
+
         my $devnull_fh = FileHandle->new('/dev/null', 'w');
         my $real_fh = $CPANPLUS::Error::ERROR_FH;
 
