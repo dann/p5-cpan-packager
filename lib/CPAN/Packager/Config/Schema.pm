@@ -35,16 +35,6 @@ which is passed to cpan-packager script.
             type: seq
             sequence:
               - type: str
-          "fix_meta_yml_modules":
-            type: seq
-            sequence:
-              - type: str
-                unique: yes
-          "fix_meta_yml_modules":
-            type: seq
-            sequence:
-              - type: str
-                unique: yes
           "fix_package_depends":
             type: seq
             sequence:

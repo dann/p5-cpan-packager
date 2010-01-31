@@ -1,7 +1,5 @@
 ---
 global:
-  fix_meta_yml_modules:
-    - HTTP::Request::AsCGI
   fix_module_name:
     - from: Template::Toolkit
       to:   Template

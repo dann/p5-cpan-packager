@@ -9,8 +9,9 @@ use CPAN::Packager::Config::Merger;
 use CPAN::Packager::Config::Loader;
 use CPAN::Packager::Util;
 use Log::Log4perl qw(:easy);
+use Try::Tiny;
 
-our $VERSION = '0.1';
+our $VERSION = '0.13';
 
 has 'builder' => (
     is      => 'rw',
@@ -67,6 +68,11 @@ has 'verbose' => (
 sub BUILD {
     my $self = shift;
     $self->_setup_dependencies();
+    $self->_enable_debug if $self->verbose;
+}
+
+sub _enable_debug {
+    get_logger->level($DEBUG);
 }
 
 sub _setup_dependencies {
@@ -85,12 +91,12 @@ sub _build_dependency_analyzer {
 sub make {
     my ( $self, $module, $built_modules ) = @_;
     die 'module must be passed' unless $module;
-    INFO("### Building packages for $module ... ###");
+    INFO("### Building packages for $module ...");
     my $config = $self->config_loader->load( $self->conf );
     $config->{modules} = $built_modules if $built_modules;
     $config->{global}->{verbose} = $self->verbose;
 
-    INFO("### Analyzing dependencies for $module ... ###");
+    INFO("### Analyzing dependencies for $module ...");
     my ( $modules, $resolved_module_name )
         = $self->analyze_module_dependencies( $module, $config );
 
@@ -110,26 +116,25 @@ sub make {
     ];
     $self->_dump_modules( "sorted modules", $sorted_modules );
 
-    local $@;
     unless ( $self->dry_run ) {
-        eval {
+        try {
             $built_modules = $self->build_modules( $sorted_modules, $config );
+            INFO("### Built packages for $module :-)");
+
+        } catch {
+            $self->_dump_modules( "Sorted modules", $sorted_modules );
+            LOGDIE( "### Built packages for $module faied :-(" . $@ );
         };
     }
 
-    if ($@) {
-        $self->_dump_modules( "Sorted modules", $sorted_modules );
-        LOGDIE( "### Built packages for $module faied :-( ###" . $@ );
-    }
-    INFO("### Built packages for $module :-) ### ");
     $built_modules;
 }
 
 sub _dump_modules {
     my ( $self, $dump_type, $modules ) = @_;
 
-    return if ( !$self->is_debug );
-    return if ( $ENV{CPAN_PACKAGER_DISABLE_DUMP} );
+    return unless $self->is_debug;
+    return unless $ENV{CPAN_PACKAGER_ENABLE_DUMP};
     require Data::Dumper;
     DEBUG("$dump_type: ");
     DEBUG( Data::Dumper::Dumper $modules );
@@ -216,7 +221,7 @@ This makes it so easy to make a perl module into a Redhat/Debian package
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
 
-walf443
+walf443 (debian related modules)
 
 =head1 CONTRIBUTORS
 
@@ -225,6 +230,22 @@ the Angelos.  Their efforts continue to be very much appreciated.
 Please let me know if you think anyone is missing from this list.
 
    walf443, afoxson, toddr
+
+=head1 For Developers
+
+=head2 How to do live tests
+
+Set CPAN_PACKAGER_TEST_LIVE environment variable when you execute prove
+
+  CPAN_PACKAGER_TEST_LIVE=1 prove -lv t/it/010_build_rpm/*.t
+
+=head2 Use verbose option to debug building a distribution package
+
+Debug message is displayed when you use the verbose option of 
+cpan-packager script.
+
+  bin/cpan-packager --conf conf/config-rpm.yaml --module Acme::Bleach 
+    --builder RPM --verbose
 
 =head1 SEE ALSO
 

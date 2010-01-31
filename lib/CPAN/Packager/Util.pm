@@ -70,7 +70,7 @@ sub run_command {
         )
         )
     {
-        INFO("success running: `$cmd`");
+        DEBUG("success running: `$cmd`");
         return 0;
     }
     else {

@@ -4,6 +4,7 @@ use CPANPLUS::Backend;
 use Path::Class qw(file dir);
 use URI;
 use Log::Log4perl qw(:easy);
+use Try::Tiny;
 with 'CPAN::Packager::Downloader::Role';
 
 has 'fetcher' => (
@@ -37,7 +38,7 @@ sub download {
 
     my ( $archive, $where );
     my $is_force = $dist->is_uptodate ? 0 : 1;
-    eval {
+    try {
         $archive = $dist->fetch( force => $is_force ) or next;
         $where = $dist->extract( force => $is_force ) or next;
     };

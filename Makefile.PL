@@ -41,6 +41,7 @@ requires(
     'IPC::Cmd'           => 0,
     'CPAN::DistnameInfo' => 0,
     'Log::Log4perl'      => '1.26',
+    'Try::Tiny'          => '0.04',
 );
 
 features(
@@ -62,11 +63,10 @@ features(
 );
 
 test_requires(
-    'Test::More'           => '0.92',
+    'Test::More'           => '0.94',
     'Test::Base'           => 0,
     'Test::LoadAllModules' => '0.02',
-    'Test::Class'          => 0,
-    'Test::Requires'       => 0,
+    'Test::Requires'       => '0.03',
 );
 
 # Module::Install::AuthorRequires

@@ -1,19 +1,16 @@
-package CPAN::Packager::Test;
-use base qw/Test::Class/;
+use strict;
+use warnings;
 use Test::More;
-use IPC::System::Simple qw(system);
+use t::Util::Deb;
 
-our $BUILD_SUCCESS = 0;
-
-sub test_build_simple_module : Test {
-    my $self = shift;
-    my $build_status
-        = system(
-        'sudo perl bin/cpan-packager --module HTTP::Engine --builder Deb --conf t/it/conf/config-deb.yaml'
-        );
-    is $BUILD_SUCCESS, $build_status, 'build a module with multiple dependencies';
+unless ( $ENV{CPAN_PACKAGER_TEST_LIVE} ) {
+    plan skip_all => "You need to set CPAN_PACKAGER_TEST_LIVE environment variable to execute live tests\n";
+    exit 0;
 }
 
-__PACKAGE__->runtests;
+subtest "install complex module (HTTP::Engine)" => sub {
+    build_ok 'HTTP::Engine';
+    done_testing;
+};
 
-1;
+done_testing;

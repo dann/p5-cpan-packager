@@ -1,7 +1,7 @@
 ---
 global:
   cpan_mirrors:
-    - file:///home/dann/.cpanpackager/minicpan/
+    - http://ftp.jaist.ac.jp/pub/CPAN/
   fix_module_name: []
   fix_package_depends: []
   no_depends:
