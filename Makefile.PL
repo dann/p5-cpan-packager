@@ -42,6 +42,7 @@ requires(
     'CPAN::DistnameInfo' => 0,
     'Log::Log4perl'      => '1.26',
     'Try::Tiny'          => '0.04',
+    'Getopt::Long::Descriptive' => '0.083',
 );
 
 features(

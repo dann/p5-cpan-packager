@@ -6,12 +6,6 @@ use Path::Class;
 
 with 'MouseX::Getopt';
 
-has 'help' => (
-    is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
-);
-
 has 'dry_run' => (
     is      => 'rw',
     isa     => 'Bool',
@@ -24,9 +18,9 @@ has 'module' => (
 );
 
 has 'builder' => (
-    is      => 'rw',
-    isa     => 'Str',
-    default => 'Deb',
+    is       => 'rw',
+    isa      => 'Str',
+    required => 1,
 );
 
 has 'downloader' => (
@@ -36,8 +30,9 @@ has 'downloader' => (
 );
 
 has 'conf' => (
-    is  => 'rw',
-    isa => 'Str',
+    is       => 'rw',
+    isa      => 'Str',
+    required => 1,
 );
 
 has 'always_build' => (
@@ -59,11 +54,6 @@ has 'verbose' => (
 
 sub run {
     my $self = shift;
-    if ( $self->help ) {
-        pod2usage(2);
-    }
-    die 'conf is required param' unless $self->conf;
-
     unless ( $self->builder eq "Deb" || $self->builder eq "RPM" ) {
         die 'builder option value must be Deb or RPM';
     }
