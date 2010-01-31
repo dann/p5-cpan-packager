@@ -215,7 +215,9 @@ CPAN::Packager - Create packages(rpm, deb) from perl modules
 =head1 DESCRIPTION
 
 CPAN::Packager is a tool to help you make packages from perl modules on CPAN.
-This makes it so easy to make a perl module into a Redhat/Debian package
+This makes it easy to make a perl module into a Redhat/Debian package.
+
+For full documentation please see the docs for cpan-packager.
 
 =head1 AUTHOR
 
@@ -225,29 +227,27 @@ walf443 (debian related modules)
 
 =head1 CONTRIBUTORS
 
-Many people have contributed ideas, inspiration, fixes and features to
-the Angelos.  Their efforts continue to be very much appreciated.
-Please let me know if you think anyone is missing from this list.
+Many people have contributed ideas, inspiration, fixes and features. Their
+efforts continue to be very much appreciated. Please let me know if you think
+anyone is missing from this list.
 
-   walf443, afoxson, toddr
+ walf443, fhoxh, toddr
 
 =head1 For Developers
 
 =head2 How to do live tests
 
-Set CPAN_PACKAGER_TEST_LIVE environment variable when you execute prove
+Set the CPAN_PACKAGER_TEST_LIVE environment variable when you execute prove:
 
   CPAN_PACKAGER_TEST_LIVE=1 prove -lv t/it/010_build_rpm/*.t
 
 =head2 Use verbose option to debug building a distribution package
 
-Debug message is displayed when you use the verbose option of 
+Debug messages are displayed when you use the verbose option of the
 cpan-packager script.
 
   bin/cpan-packager --conf conf/config-rpm.yaml --module Acme::Bleach 
     --builder RPM --verbose
-
-=head1 SEE ALSO
 
 =head1 LICENSE
 

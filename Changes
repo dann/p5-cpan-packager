@@ -2,26 +2,26 @@ Revision history for Perl extension CPAN::Packager
 
 0.13  JAN 31  13::38:00 2010
     * Made builder option required
-    * Fixing broken META.yml automatically
+    * Fixed broken META.yml automatically
  
-0.12  JAN 30  18::25:00 2010
-    * Added documentation for patches to tarball and fixing broke META.yml
-    * Added configuration for some modules that META.yaml is broken
+0.12  Jan 30  18:25:00 2010
+    * Added documentation for patches to tarballs and additional broken META.yml fixes.
+    * Added configuration for some modules whose META.yml are broken.
 
-0.11  JAN 30  18::00:00 2010
-    * Implemented integration test util
-    * verbose mode now works
+0.11  Jan 30  18:00:00 2010
+    * Implemented integration test util.
+    * Verbose mode now works.
 
-0.1   JAN 29  22::00:00 2010
-    * Used Log::Log4perl as a logger (toddr++).
-    * Fixed patch support
+0.1   Jan 29  22:00:00 2010
+    * Used Log::Log4perl as a logger. (toddr++)
+    * Fixed patch support.
 
 0.09  Jan 28  22:03:00 2010
     * Added support for 'Patch' RPM spec field.
-    * Added support for RPM "Obsoletes" (afoxson++)
-    * Added support for 'Epoch' RPM spec field. (afoxson++)
+    * Added support for RPM "Obsoletes". (fhoxh++)
+    * Added support for 'Epoch' RPM spec field. (fhoxh++)
     * Added support for overriding a .rpm or .deb's package name via the 
-      'pkg_name' in config. (afoxson++)
+      'pkg_name' in config. (fhoxh++)
 
 0.082 Jan 25  21:30:00 2010
     * Fixed modules load test.
@@ -31,13 +31,13 @@ Revision history for Perl extension CPAN::Packager
     * Tightened up support for an RPM's release number. This allows for an
       identically versioned package to be re-packaged. For example, if there
       was an error in the initial packaging, or some of the original
-      packaging's meta data needs to be updated. (afoxson++)
+      packaging's meta data needs to be updated. (fhoxh++)
     * Distributions archived in formats other than tar.gz are now supported.
-      (afoxson++)
+      (fhoxh++)
     * Improved support for distributions that use Module::Build instead of
-      ExtUtils::MakeMaker. (afoxson++)
-    * Added support for the packaging of dual life core modules. (afoxson++)
-    * Improved support for package installation. (afoxson++)
+      ExtUtils::MakeMaker. (fhoxh++)
+    * Added support for the packaging of dual life core modules. (fhoxh++)
+    * Improved support for package installation. (fhoxh++)
 
 0.074 Aug 31  23:14:00 2009
     * tgz_path is now optional.
