@@ -14,7 +14,7 @@ sub check_conflict {
     my ( $self, $module_name ) = @_;
 
     if ( my $error_message = $self->check_install_settings_conflicted() ) {
-        $self->_emit_warnings_for_confliction( $module_name, $error_message );
+        $self->_emit_confliction_warnings( $module_name, $error_message );
     }
 }
 
@@ -85,7 +85,7 @@ sub check_install_settings_conflicted {
     }
 }
 
-sub _emit_warnings_for_confliction {
+sub _emit_confliction_warnings {
     my ( $self, $module_name, $error_message ) = @_;
 
     # TODO Improve documentation
