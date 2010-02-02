@@ -12,6 +12,7 @@ use List::MoreUtils qw(uniq any);
 use FileHandle;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;
+use CPAN::Packager::ConflictionChecker;
 
 has 'downloader' => (
     is      => 'rw',
@@ -201,30 +202,17 @@ sub is_added {
 sub is_core {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
-    my $corelist = $Module::CoreList::version{$]};
 
-    # return true only if this is a dual life core module
-    if (exists $corelist->{$module}) {
-        # FIXME Dual lived module support
-        # we need to consider dual lived modules carefully
-        # The packages built by cpan-packager should not be conflicted with
-        # the default perl rpm package by default
-        # The environment variable like PERL_MMB_OPT should be optional thing.
-        return 1 unless $ENV{CPAN_PACKAGER_BUILD_DUAL_LIVED};
-
-        my $devnull_fh = FileHandle->new('/dev/null', 'w');
-        my $real_fh = $CPANPLUS::Error::ERROR_FH;
-
-        $CPANPLUS::Error::ERROR_FH = $devnull_fh;
-        my $mod = $self->downloader->fetcher->parse_module(module => $module);
-        $CPANPLUS::Error::ERROR_FH = $real_fh;
-        return 1 unless defined $mod;
-
-        my $pkg = $mod->package;
-        return 1 if $pkg =~ /^perl-?\d\.\d/;
+    my $conflict_checker = CPAN::Packager::ConflictionChecker->new(downloader => $self->downloader);
+    if ($conflict_checker->is_dual_life_module($module)) {
+        $conflict_checker->check_conflict($module); 
+        return 0;
     }
 
-    return;
+    my $corelist = $Module::CoreList::version{$]};
+    return 1 if exists $corelist->{$module};
+
+    return 0;
 }
 
 sub get_dependencies {
