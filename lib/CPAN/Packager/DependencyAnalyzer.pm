@@ -223,7 +223,7 @@ sub is_dual_lived_module {
     my ( $self, $module ) = @_;
     my $conflict_checker = CPAN::Packager::ConflictionChecker->new(
         downloader => $self->downloader );
-    if ( $conflict_checker->is_dual_life_module($module) ) {
+    if ( $conflict_checker->is_dual_lived_module($module) ) {
         $conflict_checker->check_conflict($module);
         return 1;
     }

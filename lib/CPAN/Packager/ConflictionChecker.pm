@@ -18,7 +18,7 @@ sub check_conflict {
     }
 }
 
-sub is_dual_life_module {
+sub is_dual_lived_module {
     my ( $self, $module_name ) = @_;
     my $corelist = $Module::CoreList::version{$]};
     if ( exists $corelist->{$module_name} ) {
