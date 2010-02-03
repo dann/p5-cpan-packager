@@ -11,11 +11,11 @@ use CPAN::Packager::Util;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;
 
-our $VERSION = '0.13';
+our $VERSION = '0.20';
 
 has 'builder' => (
-    is      => 'rw',
-    default => 'Deb',
+    is       => 'rw',
+    required => 1,
 );
 
 has 'downloader' => (
