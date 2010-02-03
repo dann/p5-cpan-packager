@@ -14,9 +14,7 @@ use Log::Log4perl qw(:easy);
 use Try::Tiny;
 use CPAN::Packager::ConflictionChecker;
 
-has 'downloader' => (
-    is      => 'rw',
-);
+has 'downloader' => ( is => 'rw', );
 
 has 'extractor' => (
     is      => 'rw',
@@ -60,14 +58,14 @@ sub analyze_dependencies {
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
-   # try to download unresolved name because resolver sometimes return wrong name.
+# try to download unresolved name because resolver sometimes return wrong name.
     my $module_info = $self->download_module( $module, $config );
 
     my $resolved_module = $module_info->{dist_name};
     $resolved_module = $self->fix_module_name( $module, $config );
     unless ( $module_info->{dist_name} ) {
 
-       # try to download unresolved name because resolver sometimes return wrong name.
+# try to download unresolved name because resolver sometimes return wrong name.
         $module_info = $self->download_module( $resolved_module, $config );
         $resolved_module = $module_info->{dist_name};
     }
@@ -139,18 +137,22 @@ sub download_module {
         if ($custom_src) {
             if ( $custom_src->{tgz_path} ) {
                 $custom_src->{tgz_path}
-                    = CPAN::Packager::Config::Replacer->replace_variable($custom_src->{tgz_path} );
+                    = CPAN::Packager::Config::Replacer->replace_variable(
+                    $custom_src->{tgz_path} );
             }
             $custom_src->{src_dir}
                 = $custom_src->{src_dir}
-                ? CPAN::Packager::Config::Replacer->replace_variable($custom_src->{src_dir})
+                ? CPAN::Packager::Config::Replacer->replace_variable(
+                $custom_src->{src_dir} )
                 : $self->extractor->extract( $custom_src->{tgz_path} );
             $self->{__downloaded}->{$module} = $custom_src;
 
-            if(defined $custom_src->{patches} ) {
+            if ( defined $custom_src->{patches} ) {
                 my @expanded_patches = ();
-                foreach my $patch (@{$custom_src->{patches}}) {
-                   push @expanded_patches, CPAN::Packager::Config::Replacer->replace_variable($patch); 
+                foreach my $patch ( @{ $custom_src->{patches} } ) {
+                    push @expanded_patches,
+                        CPAN::Packager::Config::Replacer->replace_variable(
+                        $patch);
                 }
                 $custom_src->{patches} = \@expanded_patches;
             }
@@ -203,9 +205,10 @@ sub is_core {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
 
-    my $conflict_checker = CPAN::Packager::ConflictionChecker->new(downloader => $self->downloader);
-    if ($conflict_checker->is_dual_life_module($module)) {
-        $conflict_checker->check_conflict($module); 
+    my $conflict_checker = CPAN::Packager::ConflictionChecker->new(
+        downloader => $self->downloader );
+    if ( $conflict_checker->is_dual_life_module($module) ) {
+        $conflict_checker->check_conflict($module);
         return 0;
     }
 
@@ -230,7 +233,8 @@ sub get_dependencies {
     my $deps;
     try {
         $deps = Module::Depends->new->dist_dir($src)->find_modules;
-    } catch {
+    }
+    catch {
         $deps = Module::Depends::Intrusive->new->dist_dir($src)->find_modules;
     };
 
