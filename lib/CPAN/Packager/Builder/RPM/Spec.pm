@@ -62,7 +62,7 @@ sub build {
             LOGEXIT("File:  ${options{'descfile'}}");
         }
         if ( !-r $options{'descfile'} ) {
-    	    FATAL("Description file given is not readable!");
+            FATAL("Description file given is not readable!");
             LOGEXIT("File:  ${options{'descfile'}}");
         }
     }
