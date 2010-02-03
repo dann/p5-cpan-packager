@@ -205,17 +205,31 @@ sub is_core {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
 
-    my $conflict_checker = CPAN::Packager::ConflictionChecker->new(
-        downloader => $self->downloader );
-    if ( $conflict_checker->is_dual_life_module($module) ) {
-        $conflict_checker->check_conflict($module);
-        return 0;
-    }
+    # We should process dual life core modules by default. 
+    # The entire point of dual life modules to exist in the first
+    # place is for users to be able to update these modules independent of
+    # upgrading Perl. The vast majority of our users will want dual life
+    # modules to be updated, particularly considering that a lot of recent
+    # CPAN distributions directly depend on updated dual life core modules.
+    return 0 if $self->is_dual_lived_module($module);
 
     my $corelist = $Module::CoreList::version{$]};
     return 1 if exists $corelist->{$module};
 
     return 0;
+}
+
+sub is_dual_lived_module {
+    my ( $self, $module ) = @_;
+    my $conflict_checker = CPAN::Packager::ConflictionChecker->new(
+        downloader => $self->downloader );
+    if ( $conflict_checker->is_dual_life_module($module) ) {
+        $conflict_checker->check_conflict($module);
+        return 1;
+    }
+    else {
+        return 0;
+    }
 }
 
 sub get_dependencies {
