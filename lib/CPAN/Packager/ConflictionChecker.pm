@@ -42,43 +42,34 @@ sub is_dual_lived_module {
 }
 
 sub check_install_settings_conflicted {
-    my $may_conflict  = 0;
-    my $error_message = "";
+    my @error_messages = ();
 
     if ( $Config{installman1dir} eq $Config{installvendorman1dir} ) {
-        $may_conflict = 1;
-        $error_message
-            .= "installman1dir and installvendorman1dir conflicts\n";
-
-    }
-    elsif ( $Config{installman3dir} eq $Config{installvendorman3dir} ) {
-        $may_conflict = 1;
-        $error_message
-            .= "installman3dir and installvendorman3dir conflicts\n";
-
-    }
-    elsif ( $Config{installbin} eq $Config{installvendorbin} ) {
-        $may_conflict = 1;
-        $error_message .= "installbin and installvendorbin conflicts\n";
-
-    }
-    elsif ( $Config{installprivlib} eq $Config{installvendorlib} ) {
-        $may_conflict = 1;
-        $error_message .= "installprivlib and installvendorlib conflicts\n";
-
-    }
-    elsif ( $Config{installscript} eq $Config{installvendorscript} ) {
-        $may_conflict = 1;
-        $error_message .= "installscript and installvendorscript conflicts\n";
-
-    }
-    elsif ( $Config{installarchlib} eq $Config{installvendorarch} ) {
-        $may_conflict = 1;
-        $error_message .= "installarchliba and installvendorarch conflicts\n";
+        push @error_messages, "!! - installman1dir and installvendorman1dir is same value.";
     }
 
-    if ($may_conflict) {
-        return $error_message;
+    if ( $Config{installman3dir} eq $Config{installvendorman3dir} ) {
+        push @error_messages,  "!! - installman3dir and installvendorman3dir is same value.";
+    }
+
+    if ( $Config{installbin} eq $Config{installvendorbin} ) {
+        push @error_messages, "!! - installbin and installvendorbin is same value";
+    }
+
+    if ( $Config{installprivlib} eq $Config{installvendorlib} ) {
+        push @error_messages, "!! - installprivlib and installvendorlib is same value";
+    }
+
+    if ( $Config{installscript} eq $Config{installvendorscript} ) {
+        push @error_messages, "!! - installscript and installvendorscript is same value";
+    }
+
+    if ( $Config{installarchlib} eq $Config{installvendorarch} ) {
+        push @error_messages, "!! - installarchliba and installvendorarch is same value";
+    }
+
+    if (@error_messages) {
+        return join "\n", @error_messages;
     }
     else {
         return 0;
@@ -88,19 +79,32 @@ sub check_install_settings_conflicted {
 sub _emit_confliction_warnings {
     my ( $self, $module_name, $error_message ) = @_;
 
-    # TODO Improve documentation
-    my $header
-        = "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
-    my $body = '!!! ' . $error_message;
-    $body
-        .= '!!! '
-        . $module_name
-        . '\' may conflict with the module in the system. ' . "\n";
+    my $body = "\"$module_name\"" . " may conflict with the module in the system";
+    my $warning_message = <<"EOS";
+WARNINGS 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!! $body
+!!
+!! Causes:
+$error_message
+!!
+!! Solution:
+!!    It is possible for a CPAN::Packager user to explicitly specify
+!!    installation locations for a distribution's libraries, documentation,
+!!    man pages, binaries, and scripts. Setting both of the below environment
+!!    variables, for example, will accomplish this.
+!!
+!!     PERL_MM_OPT="INSTALLVENDORMAN1DIR=/usr/local/share/man/man1
+!!     INSTALLVENDORMAN3DIR=/usr/local/share/man/man3
+!!     INSTALLVENDORBIN=/usr/local/bin INSTALLVENDORSCRIPT=/usr/local/bin"
+!!
+!!     PERL_MB_OPT="--config installvendorman1dir=/usr/local/share/man/man1
+!!     --config installvendorman3dir=/usr/local/share/man/man3 --config
+!!     installvendorbin=/usr/local/bin --config installvendorscript=/usr/local/bin"
+!! 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOS
 
-    my $footer
-        = "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n";
-
-    my $warning_message = $header . $body . $footer;
     WARN($warning_message);
 }
 
