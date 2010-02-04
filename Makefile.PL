@@ -1,5 +1,5 @@
 sub readme_from {
-    warn "You need to install Module::Install::ReadmeFromPod to make README";
+    warn "You need to install Module::Install::ReadmeFromPod to generate README";
 }
 
 sub use_test_base {
