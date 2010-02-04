@@ -25,6 +25,25 @@ cpan-packager - create redhat/debian packages from CPAN distributions
 
 =head1 SYNOPSIS
 
+  cpan-packager 
+    --module             The module name  ex) Test::Exception 
+    --builder            RPM or Deb
+    --conf               The CPAN::Packager configuration file path.
+    [--verbose]          Emit additional information and diagnostics.
+    [--always-build]     Always build CPAN modules even if the module is already installed.
+    [--modulelist]       The path to a file containing the list of modules
+    [--help]
+
+  Example
+    $ cpan-packager --module Test::Exception --builder RPM --conf \
+    conf/config-deb.yaml --verbose
+
+  Usage
+    See perldoc cpan-packager
+    See perldoc L<CPAN::Packager::Manual>. 
+
+=head1 Manual
+
 =head2 RPMs
 
 $ sudo cpan-packager --module Test::Exception --builder RPM --conf \

@@ -1,7 +1,16 @@
-sub readme_from { }
-sub use_test_base { warn "You need to install Test::Base to run make test from git clone" }
-sub author_requires { warn "You need to install Module::Install::AuthorRequires to install modules author requires" }
-sub author_tests { }
+sub readme_from {
+    warn "You need to install Module::Install::ReadmeFromPod to make README";
+}
+
+sub use_test_base {
+    warn "You need to install Test::Base to run make test from git clone";
+}
+
+sub author_requires {
+    warn
+        "You need to install Module::Install::AuthorRequires to install modules author requires";
+}
+sub author_tests        { }
 sub auto_set_repository { }
 
 use inc::Module::Install;
@@ -19,29 +28,29 @@ all_from 'lib/CPAN/Packager.pm';
 readme_from 'bin/cpan-packager';
 
 requires(
-    'CPANPLUS::Backend'  => 0,
-    'File::Copy'         => 0,
-    'FindBin::libs'      => 0,
-    'Hash::Merge'        => 0,
-    'LWP::UserAgent'     => 0,
-    'List::Compare'      => 0,
-    'List::MoreUtils'    => 0,
-    'Module::CoreList'   => '2.17',
-    'Module::Depends'    => 0,
-    'Mouse'              => '0.47',
-    'MouseX::Getopt'     => '0.2601',
-    'Path::Class'        => 0,
-    'Archive::Extract'   => 0,
-    'UNIVERSAL::require' => 0,
-    'YAML'               => 0,
-    'Pod::POM'           => 0,
-    'Class::Inspector'   => 0,
-    'Kwalify'            => '1.20',
-    'URI'                => 0,
-    'IPC::Cmd'           => 0,
-    'CPAN::DistnameInfo' => 0,
-    'Log::Log4perl'      => '1.26',
-    'Try::Tiny'          => '0.04',
+    'CPANPLUS::Backend'         => 0,
+    'File::Copy'                => 0,
+    'FindBin::libs'             => 0,
+    'Hash::Merge'               => 0,
+    'LWP::UserAgent'            => 0,
+    'List::Compare'             => 0,
+    'List::MoreUtils'           => 0,
+    'Module::CoreList'          => '2.17',
+    'Module::Depends'           => 0,
+    'Mouse'                     => '0.47',
+    'MouseX::Getopt'            => '0.2601',
+    'Path::Class'               => 0,
+    'Archive::Extract'          => 0,
+    'UNIVERSAL::require'        => 0,
+    'YAML'                      => 0,
+    'Pod::POM'                  => 0,
+    'Class::Inspector'          => 0,
+    'Kwalify'                   => '1.20',
+    'URI'                       => 0,
+    'IPC::Cmd'                  => 0,
+    'CPAN::DistnameInfo'        => 0,
+    'Log::Log4perl'             => '1.26',
+    'Try::Tiny'                 => '0.04',
     'Getopt::Long::Descriptive' => '0.083',
 );
 

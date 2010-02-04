@@ -1,6 +1,5 @@
 package CPAN::Packager::Script;
 use Mouse;
-use Pod::Usage;
 use CPAN::Packager;
 use Path::Class;
 
@@ -54,6 +53,7 @@ has 'verbose' => (
 
 sub run {
     my $self = shift;
+
     unless ( $self->builder eq "Deb" || $self->builder eq "RPM" ) {
         die 'builder option value must be Deb or RPM';
     }
