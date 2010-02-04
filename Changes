@@ -2,6 +2,7 @@ Revision history for Perl extension CPAN::Packager
 
 0.20  FEB 04  21::38:00 2010
     * Fixed broken META.yml automatically
+    * Supported building  dual-lived module package
     * Emited warning message when dual-lived modules causes conflict with 
       the module in the system. 
     * Major documendation updates (fhoxh++)
