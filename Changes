@@ -1,5 +1,8 @@
 Revision history for Perl extension CPAN::Packager
 
+0.22  FEB 04  23::00:00 2010
+    * Fixed dual-lived module checking 
+
 0.21  FEB 04  23::45:00 2010
     * Fixed help option of cpan-packager script
 
