@@ -64,8 +64,8 @@ sub analyze_dependencies {
     return $module
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
-
-    return $module unless $self->_is_needed_to_analyze_dependencies($module);
+    
+    return $module if $self->is_non_dualife_core_module($module);
 
     # try to download unresolved name because resolver sometimes return wrong name.
     my $module_info = $self->download_module( $module, $config );

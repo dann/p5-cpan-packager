@@ -49,7 +49,9 @@ sub is_dual_lived_module {
 sub is_module_already_installed {
     my ( $self, $module ) = @_;
     my $installed = ExtUtils::Installed->new;
-    return any { $module eq $_ } $installed->modules;
+    my $result = any { $module eq $_ } $installed->modules;
+    DEBUG("Is this dual module ( $module ) already installed?: $result");
+    return $result;
 }
 
 sub check_install_settings_conflicted {
