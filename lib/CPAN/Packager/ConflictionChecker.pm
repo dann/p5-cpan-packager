@@ -4,12 +4,13 @@ use Config;
 use Module::CoreList;
 use FileHandle;
 use Log::Log4perl qw(:easy);
-use List::MoreUtils qw(uniq);
+use List::MoreUtils qw(uniq any);
 use CPAN::Packager::DualLivedList;
+use ExtUtils::Installed;
 
 has 'checked_duallived_modules' => (
-    is       => 'rw',
-    default  => sub {
+    is      => 'rw',
+    default => sub {
         [];
     }
 );
@@ -17,10 +18,11 @@ has 'checked_duallived_modules' => (
 sub check_conflict {
     my ( $self, $module_name ) = @_;
 
-    return unless scalar @{$self->checked_duallived_modules};
+    return unless scalar @{ $self->checked_duallived_modules };
 
     if ( my $error_message = $self->check_install_settings_conflicted() ) {
-        my $module_names = join ",", uniq @{$self->checked_duallived_modules}; 
+        my $module_names = join ",",
+            uniq @{ $self->checked_duallived_modules };
         $self->_emit_confliction_warnings( $module_names, $error_message );
     }
 }
@@ -28,13 +30,21 @@ sub check_conflict {
 sub is_dual_lived_module {
     my ( $self, $module_name ) = @_;
     my $dual_lived_list = CPAN::Packager::DualLivedList->new;
-    if( $dual_lived_list->is_duallived_module($module_name) ) {
-        push @{$self->checked_duallived_modules}, $module_name;
+    if (    $dual_lived_list->is_duallived_module($module_name)
+        and $self->is_module_already_installed($module_name) )
+    {
+        push @{ $self->checked_duallived_modules }, $module_name;
         return 1;
     }
     else {
         return 0;
     }
+}
+
+sub is_module_already_installed {
+    my ( $self, $module ) = @_;
+    my $installed = ExtUtils::Installed->new;
+    return any { $module eq $_ } $installed->modules;
 }
 
 sub check_install_settings_conflicted {

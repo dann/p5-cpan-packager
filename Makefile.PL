@@ -52,6 +52,7 @@ requires(
     'Log::Log4perl'             => '1.26',
     'Try::Tiny'                 => '0.04',
     'Getopt::Long::Descriptive' => '0.083',
+    'ExtUtils::Installed'       => '1.54',
 );
 
 features(
