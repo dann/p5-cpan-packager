@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
+0.23  FEB 05  01::00:00 2010
+    * Emited confliction warnings when installed modules are found.
+    * Emited warnings once
+
 0.22  FEB 04  23::00:00 2010
     * Fixed dual-lived module checking 
 
