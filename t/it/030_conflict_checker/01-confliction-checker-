@@ -25,4 +25,11 @@ subtest "CPAN" => sub {
     done_testing;
 };
 
+
+subtest "File::Spec" => sub {
+    my $is_dual_life_module = $confliction_checker->is_dual_lived_module('File::Spec');
+    ok $is_dual_life_module;
+    done_testing;
+};
+
 done_testing;

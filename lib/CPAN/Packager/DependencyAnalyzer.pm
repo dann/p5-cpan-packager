@@ -58,7 +58,9 @@ sub analyze_dependencies {
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
 
-# try to download unresolved name because resolver sometimes return wrong name.
+    return $module unless $self->_is_needed_to_analyze_dependencies($module);
+
+    # try to download unresolved name because resolver sometimes return wrong name.
     my $module_info = $self->download_module( $module, $config );
 
     my $resolved_module = $module_info->{dist_name};
@@ -179,7 +181,7 @@ sub download_module {
 sub _is_needed_to_analyze_dependencies {
     my ( $self, $resolved_module, $config ) = @_;
     return 0 if $self->is_added($resolved_module);
-    return 0 if $self->is_core($resolved_module);
+    return 0 if $self->is_non_dualife_core_module($resolved_module);
     return 0 if $resolved_module eq 'perl';
     return 0 if $resolved_module eq 'PerlInterp';
     return 0 if $config->{modules}->{$resolved_module}->{skip_build};
@@ -201,7 +203,7 @@ sub is_added {
     exists $self->modules->{$module};
 }
 
-sub is_core {
+sub is_non_dualife_core_module {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
 
@@ -253,7 +255,7 @@ sub get_dependencies {
     };
 
     return grep { !$self->is_added($_) }
-        grep    { !$self->is_core($_) } uniq(
+        grep    { !$self->is_non_dualife_core_module($_) } uniq(
         keys %{ $deps->requires || {} },
         keys %{ $deps->build_requires || {} }
         );
