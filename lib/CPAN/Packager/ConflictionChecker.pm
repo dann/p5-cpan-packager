@@ -4,11 +4,7 @@ use Config;
 use Module::CoreList;
 use FileHandle;
 use Log::Log4perl qw(:easy);
-
-has 'downloader' => (
-    is       => 'rw',
-    required => 1,
-);
+use List::MoreUtils qw(uniq);
 
 # FIXME
 # copied from Bundle::duallived
@@ -130,17 +126,28 @@ my $DUAL_LIVED_LIST = {
     "XSLoader" => 1,
 };
 
+has 'checked_duallived_modules' => (
+    is       => 'rw',
+    default  => sub {
+        [];
+    }
+);
+
 sub check_conflict {
     my ( $self, $module_name ) = @_;
 
+    return unless scalar @{$self->checked_duallived_modules};
+
     if ( my $error_message = $self->check_install_settings_conflicted() ) {
-        $self->_emit_confliction_warnings( $module_name, $error_message );
+        my $module_names = join ",", uniq @{$self->checked_duallived_modules}; 
+        $self->_emit_confliction_warnings( $module_names, $error_message );
     }
 }
 
 sub is_dual_lived_module {
     my ( $self, $module_name ) = @_;
     if( exists $DUAL_LIVED_LIST->{$module_name}) {
+        push @{$self->checked_duallived_modules}, $module_name;
         return 1;
     } else {
         return 0;
@@ -183,13 +190,15 @@ sub check_install_settings_conflicted {
 }
 
 sub _emit_confliction_warnings {
-    my ( $self, $module_name, $error_message ) = @_;
+    my ( $self, $module_names, $error_message ) = @_;
 
-    my $body = "\"$module_name\"" . " may conflict with the module in the system";
     my $warning_message = <<"EOS";
 WARNINGS 
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!! $body
+!! The following modules that are being installed may conflict 
+!! with existing modules on the system: 
+!!
+!!   $module_names
 !!
 !! Causes:
 $error_message

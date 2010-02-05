@@ -137,7 +137,14 @@ sub make {
         };
     }
 
+    $self->check_confliction;
+
     $built_modules;
+}
+
+sub check_confliction {
+    my $self = shift;
+    $self->dependency_analyzer->confliction_checker->check_conflict();
 }
 
 sub _dump_modules {

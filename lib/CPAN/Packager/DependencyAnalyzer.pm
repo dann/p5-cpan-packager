@@ -52,6 +52,13 @@ has 'dependency_filter' => (
     }
 );
 
+has 'confliction_checker' => (
+    is      => 'rw',
+    default => sub {
+        CPAN::Packager::ConflictionChecker->new;
+    }
+);
+
 sub analyze_dependencies {
     my ( $self, $module, $config ) = @_;
     return $module
@@ -222,11 +229,8 @@ sub is_non_dualife_core_module {
 }
 
 sub is_dual_lived_module {
-    my ( $self, $module ) = @_;
-    my $conflict_checker = CPAN::Packager::ConflictionChecker->new(
-        downloader => $self->downloader );
-    if ( $conflict_checker->is_dual_lived_module($module) ) {
-        $conflict_checker->check_conflict($module);
+    my ( $self, $module ) = @_; 
+    if ( $self->confliction_checker->is_dual_lived_module($module) ) {
         return 1;
     }
     else {
