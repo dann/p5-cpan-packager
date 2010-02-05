@@ -21,8 +21,15 @@ sub check_conflict {
     return unless scalar @{ $self->checked_duallived_modules };
 
     if ( my $error_message = $self->check_install_settings_conflicted() ) {
-        my $module_names = join ",",
-            uniq @{ $self->checked_duallived_modules };
+        my @checked_duallived_modules
+            = uniq @{ $self->checked_duallived_modules };
+        my @module_may_conflicts = ();
+        foreach my $duallived (@checked_duallived_modules) {
+            if ( $self->is_module_already_installed($duallived) ) {
+                push @module_may_conflicts, $duallived;
+            }
+        }
+        my $module_names = join ",", @module_may_conflicts;
         $self->_emit_confliction_warnings( $module_names, $error_message );
     }
 }
@@ -30,9 +37,7 @@ sub check_conflict {
 sub is_dual_lived_module {
     my ( $self, $module_name ) = @_;
     my $dual_lived_list = CPAN::Packager::DualLivedList->new;
-    if (    $dual_lived_list->is_duallived_module($module_name)
-        and $self->is_module_already_installed($module_name) )
-    {
+    if ( $dual_lived_list->is_duallived_module($module_name) ) {
         push @{ $self->checked_duallived_modules }, $module_name;
         return 1;
     }
