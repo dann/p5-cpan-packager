@@ -30,7 +30,7 @@ sub check_conflict {
             }
         }
         my $module_names = join ",", @module_may_conflicts;
-        $self->_emit_confliction_warnings( $module_names, $error_message );
+        return $self->emit_confliction_warnings( $module_names, $error_message );
     }
 }
 
@@ -50,7 +50,7 @@ sub is_module_already_installed {
     my ( $self, $module ) = @_;
     my $installed = ExtUtils::Installed->new;
     my $result = any { $module eq $_ } $installed->modules;
-    DEBUG("Is this dual module ( $module ) already installed?: $result");
+    INFO("Is this dual module ( $module ) already installed?: $result");
     return $result;
 }
 
@@ -95,7 +95,7 @@ sub check_install_settings_conflicted {
     }
 }
 
-sub _emit_confliction_warnings {
+sub _create_confliction_warnings {
     my ( $self, $module_names, $error_message ) = @_;
 
     my $warning_message = <<"EOS";
@@ -126,7 +126,14 @@ $error_message
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EOS
 
+    return $warning_message;
+}
+
+sub emit_confliction_warnings {
+    my ( $self, $module_names, $error_message ) = @_;
+    my $warning_message = $self->_create_confliction_warnings($module_names, $error_message);
     WARN($warning_message);
+    return $warning_message;
 }
 
 1;

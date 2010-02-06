@@ -13,7 +13,7 @@ my $downloader = CPAN::Packager::DownloaderFactory->create("CPANPLUS");
 $downloader->set_cpan_mirrors(['http://cpan.pair.com/']);
 my $confliction_checker = CPAN::Packager::ConflictionChecker->new(downloader => $downloader);
 
-subtest "File::Basename" => sub {
+subtest "Is File::Basename non dual-lived core module?" => sub {
     my $is_dual_lived_module = $confliction_checker->is_dual_lived_module('File::Basename');
     ok !$is_dual_lived_module;
     done_testing;
