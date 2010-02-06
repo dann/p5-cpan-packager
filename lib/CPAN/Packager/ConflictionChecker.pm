@@ -30,7 +30,8 @@ sub check_conflict {
             }
         }
         my $module_names = join ",", @module_may_conflicts;
-        return $self->emit_confliction_warnings( $module_names, $error_message );
+        return $self->emit_confliction_warnings( $module_names,
+            $error_message );
     }
 }
 
@@ -131,7 +132,8 @@ EOS
 
 sub emit_confliction_warnings {
     my ( $self, $module_names, $error_message ) = @_;
-    my $warning_message = $self->_create_confliction_warnings($module_names, $error_message);
+    my $warning_message = $self->_create_confliction_warnings( $module_names,
+        $error_message );
     WARN($warning_message);
     return $warning_message;
 }

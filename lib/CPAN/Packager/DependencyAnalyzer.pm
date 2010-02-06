@@ -64,10 +64,10 @@ sub analyze_dependencies {
     return $module
         if $config->{modules}->{$module}
             && $config->{modules}->{$module}->{build_status};
-    
+
     return $module if $self->is_non_dualife_core_module($module);
 
-    # try to download unresolved name because resolver sometimes return wrong name.
+# try to download unresolved name because resolver sometimes return wrong name.
     my $module_info = $self->download_module( $module, $config );
 
     my $resolved_module = $module_info->{dist_name};
@@ -214,7 +214,7 @@ sub is_non_dualife_core_module {
     my ( $self, $module ) = @_;
     return 1 if $module eq 'perl';
 
-    # We should process dual life core modules by default. 
+    # We should process dual life core modules by default.
     # The entire point of dual life modules to exist in the first
     # place is for users to be able to update these modules independent of
     # upgrading Perl. The vast majority of our users will want dual life
@@ -229,7 +229,7 @@ sub is_non_dualife_core_module {
 }
 
 sub is_dual_lived_module {
-    my ( $self, $module ) = @_; 
+    my ( $self, $module ) = @_;
     if ( $self->confliction_checker->is_dual_lived_module($module) ) {
         return 1;
     }

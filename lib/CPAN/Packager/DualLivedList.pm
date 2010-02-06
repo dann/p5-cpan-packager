@@ -122,8 +122,8 @@ my $DUAL_LIVED_LIST = {
 };
 
 sub is_duallived_module {
-    my ($self, $module_name) = @_;
-    return exists $DUAL_LIVED_LIST->{$module_name}
+    my ( $self, $module_name ) = @_;
+    return exists $DUAL_LIVED_LIST->{$module_name};
 }
 
 1;

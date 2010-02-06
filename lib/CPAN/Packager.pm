@@ -77,17 +77,20 @@ sub _setup_dependencies {
 }
 
 sub _setup_logger {
-    my $self = shift;
-    my $level = $self->verbose ? $DEBUG : $INFO;
+    my $self   = shift;
+    my $level  = $self->verbose ? $DEBUG : $INFO;
     my $layout = '%p: %m{chomp}%n';
 
-    if($ENV{CPAN_PACKAGER_DEBUG}) {
-        $level = $DEBUG; 
+    if ( $ENV{CPAN_PACKAGER_DEBUG} ) {
+        $level  = $DEBUG;
         $layout = '%p %d{HH:mm:ss} [%c:%L]: %m{chomp}%n';
     }
 
-    Log::Log4perl->easy_init({ level => $level,
-                           layout => $layout });
+    Log::Log4perl->easy_init(
+        {   level  => $level,
+            layout => $layout
+        }
+    );
 }
 
 sub _build_dependency_analyzer {
@@ -131,7 +134,8 @@ sub make {
             $built_modules = $self->build_modules( $sorted_modules, $config );
             INFO("### Built packages for $module :-)");
 
-        } catch {
+        }
+        catch {
             $self->_dump_modules( "Sorted modules", $sorted_modules );
             LOGDIE( "### Built packages for $module faied :-(" . $@ );
         };
