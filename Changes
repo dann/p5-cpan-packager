@@ -1,16 +1,19 @@
 Revision history for Perl extension CPAN::Packager
 
-0.23  FEB 05  01::00:00 2010
+0.24  FEB 09  01:00:00 2010
+    * Fixed confliction check
+
+0.23  FEB 05  01:00:00 2010
     * Emited confliction warnings when installed modules are found.
     * Emited warnings once
 
-0.22  FEB 04  23::00:00 2010
+0.22  FEB 04  23:00:00 2010
     * Fixed dual-lived module checking 
 
-0.21  FEB 04  23::45:00 2010
+0.21  FEB 04  23:45:00 2010
     * Fixed help option of cpan-packager script
 
-0.20  FEB 04  21::38:00 2010
+0.20  FEB 04  21:38:00 2010
     * Fixed broken META.yml automatically
     * Supported building  dual-lived module package
     * Emited warning message when dual-lived modules causes conflict with 
