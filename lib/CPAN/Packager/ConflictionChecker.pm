@@ -6,7 +6,7 @@ use FileHandle;
 use Log::Log4perl qw(:easy);
 use List::MoreUtils qw(uniq any);
 use CPAN::Packager::DualLivedList;
-use ExtUtils::Installed;
+use File::Spec;
 
 has 'checked_duallived_modules' => (
     is      => 'rw',
@@ -49,8 +49,11 @@ sub is_dual_lived_module {
 
 sub is_module_already_installed {
     my ( $self, $module ) = @_;
-    my $installed = ExtUtils::Installed->new;
-    my $result = any { $module eq $_ } $installed->modules;
+    my $file = File::Spec->catfile( split /(?:\'|::)/, $module ) . '.pm';
+
+    my $result = -e File::Spec->catfile( $Config{installprivlib}, $file )
+        || -e File::Spec->catfile( $Config{installarchlib}, $file );
+
     INFO("Is this dual module ( $module ) already installed?: $result");
     return $result;
 }
