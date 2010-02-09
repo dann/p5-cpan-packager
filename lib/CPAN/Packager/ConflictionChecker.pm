@@ -54,7 +54,7 @@ sub is_module_already_installed {
     my $result = -e File::Spec->catfile( $Config{installprivlib}, $file )
         || -e File::Spec->catfile( $Config{installarchlib}, $file );
 
-    INFO("Is this dual module ( $module ) already installed?: $result");
+    DEBUG("Is this dual module ( $module ) already installed?: $result");
     return $result;
 }
 
