@@ -25,7 +25,13 @@ sub check_conflict {
             = uniq @{ $self->checked_duallived_modules };
         my @module_may_conflicts = ();
         foreach my $duallived (@checked_duallived_modules) {
-            if ( $self->is_module_already_installed($duallived) ) {
+
+            # We emit warnings for only really installing the module modules
+            # Those other modules were already installed via RPM in the past
+            # must be ignored
+            if ( $self->is_privlib_installed($duallived)
+                && !$self->is_vendor_installed($duallived) )
+            {
                 push @module_may_conflicts, $duallived;
             }
         }
@@ -37,6 +43,7 @@ sub check_conflict {
 
 sub is_dual_lived_module {
     my ( $self, $module_name ) = @_;
+
     my $dual_lived_list = CPAN::Packager::DualLivedList->new;
     if ( $dual_lived_list->is_duallived_module($module_name) ) {
         push @{ $self->checked_duallived_modules }, $module_name;
@@ -47,15 +54,46 @@ sub is_dual_lived_module {
     }
 }
 
-sub is_module_already_installed {
+# This checks modules which may conflict with the given dual-lived module
+sub is_privlib_installed {
     my ( $self, $module ) = @_;
+
     my $file = File::Spec->catfile( split /(?:\'|::)/, $module ) . '.pm';
+    my $is_privlib_installed;
+    if (   -e File::Spec->catfile( $Config{installprivlib}, $file )
+        || -e File::Spec->catfile( $Config{installarchlib}, $file ) )
+    {
+        $is_privlib_installed = 1;
+    }
+    else {
+        $is_privlib_installed = 0;
+    }
 
-    my $result = -e File::Spec->catfile( $Config{installprivlib}, $file )
-        || -e File::Spec->catfile( $Config{installarchlib}, $file );
+    DEBUG(
+        "Is this module( $module ) installed at privlib or archlib?: $is_privlib_installed"
+    );
+    return $is_privlib_installed;
+}
 
-    DEBUG("Is this dual module ( $module ) already installed?: $result");
-    return $result;
+# This checks modules which are already installed
+sub is_vendor_installed {
+    my ( $self, $module ) = @_;
+
+    my $file = File::Spec->catfile( split /(?:\'|::)/, $module ) . '.pm';
+    my $is_vendor_installed;
+    if (   -e File::Spec->catfile( $Config{installvendorlib}, $file )
+        || -e File::Spec->catfile( $Config{installvendorarch}, $file ) )
+    {
+        $is_vendor_installed = 1;
+    }
+    else {
+        $is_vendor_installed = 0;
+    }
+
+    DEBUG(
+        "Is this module( $module ) installed at vendorlib or vendorarch?: $is_vendor_installed"
+    );
+    return $is_vendor_installed;
 }
 
 sub check_install_settings_conflicted {
@@ -127,6 +165,10 @@ $error_message
 !!     --config installvendorman3dir=/usr/local/share/man/man3 --config
 !!     installvendorbin=/usr/local/bin --config installvendorscript=/usr/local/bin"
 !! 
+!!   You can see the current installation setting with:
+!!
+!!     perl '-V:install.*'
+!!
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 EOS
 
