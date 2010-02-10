@@ -165,7 +165,7 @@ $error_message
 !!     --config installvendorman3dir=/usr/local/share/man/man3 --config
 !!     installvendorbin=/usr/local/bin --config installvendorscript=/usr/local/bin"
 !! 
-!!   You can see the current installation setting with:
+!!    You can see the current installation setting with:
 !!
 !!     perl '-V:install.*'
 !!
