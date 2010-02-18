@@ -11,7 +11,8 @@ BEGIN {
             'CPAN::Packager::Builder::RPM',
             'CPAN::Packager::Builder::RPM::Spec',
             'CPAN::Packager::Downloader::Role',
-            'CPAN::Packager::Downloader::Fresh'
+            'CPAN::Packager::Downloader::Fresh',
+            'CPAN::Packager::Downloader::CPANPLUS'
         ]
     );
 }

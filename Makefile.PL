@@ -28,7 +28,6 @@ all_from 'lib/CPAN/Packager.pm';
 readme_from 'bin/cpan-packager';
 
 requires(
-    'CPANPLUS::Backend'         => 0,
     'File::Copy'                => 0,
     'FindBin::libs'             => 0,
     'Hash::Merge'               => 0,
@@ -39,6 +38,7 @@ requires(
     'Module::Depends'           => 0,
     'Mouse'                     => '0.47',
     'MouseX::Getopt'            => '0.2601',
+    'Getopt::Long::Descriptive' => '0.083',
     'Path::Class'               => 0,
     'Archive::Extract'          => 0,
     'UNIVERSAL::require'        => 0,
@@ -46,12 +46,10 @@ requires(
     'Pod::POM'                  => 0,
     'Class::Inspector'          => 0,
     'Kwalify'                   => '1.20',
-    'URI'                       => 0,
     'IPC::Cmd'                  => 0,
     'CPAN::DistnameInfo'        => 0,
     'Log::Log4perl'             => '1.26',
     'Try::Tiny'                 => '0.04',
-    'Getopt::Long::Descriptive' => '0.083',
 );
 
 features(
@@ -69,6 +67,12 @@ features(
     'use App::CPAN::Fresh as a module downloader?' => [
         -default => 0,
         recommends_hack( 'App::CPAN::Fresh' => 0 ),
+        recommends_hack( 'URI' => 0 ),
+    ],
+    'use CPANPLUS as a module downloader?' => [
+        -default => 0,
+        recommends_hack( 'CPANPLUS::Backend' => 0 ),
+        recommends_hack( 'URI' => 0 ),
     ],
 );
 

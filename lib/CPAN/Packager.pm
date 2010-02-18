@@ -20,7 +20,7 @@ has 'builder' => (
 
 has 'downloader' => (
     is      => 'rw',
-    default => 'CPANPLUS',
+    default => 'CPAN',
 );
 
 has 'dry_run' => (
