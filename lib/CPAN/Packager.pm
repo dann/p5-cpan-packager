@@ -137,7 +137,7 @@ sub make {
         }
         catch {
             $self->_dump_modules( "Sorted modules", $sorted_modules );
-            LOGDIE( "### Built packages for $module faied :-(" . $@ );
+            LOGDIE( "### Built packages for $module faied :-(" . $_);
         };
     }
 

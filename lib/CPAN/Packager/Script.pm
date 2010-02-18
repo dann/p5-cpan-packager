@@ -1,7 +1,7 @@
 package CPAN::Packager::Script;
 use Mouse;
 use CPAN::Packager;
-use Path::Class;
+use CPAN::Packager::FileUtil qw(dir file);
 
 with 'MouseX::Getopt';
 

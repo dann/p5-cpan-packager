@@ -2,7 +2,7 @@ package CPAN::Packager::Downloader::Fresh;
 use Mouse;
 use CPAN;
 use App::CPAN::Fresh;
-use Path::Class qw(file dir);
+use CPAN::Packager::FileUtil qw(file dir);
 use URI;
 use Log::Log4perl qw(:easy);
 with 'CPAN::Packager::Downloader::Role';

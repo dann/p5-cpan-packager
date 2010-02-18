@@ -2,7 +2,6 @@ package CPAN::Packager::Config::Loader;
 use Mouse;
 use YAML;
 use Encode;
-use Path::Class;
 use CPAN::Packager::Config::Validator;
 
 sub load {

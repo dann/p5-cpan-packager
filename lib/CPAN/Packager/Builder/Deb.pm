@@ -1,7 +1,7 @@
 package CPAN::Packager::Builder::Deb;
 use Mouse;
 use Carp;
-use Path::Class;
+use CPAN::Packager::FileUtil qw(file dir openw);
 use List::MoreUtils qw(any);
 use CPAN::Packager::Home;
 use CPAN::Packager::Util;
@@ -19,7 +19,7 @@ has 'package_output_dir' => (
 sub BUILD {
     my $self = shift;
     $self->check_executables_exist_in_path;
-    $self->package_output_dir->mkpath;
+    File::Path::mkpath($self->package_output_dir);
     $self;
 }
 
@@ -208,7 +208,7 @@ sub installed_packages {
 sub print_installed_packages {
     my ($self) = @_;
     my $installed_file = file( $self->package_output_dir, 'installed' );
-    my $fh = $installed_file->openw;
+    my $fh = openw($installed_file);
     print $fh "aptitude -y install $_\n" for $self->installed_packages;
     close $fh;
 }

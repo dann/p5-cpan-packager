@@ -1,7 +1,7 @@
 package CPAN::Packager::Builder::RPM;
 use Mouse;
 use Carp ();
-use Path::Class qw(file dir);
+use CPAN::Packager::FileUtil qw(file dir openw);
 use RPM::Specfile;
 use File::Temp qw(tempdir);
 use File::Copy;
@@ -46,7 +46,7 @@ has 'spec_builder' => (
 sub BUILD {
     my $self = shift;
     $self->check_executables_exist_in_path;
-    $self->package_output_dir->mkpath;
+    File::Path::mkpath($self->package_output_dir);
     $self;
 }
 
@@ -153,7 +153,7 @@ sub filter_spec_file {
 sub create_spec_file {
     my ( $self, $spec_content, $spec_file_name ) = @_;
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
-    my $fh = file($spec_file_path)->openw;
+    my $fh = openw(file($spec_file_path));
     print $fh $spec_content;
     $fh->close;
     copy( $spec_file_path,
@@ -265,7 +265,7 @@ sub _generate_module_filter_macro {
     my ( $self, $module_name ) = @_;
 
     my $filter_macro_file = file( $self->build_dir, 'filter_macro' );
-    my $fh = $filter_macro_file->openw
+    my $fh = openw($filter_macro_file)
         or die "Can't create $filter_macro_file: $!";
     print $fh qq{#!/bin/sh
  
@@ -285,7 +285,7 @@ sub _generate_global_filter_macro {
 
     my $filter_macro_file
         = file( $self->build_dir, 'filter_macro_for_special_modules' );
-    my $fh = $filter_macro_file->openw
+    my $fh = openw($filter_macro_file)
         or die "Can't create $filter_macro_file: $!";
     print $fh qq{#!/bin/sh
  
@@ -330,7 +330,7 @@ sub is_installed {
 sub generate_macro {
     my $self       = shift;
     my $macro_file = file( $self->build_dir, 'macros' );
-    my $fh         = $macro_file->openw or die "Can't create $macro_file: $!";
+    my $fh         = openw($macro_file) or die "Can't create $macro_file: $!";
     my $package_output_dir = $self->package_output_dir;
     my $build_dir          = $self->build_dir;
 
@@ -351,7 +351,7 @@ sub generate_rpmrc {
     my $self = shift;
 
     my $rpmrc_file = file( $self->build_dir, 'rpmrc' );
-    my $fh = $rpmrc_file->openw
+    my $fh = openw($rpmrc_file)
         or die "Can't create $rpmrc_file: $!";
     my $macrofiles = qx(rpm --showrc | grep ^macrofiles | cut -f2- -d:);
     chomp $macrofiles;
@@ -419,7 +419,7 @@ sub installed_packages {
 sub print_installed_packages {
     my ($self) = @_;
     my $installed_file = file( $self->package_output_dir, 'installed' );
-    my $fh = $installed_file->openw;
+    my $fh = openw($installed_file);
     print $fh "yum -y install $_\n" for $self->installed_packages;
     $fh->close;
 }

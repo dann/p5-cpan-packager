@@ -1,7 +1,7 @@
 package CPAN::Packager::Downloader::CPANPLUS;
 use Mouse;
 use CPANPLUS::Backend;
-use Path::Class qw(file dir);
+use CPAN::Packager::FileUtil qw(file dir);
 use URI;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;

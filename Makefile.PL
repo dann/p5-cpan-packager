@@ -39,17 +39,17 @@ requires(
     'Mouse'                     => '0.47',
     'MouseX::Getopt'            => '0.2601',
     'Getopt::Long::Descriptive' => '0.083',
-    'Path::Class'               => 0,
     'Archive::Extract'          => 0,
     'UNIVERSAL::require'        => 0,
     'YAML'                      => 0,
     'Pod::POM'                  => 0,
     'Class::Inspector'          => 0,
     'Kwalify'                   => '1.20',
-    'IPC::Cmd'                  => 0,
     'CPAN::DistnameInfo'        => 0,
     'Log::Log4perl'             => '1.26',
     'Try::Tiny'                 => '0.04',
+    'IPC::Cmd'                  => 0,
+    'IO::File'                  => 0,
 );
 
 features(
@@ -57,7 +57,6 @@ features(
         -default => 0,
         recommends_hack( 'RPM::Specfile'  => 0 ),
         recommends_hack( 'File::Basename' => 0 ),
-        recommends_hack( 'File::Copy'     => 0 ),
         recommends_hack( 'Archive::Tar'   => 0 ),
         recommends_hack( 'File::Temp'     => 0 ),
         recommends_hack( 'URI::Escape'    => 0 ),
