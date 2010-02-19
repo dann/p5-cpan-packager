@@ -1,14 +1,13 @@
 package CPAN::Packager::BuilderFactory;
 use strict;
 use warnings;
-use UNIVERSAL::require;
 
 # TODO decited Builder based on OS type
 sub create {
     my ( $class, $builder, $config ) = @_;
     my $builder_class = join '::',
         ( 'CPAN', 'Packager', 'Builder', $builder );
-    $builder_class->require or die "Can't load module $@";
+    eval "require $builder_class;" or die "Can't load module $@";
     $builder_class->new( conf => $config );
 }
 

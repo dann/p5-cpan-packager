@@ -39,7 +39,6 @@ requires(
     'MouseX::Getopt'            => '0.2601',
     'Getopt::Long::Descriptive' => '0.083',
     'Archive::Extract'          => 0,
-    'UNIVERSAL::require'        => 0,
     'YAML'                      => 0,
     'Kwalify'                   => '1.20',
     'CPAN::DistnameInfo'        => 0,
@@ -53,12 +52,12 @@ features(
     'build RPM package?' => [
         -default => 0,
         recommends_hack( 'RPM::Specfile'  => 0 ),
-        recommends_hack( 'File::Basename' => 0 ),
         recommends_hack( 'Archive::Tar'   => 0 ),
+        recommends_hack( 'Archive::Zip'   => 0 ),
         recommends_hack( 'File::Temp'     => 0 ),
         recommends_hack( 'URI::Escape'    => 0 ),
         recommends_hack( 'Cwd'            => 0 ),
-        recommends_hack( 'Archive::Zip'   => 0 ),
+        recommends_hack( 'File::Basename' => 0 ),
     ],
     'use App::CPAN::Fresh as a module downloader?' => [
         -default => 0,
