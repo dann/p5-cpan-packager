@@ -1,7 +1,7 @@
 package CPAN::Packager::ModuleNameResolver;
 use Mouse;
 use LWP::UserAgent;
-use List::MoreUtils qw(any);
+use CPAN::Packager::ListUtil qw(any);
 use Log::Log4perl qw(:easy);
 
 has 'ua' => (

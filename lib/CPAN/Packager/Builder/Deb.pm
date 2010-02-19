@@ -2,7 +2,7 @@ package CPAN::Packager::Builder::Deb;
 use Mouse;
 use Carp;
 use CPAN::Packager::FileUtil qw(file dir openw);
-use List::MoreUtils qw(any);
+use CPAN::Packager::ListUtil qw(any);
 use CPAN::Packager::Home;
 use CPAN::Packager::Util;
 with 'CPAN::Packager::Builder::Role';

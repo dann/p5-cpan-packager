@@ -8,7 +8,7 @@ use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
 use CPAN::Packager::Config::Replacer;
 use CPAN::Packager::Extractor;
-use List::MoreUtils qw(uniq any);
+use CPAN::Packager::ListUtil qw(uniq any);
 use FileHandle;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;

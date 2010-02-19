@@ -3,7 +3,7 @@ use Mouse;
 use YAML;
 use CPAN::Packager::Config::Loader;
 use List::Compare;
-use List::MoreUtils qw/any/;
+use CPAN::Packager::ListUtil qw(any);
 use Hash::Merge qw(merge);
 Hash::Merge::set_behavior('RIGHT_PRECEDENT');
 

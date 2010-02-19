@@ -4,7 +4,7 @@ use Config;
 use Module::CoreList;
 use FileHandle;
 use Log::Log4perl qw(:easy);
-use List::MoreUtils qw(uniq any);
+use CPAN::Packager::ListUtil qw(uniq any);
 use CPAN::Packager::DualLivedList;
 use File::Spec;
 
