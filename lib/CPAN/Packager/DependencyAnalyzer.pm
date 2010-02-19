@@ -8,10 +8,12 @@ use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
 use CPAN::Packager::Config::Replacer;
 use CPAN::Packager::Extractor;
-use CPAN::Packager::ListUtil qw(uniq any);
 use FileHandle;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;
+use Parse::CPAN::Meta ();
+use CPAN::Packager::FileUtil qw(file dir);
+use CPAN::Packager::ListUtil qw(uniq any);
 use CPAN::Packager::ConflictionChecker;
 
 has 'downloader' => ( is => 'rw', );
@@ -250,19 +252,47 @@ sub get_dependencies {
             @{ $config->{modules}->{$module}->{depends} };
     }
 
-    my $deps;
-    try {
-        $deps = Module::Depends->new->dist_dir($src)->find_modules;
-    }
-    catch {
-        $deps = Module::Depends::Intrusive->new->dist_dir($src)->find_modules;
-    };
+    my $deps = $self->get_dependencies_from_meta($src);
 
     return grep { !$self->is_added($_) }
-        grep    { !$self->is_non_dualife_core_module($_) } uniq(
-        keys %{ $deps->requires || {} },
-        keys %{ $deps->build_requires || {} }
+        grep    { !$self->is_non_dualife_core_module($_) }
+        uniq( keys %{ $deps || {} }, );
+}
+
+sub get_dependencies_from_meta {
+    my ( $self, $dist_dir ) = @_;
+
+    my %deps;
+    my $meta = {};
+    my ($metayml) = grep -e file( $dist_dir, $_ ), qw( MYMETA.yml META.yml );
+    try {
+        if ($metayml) {
+            $metayml = file( $dist_dir, $metayml );
+            $meta    = $self->parse_meta($metayml);
+            %deps    = ( %{ $meta->{requires} || {} } );
+            %deps    = (
+                %deps,
+                %{ $meta->{build_requires} || {} },
+                %{ $meta->{test_requires}  || {} }
+            );
+        }
+    }
+    catch {
+        DEBUG( "Can't parse META.yml:" . $_ );
+        my $dependencies
+            = Module::Depends::Intrusive->new->dist_dir($dist_dir)
+            ->find_modules;
+        %deps = (
+            %{ $dependencies->{requires} || {} },
+            %{ $dependencies->{build_requires} || {} }
         );
+    };
+    return \%deps;
+}
+
+sub parse_meta {
+    my ( $self, $file ) = @_;
+    return ( Parse::CPAN::Meta::LoadFile($file) )[0];
 }
 
 sub resolve_module_name {

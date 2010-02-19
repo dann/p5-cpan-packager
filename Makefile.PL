@@ -1,5 +1,6 @@
 sub readme_from {
-    warn "You need to install Module::Install::ReadmeFromPod to generate README";
+    warn
+        "You need to install Module::Install::ReadmeFromPod to generate README";
 }
 
 sub use_test_base {
@@ -46,6 +47,7 @@ requires(
     'Try::Tiny'                 => '0.04',
     'IPC::Cmd'                  => 0,
     'IO::File'                  => 0,
+    'Parse::CPAN::Meta'         => 0,
 );
 
 features(
@@ -62,12 +64,12 @@ features(
     'use App::CPAN::Fresh as a module downloader?' => [
         -default => 0,
         recommends_hack( 'App::CPAN::Fresh' => 0 ),
-        recommends_hack( 'URI' => 0 ),
+        recommends_hack( 'URI'              => 0 ),
     ],
     'use CPANPLUS as a module downloader?' => [
         -default => 0,
         recommends_hack( 'CPANPLUS::Backend' => 0 ),
-        recommends_hack( 'URI' => 0 ),
+        recommends_hack( 'URI'               => 0 ),
     ],
 );
 
