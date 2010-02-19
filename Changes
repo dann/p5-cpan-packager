@@ -1,7 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
-0.24  FEB 09  01:00:00 2010
+0.24  FEB 22  11:50:00 2010
     * Fixed confliction check
+    * Removed CPANPLUS and Path::Class dependencies
+    * Changed default downloader from CPANPLUS to CPAN
 
 0.23  FEB 05  01:00:00 2010
     * Emited confliction warnings when installed modules are found.
