@@ -11,7 +11,7 @@ use Archive::Tar;
 use File::Temp qw(tempdir);
 use URI::Escape qw(uri_escape);
 use Cwd;
-use YAML;
+use Parse::CPAN::Meta qw(Load);
 use RPM::Specfile;
 use CPAN::DistnameInfo;
 use Archive::Zip;
