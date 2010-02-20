@@ -3,18 +3,18 @@ use Mouse;
 use Module::Depends;
 use Module::Depends::Intrusive;
 use Module::CoreList;
-use CPAN::Packager::ModuleNameResolver;
-use CPAN::Packager::DependencyFilter::Common;
 use List::Compare;
-use CPAN::Packager::Config::Replacer;
-use CPAN::Packager::Extractor;
 use FileHandle;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;
 use Parse::CPAN::Meta ();
+use CPAN::Packager::ModuleNameResolver;
+use CPAN::Packager::DependencyFilter::Common;
 use CPAN::Packager::FileUtil qw(file dir);
 use CPAN::Packager::ListUtil qw(uniq any);
 use CPAN::Packager::ConflictionChecker;
+use CPAN::Packager::Config::Replacer;
+use CPAN::Packager::Extractor;
 
 has 'downloader' => ( is => 'rw', );
 
@@ -255,8 +255,7 @@ sub get_dependencies {
     my $deps = $self->get_dependencies_from_meta($src);
 
     return grep { !$self->is_added($_) }
-        grep    { !$self->is_non_dualife_core_module($_) }
-        uniq( keys %{ $deps || {} }, );
+        grep    { !$self->is_non_dualife_core_module($_) } @$deps;
 }
 
 sub get_dependencies_from_meta {
@@ -287,7 +286,8 @@ sub get_dependencies_from_meta {
             %{ $dependencies->{build_requires} || {} }
         );
     };
-    return \%deps;
+    my @dependencies =  uniq( keys %deps );
+    return \@dependencies;
 }
 
 sub parse_meta {
