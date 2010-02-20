@@ -46,7 +46,7 @@ has 'spec_builder' => (
 sub BUILD {
     my $self = shift;
     $self->check_executables_exist_in_path;
-    File::Path::mkpath($self->package_output_dir);
+    File::Path::mkpath( $self->package_output_dir );
     $self;
 }
 
@@ -101,7 +101,7 @@ sub generate_spec_with_cpanflute {
     my ( $self, $module ) = @_;
 
     my $tgz = $module->{tgz};
-    INFO( 'Generating specfile for ' . $tgz);
+    INFO( 'Generating specfile for ' . $tgz );
 
     my $module_name = $module->{module};
     my $version     = $module->{version};
@@ -132,10 +132,26 @@ sub generate_spec_with_cpanflute {
         $opts->{patch} = $module->{custom}->{patches};
     }
 
-    my $spec
-        = $self->spec_builder->build( $opts, $copy_to, $self->build_dir );
+    my $no_depends = $self->_get_no_depends($module_name);
+    my $spec = $self->spec_builder->build( $opts, $copy_to, $no_depends );
+
     $spec;
 
+}
+
+sub _get_no_depends {
+    my ( $self, $module_name ) = @_;
+    my @module_no_depends = ();
+    if ( $self->config( modules => $module_name ) && $self->config( modules => $module_name )->{no_depends} ) {
+        @module_no_depends
+            = @{ $self->config( modules => $module_name )->{no_depends}
+                || () };
+    }
+    my @global_no_depends
+        = @{ $self->config( global => 'no_depends' ) || () };
+    my @no_depends = ( @module_no_depends, @global_no_depends );
+    @no_depends = map { $_->{module}} @no_depends;
+    return \@no_depends;
 }
 
 sub filter_spec_file {
@@ -153,7 +169,7 @@ sub filter_spec_file {
 sub create_spec_file {
     my ( $self, $spec_content, $spec_file_name ) = @_;
     my $spec_file_path = file( $self->build_dir, $spec_file_name );
-    my $fh = openw(file($spec_file_path));
+    my $fh = openw( file($spec_file_path) );
     print $fh $spec_content;
     $fh->close;
     copy( $spec_file_path,
@@ -428,7 +444,7 @@ sub install {
     my ( $self, $module ) = @_;
     my $module_name    = $module->{module};
     my $module_version = $module->{version};
-    my $package_name = $self->get_package_name($module);
+    my $package_name   = $self->get_package_name($module);
 
     INFO(">>> install $package_name-$module_version");
     my $rpm_path

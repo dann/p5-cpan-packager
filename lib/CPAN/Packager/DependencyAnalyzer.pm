@@ -15,6 +15,7 @@ use CPAN::Packager::ListUtil qw(uniq any);
 use CPAN::Packager::ConflictionChecker;
 use CPAN::Packager::Config::Replacer;
 use CPAN::Packager::Extractor;
+use CPAN::Packager::MetaAnalyzer;
 
 has 'downloader' => ( is => 'rw', );
 
@@ -29,6 +30,13 @@ has 'module_name_resolver' => (
     is      => 'rw',
     default => sub {
         CPAN::Packager::ModuleNameResolver->new;
+    }
+);
+
+has 'meta_analyzer' => (
+    is      => 'rw',
+    default => sub {
+        CPAN::Packager::MetaAnalyzer->new;
     }
 );
 
@@ -252,47 +260,10 @@ sub get_dependencies {
             @{ $config->{modules}->{$module}->{depends} };
     }
 
-    my $deps = $self->get_dependencies_from_meta($src);
+    my $deps = $self->meta_analyzer->get_dependencies_from_meta($src);
 
     return grep { !$self->is_added($_) }
         grep    { !$self->is_non_dualife_core_module($_) } @$deps;
-}
-
-sub get_dependencies_from_meta {
-    my ( $self, $dist_dir ) = @_;
-
-    my %deps;
-    my $meta = {};
-    my ($metayml) = grep -e file( $dist_dir, $_ ), qw( MYMETA.yml META.yml );
-    try {
-        if ($metayml) {
-            $metayml = file( $dist_dir, $metayml );
-            $meta    = $self->parse_meta($metayml);
-            %deps    = ( %{ $meta->{requires} || {} } );
-            %deps    = (
-                %deps,
-                %{ $meta->{build_requires} || {} },
-                %{ $meta->{test_requires}  || {} }
-            );
-        }
-    }
-    catch {
-        DEBUG( "Can't parse META.yml:" . $_ );
-        my $dependencies
-            = Module::Depends::Intrusive->new->dist_dir($dist_dir)
-            ->find_modules;
-        %deps = (
-            %{ $dependencies->{requires} || {} },
-            %{ $dependencies->{build_requires} || {} }
-        );
-    };
-    my @dependencies =  uniq( keys %deps );
-    return \@dependencies;
-}
-
-sub parse_meta {
-    my ( $self, $file ) = @_;
-    return ( Parse::CPAN::Meta::LoadFile($file) )[0];
 }
 
 sub resolve_module_name {

@@ -16,9 +16,18 @@ use RPM::Specfile;
 use CPAN::DistnameInfo;
 use Archive::Zip;
 use Log::Log4perl qw(:easy);
+use CPAN::Packager::MetaAnalyzer;
+use CPAN::Packager::ListUtil qw(any);
+
+has 'meta_analyzer' => (
+    is      => 'rw',
+    default => sub {
+        CPAN::Packager::MetaAnalyzer->new;
+    }
+);
 
 sub build {
-    my ( $self, $args, $fullname ) = @_;
+    my ( $self, $args, $fullname, $no_depends ) = @_;
 
     # Setup some defaults
     my %defaults;
@@ -31,7 +40,7 @@ sub build {
     $defaults{'installdirs'} = "";
     {
         my ( $username, $fullname ) = ( getpwuid($<) )[ 0, 6 ];
-        $fullname = ( split /,/, $fullname )[0]; #/
+        $fullname = ( split /,/, $fullname )[0];    #/
         $defaults{'email'} = $fullname ? $fullname . ' ' : '';
         $defaults{'email'} .= '<';
         $defaults{'email'} .= $ENV{REPLYTO} || $username . '@redhat.com';
@@ -83,7 +92,7 @@ sub build {
     my $use_module_build = 0;
     my @docs             = ();
 
-    my $patchdir         = $options{patchdir};
+    my $patchdir = $options{patchdir};
 
     # FIXME: this line breaks supporting Patch RPM spec field.
     $tmpdir = tempdir( CLEANUP => 1, DIR => $tmpdir );
@@ -109,13 +118,13 @@ sub build {
     $build_switch = 'a' if ( defined( $options{'buildall'} ) );
 
     my $local_tarball = $tarball;
-    $local_tarball    =~ s/::/-/g;
-    my $distro        = CPAN::DistnameInfo->new($local_tarball);
-    my $dist_name     = $distro->dist;
-    $dist_name        =~ s/-/::/g;
-    my $version       = $distro->version;
-    my $name          = $options{name}    || $dist_name;
-    my $ver           = $options{version} || $version;
+    $local_tarball =~ s/::/-/g;
+    my $distro    = CPAN::DistnameInfo->new($local_tarball);
+    my $dist_name = $distro->dist;
+    $dist_name =~ s/-/::/g;
+    my $version = $distro->version;
+    my $name    = $options{name} || $dist_name;
+    my $ver     = $options{version} || $version;
 
     my $tarball_top_dir = "$name-%{version}";
 
@@ -128,17 +137,17 @@ sub build {
         or die "copy $fullname: $!";
     utime( ( stat($fullname) )[ 8, 9 ], "$tmpdir/$tarball" );
 
-    my (@files, $zip);
+    my ( @files, $zip );
 
-    if ($distro->extension eq 'zip') {
-        $zip = Archive::Zip::Archive->new("$tmpdir/$tarball");
+    if ( $distro->extension eq 'zip' ) {
+        $zip   = Archive::Zip::Archive->new("$tmpdir/$tarball");
         @files = $zip->memberNames;
     }
     else {
         @files = Archive::Tar->list_archive("$tmpdir/$tarball");
     }
 
-    if ( @files ) {
+    if (@files) {
         $use_module_build = 1 if grep {/Build\.PL$/} @files;
         $use_module_build = 0 if grep {/Makefile\.PL$/} @files;
 
@@ -148,41 +157,56 @@ sub build {
         }
 
         my %prefixes;
-        foreach (@files) {
-            my @path_components = split m[/], $_;
+        for my $file (@files) {
+            my @path_components = split m[/], $file;
             $prefixes{ $path_components[0] }++;
 
             if ( $path_components[-1] eq 'META.yml' ) {
                 my $contents;
 
-                if ($distro->extension eq 'zip') {
-                    my $member = $zip->memberNamed($_);
+                if ( $distro->extension eq 'zip' ) {
+                    my $member = $zip->memberNamed($file);
                     $contents = $member->contents;
                 }
                 else {
                     my $tar = new Archive::Tar;
                     $tar->read( "$tmpdir/$tarball", 1 );
-                    $contents = $tar->get_content($_);
+                    $contents = $tar->get_content($file);
                 }
 
-                my $yaml;
-                eval { $yaml = Load($contents); };
-
+                my $meta;
+                eval {
+                    $meta
+                        = $self->meta_analyzer->parse_meta_from_content(
+                        $contents);
+                };
                 unless ($@) {
+
+                    my %build_requires_dependencies = (
+                        %{ $meta->{build_requires} || {} },
+                        %{ $meta->{test_requires}  || {} }
+                    );
                     while ( my ( $mod, $ver )
-                        = each %{ $yaml->{build_requires} } )
+                        = each %build_requires_dependencies )
                     {
-                        push @build_requires, [ "perl($mod)", $ver ];
+                        unless ( $self->is_no_depends( $mod, $no_depends ) ) {
+                            push @build_requires, [ "perl($mod)", $ver ];
+                        }
                     }
-                    while ( my ( $mod, $ver ) = each %{ $yaml->{requires} } )
+
+                    my %requires_dependencies
+                        = ( %{ $meta->{requires} || {} } );
+                    while ( my ( $mod, $ver ) = each %requires_dependencies )
                     {
-                        push @requires, [ "perl($mod)", $ver ];
+                        unless ( $self->is_no_depends( $mod, $no_depends ) ) {
+                            push @requires, [ "perl($mod)", $ver ];
+                        }
                     }
                 }
             }
 
             # find docs
-            if (m,^${name}-${ver}/(
+            if ($file =~ m,^${name}-${ver}/(
           authors?|
           change(log|s)|
           credits|
@@ -209,7 +233,7 @@ sub build {
     my @patchfiles = ();
     my $patch      = '';
     if ( $options{patch} ) {
-        for $patch ( @{ $options{'patch'} } ) { ## no critic
+        for $patch ( @{ $options{'patch'} } ) {    ## no critic
             copy( $patch, $patchdir ) or die "copy ${patch}: $!";
             utime(
                 ( stat( $options{patch} ) )[ 8, 9 ],
@@ -236,7 +260,7 @@ sub build {
 
     # some basic spec fields
     if ( $options{pkg_name} ) {
-        $spec->name($options{pkg_name});
+        $spec->name( $options{pkg_name} );
     }
     else {
         $spec->name("perl-$name");
@@ -247,7 +271,7 @@ sub build {
     $spec->summary("$name Perl module");
     $spec->group("Development/Libraries");
     $spec->license('GPL or Artistic');
-    $spec->packager($options{'packager'}) if $options{'packager'};
+    $spec->packager( $options{'packager'} ) if $options{'packager'};
     my $clver = defined( $options{epoch} ) ? "$options{epoch}:" : '';
     $clver .= "$ver-$release";
     $spec->add_changelog_entry( $email,
@@ -284,7 +308,7 @@ sub build {
     }
 
     $spec->push_source($tarball);
-    foreach $patchfile (@patchfiles) { ## no critic
+    foreach $patchfile (@patchfiles) {    ## no critic
         $spec->push_patch($patchfile);
     }
 
@@ -300,10 +324,11 @@ sub build {
     $spec->push_file( '%doc ' . join( ' ', sort @docs ) ) if @docs;
 
     if ( $options{test} ) {
-        if($use_module_build) {
+        if ($use_module_build) {
             $spec->check("perl Build.PL");
             $spec->check("./Build test");
-        } else {
+        }
+        else {
             $spec->check("perl Makefile.PL");
             $spec->check("make test");
         }
@@ -402,7 +427,7 @@ fi
     # Add the install scriptlets if defined...
     foreach my $scriptlet (qw(pre post preun postun)) {
         if ( defined( $options{$scriptlet} ) ) {
-            open( SCRIPTLET, "<${options{${scriptlet}}}" ) ## no critic
+            open( SCRIPTLET, "<${options{${scriptlet}}}" )    ## no critic
                 || die
                 "Could not open scriptlet ${options{${scriptlet}}} for reading!";
             local $/;    # enable slurp mode.
@@ -419,7 +444,7 @@ fi
     # write the spec file.  create some macros.
     $spec->write_specfile("$tmpdir/perl-$name.spec");
 
-    open FH, ">$tmpdir/macros" ## no critic
+    open FH, ">$tmpdir/macros"    ## no critic
         or die "Can't create $tmpdir/macros: $!";
 
     print FH qq{
@@ -434,7 +459,7 @@ fi
 
     close FH;
 
-    open FH, ">$tmpdir/rpmrc" ## no critic
+    open FH, ">$tmpdir/rpmrc"    ## no critic
         or die "Can't create $tmpdir/rpmrc: $!";
 
     my $macrofiles = qx(rpm --showrc | grep ^macrofiles | cut -f2- -d:);
@@ -486,14 +511,19 @@ sub get_default_build_arch {
 sub read_desc_file {
     my $file = shift;
 
-    open FILE, "<$file" ## no critic
+    open FILE, "<$file"    ## no critic
         or die "Can't open $file for reading: $!";
 
     local $/ = undef;
-    my $ret = <FILE>; ## no critic
+    my $ret = <FILE>;      ## no critic
 
     close FILE;
     return $ret;
+}
+
+sub is_no_depends {
+    my ( $self, $mod, $no_depends ) = @_;
+    return any { $mod eq $_ } @$no_depends;
 }
 
 1;
