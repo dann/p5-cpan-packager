@@ -7,7 +7,7 @@ sub create {
     my ( $class, $builder, $config ) = @_;
     my $builder_class = join '::',
         ( 'CPAN', 'Packager', 'Builder', $builder );
-    eval "require $builder_class;" or die "Can't load module $@";
+    eval "require $builder_class;" or die "Can't load module $@"; ## no critic
     $builder_class->new( conf => $config );
 }
 

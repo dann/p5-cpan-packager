@@ -8,7 +8,7 @@ use vars qw($VERSION @ISA @EXPORT_OK %EXPORT_TAGS);
 
 @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-sub any (&@) {
+sub any (&@) { ## no critic
     my $f = shift;
     return if !@_;
     for (@_) {
@@ -17,7 +17,7 @@ sub any (&@) {
     return 0;
 }
 
-sub all (&@) {
+sub all (&@) { ## no critic
     my $f = shift;
     return if !@_;
     for (@_) {
@@ -26,7 +26,7 @@ sub all (&@) {
     return 1;
 }
 
-sub none (&@) {
+sub none (&@) { ## no critic
     my $f = shift;
     return if !@_;
     for (@_) {
@@ -35,7 +35,7 @@ sub none (&@) {
     return 1;
 }
 
-sub uniq (@) {
+sub uniq (@) { ## no critic
     my %h;
     map { $h{$_}++ == 0 ? $_ : () } @_;
 }
