@@ -97,11 +97,6 @@ should be one module per line. For example:
  Foo::Bar
  Wibble::Plink
 
-Use of this option is temporarily discouraged. There is a defect whereby
-configuration entries (that appear in your configuration file) are ignored for
-all modules listed in the modulelist except for the first. For more
-information, visit: http://github.com/dann/p5-cpan-packager/issues#issue/3
-
 =back
 
 =head2 User Manual
