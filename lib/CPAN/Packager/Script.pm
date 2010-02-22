@@ -25,7 +25,7 @@ has 'builder' => (
 has 'downloader' => (
     is      => 'rw',
     isa     => 'Str',
-    default => 'CPANPLUS',
+    default => 'CPAN',
 );
 
 has 'conf' => (
