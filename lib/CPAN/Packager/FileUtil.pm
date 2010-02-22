@@ -5,7 +5,7 @@ use base qw(Exporter);
 use File::Spec;
 use IO::File ();
 
-our @EXPORT = qw(file dir openw);
+our @EXPORT = qw(file dir openw slurp openr);
 
 sub file {
     File::Spec->catfile(@_);
@@ -20,6 +20,26 @@ sub openw {
     my $io = IO::File->new;
     $io->open($file, 'w') or die "Can't write $file: $!";
     return $io;
+}
+
+sub openr {
+    my $file = shift;
+    my $io = IO::File->new;
+    $io->open($file, 'r') or die "Can't read $file: $!";
+    return $io;
+}
+
+
+sub slurp {
+  my ($file, $args) = @_;
+  my $fh = openr($file);
+    if ($args->{chomp}) {
+    chomp( my @data = <$fh> );
+    return wantarray ? @data : join '', @data;
+  }
+
+  local $/ unless wantarray;
+  return <$fh>;
 }
 
 1;

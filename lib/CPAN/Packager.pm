@@ -106,7 +106,9 @@ sub make {
     die 'module must be passed' unless $module;
     INFO("### Building packages for $module ...");
     my $config = $self->config_loader->load( $self->conf );
-    $config->{modules} = $built_modules if $built_modules;
+    if($built_modules) {
+        $config = $self->merge_config( $built_modules, $config );
+    }
     $config->{global}->{verbose} = $self->verbose;
 
     INFO("### Analyzing dependencies for $module ...");
@@ -199,10 +201,19 @@ sub build_modules {
             die("$module->{module} failed");
         }
     }
-    my %modules
-        = map { exists $_->{module} ? { $_->{module} => $_ } : $_ => $_; }
-        @{$modules};
-    return \%modules;
+
+    my $built_modules = {};
+    foreach my $module (@{$modules}) {
+        if(exists $module->{module}) {
+            $built_modules->{$module->{module}} = $module; 
+        } elsif (exists $module->{original_module}) {
+            $built_modules->{$module->{original_module}} = $module; 
+        } else {
+            $built_modules->{$module} = $module;
+        }
+    }
+
+    return $built_modules; 
 }
 
 sub analyze_module_dependencies {

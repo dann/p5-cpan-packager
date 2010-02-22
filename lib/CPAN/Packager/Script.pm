@@ -1,7 +1,7 @@
 package CPAN::Packager::Script;
 use Mouse;
 use CPAN::Packager;
-use CPAN::Packager::FileUtil qw(dir file);
+use CPAN::Packager::FileUtil qw(dir file slurp);
 
 with 'MouseX::Getopt';
 
@@ -68,7 +68,8 @@ sub run {
     );
 
     if ( $self->modulelist ) {
-        my @modules = file( $self->modulelist )->slurp( chomp => 1 );
+        my $module_list = file( $self->modulelist );
+        my @modules = slurp($module_list, {chomp=>1});
         @modules = grep { $_ !~ /^#/ } @modules;
         my $built_modules;
         foreach my $module (@modules) {
