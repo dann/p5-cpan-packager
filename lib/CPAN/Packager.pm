@@ -101,11 +101,12 @@ sub _build_dependency_analyzer {
     $self->dependency_analyzer($dependency_analyzer);
 }
 
+our $config;
 sub make {
     my ( $self, $module, $built_modules ) = @_;
     die 'module must be passed' unless $module;
     INFO("### Building packages for $module ...");
-    my $config = $self->config_loader->load( $self->conf );
+    $config = $self->config_loader->load( $self->conf ) unless $config;
     if($built_modules) {
         $config = $self->merge_config( $built_modules, $config );
     }
