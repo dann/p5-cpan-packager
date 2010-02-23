@@ -39,67 +39,9 @@ cpan-packager - create redhat/debian packages from CPAN distributions
     conf/config-deb.yaml --verbose
 
   Usage
-    See perldoc cpan-packager
     See perldoc CPAN::Packager::Manual. 
 
-=head1 Manual
-
-=head2 RPMs
-
-$ sudo cpan-packager --module Test::Exception --builder RPM --conf \
-conf/config-rpm.yaml --verbose
-
-The resulting package may be found at: ~/.cpanpackager/rpm
-
-=head2 Debs
-
-$ sudo cpan-packager --module Test::Exception --builder Deb --conf \
-conf/config-deb.yaml --verbose
-
-The resulting package may be found at: ~/.cpanpackager/deb
-
-=head2 Options
-
-=over 4
-
-=item * B<--builder> (required)
-
-The builder you'd like to use to build the module. Either "RPM" or "Deb".
-
-=item * B<--conf> (required)
-
-The local filesystem path to your CPAN::Packager configuration file. An example
-configuration file is available at:
-
-http://github.com/dann/p5-cpan-packager/tree/master/conf/
-
-If you're building RPM's, you'll want the 'config-rpm.yaml' configuration file.
-
-If you're building Deb's, you'll want the 'config-deb.yaml' configuration file.
-
-=item * B<--module> (required)
-
-The name of the module that you'd like to build. For example: Test::Reporter.
-
-=item * B<--always-build> (optional; default skips builds of installed modules)
-
-Always build CPAN modules even if the module is already installed.
-
-=item * B<--verbose> (optional)
-
-Emit additional information and diagnostics.
-
-=item * B<--modulelist> (optional; discouraged)
-
-The path to a file containing the list of modules that should be built. There
-should be one module per line. For example:
-
- Foo::Bar
- Wibble::Plink
-
-=back
-
-=head2 User Manual
+=head1 User Manual
 
 See L<CPAN::Packager::Manual>. 
 

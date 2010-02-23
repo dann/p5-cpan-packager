@@ -26,7 +26,7 @@ use inc::Module::Install;
 
 name 'CPAN-Packager';
 all_from 'lib/CPAN/Packager.pm';
-readme_from 'bin/cpan-packager';
+readme_from 'lib/CPAN/Packager/Manual.pod';
 
 requires(
     'File::Copy'                => 0,
