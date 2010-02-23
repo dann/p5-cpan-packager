@@ -65,6 +65,9 @@ modules:
     no_depends:
       - module: HTTP::Request::AsCGI
       - module: Test::Exception
+  - module: Module::Depends
+    no_depends:
+      - module: Template
   - module: Acme
     custom:
       tgz_path: ~/.cpanpackager/custom_module/Acme-1.11111.tar.gz
