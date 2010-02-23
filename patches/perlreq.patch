@@ -1,0 +1,12 @@
+--- /usr/lib/rpm/perl.req.orig	2010-02-23 21:21:34.000000000 +0900
++++ /usr/lib/rpm/perl.req	2010-02-23 21:23:21.000000000 +0900
+@@ -233,9 +233,6 @@
+       # basename of *.ph files
+ 
+       ($module  =~ m/\.ph$/) && next;
+-
+-      $require{$module}=$version;
+-      $line{$module}=$_;
+     }
+     
+   }

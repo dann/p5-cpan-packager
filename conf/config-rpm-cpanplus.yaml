@@ -5,34 +5,63 @@ global:
   fix_module_name:
     - from: Class::Classgen::classgen
       to: Class::Classgen::Attribute
-    - from: IO::Scalar
-      to: IO::stringy
-    - from: podlators
-      to: Pod::Man
   fix_package_depends: []
   no_depends:
     # default
     - module: perl
     - module: mod_perl
     - module: version
+    # PathTools
+    - module: File::Copy
     - module: File::Spec
     - module: File::Spec::Functions
     - module: File::Spec::Mac
     - module: File::Spec::OS2
     - module: File::Spec::Unix
     - module: File::Spec::Win32
+    - module: File::Temp
+    - module: File::chdir
+    - module: PathTools
+    # IO Compress
+    - module: IO::Compress
+    - module: IO::Compress::Gzip
+    - module: IO::Compress::Bzip2
+    - module: IO::Compress::Base
+    - module: IO::Compress::Zlib
+    - module: Compress::Raw::Zlib
+    - module: Compress::Zlib
+    - module: IO::Zlib
+    # Testing
+    - module: Text::Exception
+    - module: Test::Simple
+    - module: Test::Harness
     # other
+    - module: CGI
+    - module: Class::Accessor
+    - module: Class::Accessor::Fast
+    - module: Cwd
+    - module: Devel::PPPort
+    - module: Encode
+    - module: ExtUtils::MakeMaker
+    - module: ExtUtils::Install
     - module: 'Filter # brokes?'
     - module: HTTP::Request
     - module: HTTP::Response
-    - module: HTTP::Request::AsCGI
-    - module: IO::Socket::INET
+    - module: IO::stringy
     - module: kurila
+    - module: List::Util
     - module: Module::Install
     - module: Module::Install::AuthorTests
+    - module: Pod::Parser
+    - module: Scalar::List::Utils
+    - module: Scalar::Util
+    - module: Sub::Uplevel
   skip_name_resolve_modules: []
 
 modules:
+  - module: CGI::Simple
+    no_depends:
+     - module: IO::Scalar
   - module: Test::Exception
     depends:
       - module: Test::Simple
@@ -40,19 +69,22 @@ modules:
     no_depends:
       - module: Test::Builder::Tester
     skip_test: 1
+  - module: Sub::Uplevel 
+    skip_test: 1
+  - module: FindBin::libs
+    skip_test: 1
+  - module: HTTP::Request::AsCGI
+    skip_build: 1
   - module: IO::Compress::Base
     skip_build: 1
   - module: MooseX::MethodAttributes::Inheritable
     skip_build: 1
   - module: Perl::MinimumVersion
     skip_test: 1
-  - module: HTTP::Request::AsCGI
+  - module: PathTools
     skip_build: 1
-  - module: libwww-perl
-    no_depends:
-      - module: Authen::NTLM
-      - module: HTTP::GHTTP
-      - module: Win32
+  - module: Scalar::List::Utils
+    skip_build: 1
   - module: Module::Setup
     no_depends:
       - module: Module::Install::AuthorTests

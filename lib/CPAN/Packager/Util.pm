@@ -4,9 +4,11 @@ use warnings;
 use List::Util qw/first/;
 use IPC::Cmd qw(run);
 use Log::Log4perl qw(:easy);
+use CPAN::Packager::ListUtil qw(any);
 
 our $DEFAULT_COMMAND_TIMEOUT = 30 * 60;
 our $DEFAULT_VERVOSE_MODE    = 0;
+our @EXCLUSION_MODULE_LIST = ('File::Path', 'PathTools', 'ExtUtils::MakeMaker');
 
 sub topological_sort {
     my ( $target, $modules ) = @_;
@@ -18,11 +20,15 @@ sub topological_sort {
             && @{ $modules->{$target}->{depends} } )
         {
             for my $mod ( @{ $modules->{$target}->{depends} } ) {
+                if(any { $mod eq $_ } @EXCLUSION_MODULE_LIST) {
+                    next;
+                }
 
                 # ex) fix for List::AllUtils
                 if ( $mod eq $target ) {
                     next;
                 }
+
                 my $result = CPAN::Packager::Util::topological_sort( $mod,
                     $modules );
                 push @results, @{$result};
