@@ -1,25 +1,29 @@
 NAME
-    cpan-packager - create redhat/debian packages from CPAN distributions
+    CPAN::Packager::Manual - User manual
 
-SYNOPSIS
-      cpan-packager 
-        --module             The module name  ex) Test::Exception 
-        --builder            RPM or Deb
-        --conf               The CPAN::Packager configuration file path.
-        [--verbose]          Emit additional information and diagnostics.
-        [--always-build]     Always build CPAN modules even if the module is already installed.
-        [--modulelist]       The path to a file containing the list of modules
-        [--help]
+USER MANUAL
+    This is the CPAN::Packager users manual.
 
-      Example
-        $ cpan-packager --module Test::Exception --builder RPM --conf \
-        conf/config-deb.yaml --verbose
+DESCRIPTION
+    cpan-packager creates RPM and Deb packages of CPAN distributions. Given
+    a module name, cpan-packager will automatically analyze dependencies,
+    download, build, test, provision, and install packages.
 
-      Usage
-        See perldoc cpan-packager
-        See perldoc CPAN::Packager::Manual.
+SETUP
+How to setup cpan-packager
+  Installation 
+Install CPAN::Packager from CPAN.
+      cpan CPAN::Packager
 
-Manual
+  Additional setup for redhat users
+    Apply patches/rpm/perlreq.patch to /usr/lib/rpm/perl.req. Otherwise,
+    perl.req extracts needles module dependencies.
+
+  Additional setup for debian users
+    Copy conf/debian/rules* to the ~/.dh-make-perl directory. Otherwise, you
+    may experience conflicts. For example: perllocal.pod.
+
+HOW TO USE CPAN-PACKAGER SCRIPT
   RPMs
     $ sudo cpan-packager --module Test::Exception --builder RPM --conf \
     conf/config-rpm.yaml --verbose
@@ -72,18 +76,260 @@ Manual
          Foo::Bar
          Wibble::Plink
 
-  User Manual
-    See CPAN::Packager::Manual.
+CONFIGURATION
+    The configuration file is YAML-based and is comprised of two main
+    sections, the "global" section, and the "modules" section. The
+    configuration schema is defined in: CPAN::Packager::Config::Schema
 
-DESCRIPTION
-    cpan-packager creates RPM and Deb packages of CPAN distributions. Given
-    a module name, cpan-packager will automatically analyze dependencies,
-    download, build, test, provision, and install packages.
+  The "global" configuration section.
+    This section defines common configuration entities.
+
+    *   cpan_mirrors
+
+        Accepts one or more CPAN mirror arguments. These mirrors are used to
+        retrieve the module(s) being packaged in addition to their
+        dependencies. For example, a local CPAN::Mini mirror, or a "real"
+        mirror may be referenced:
+
+        *   file:///home/dann/minicpan/
+
+        *   http://cpan.pair.com/
+
+        *   ftp://cpan.pair.com/pub/CPAN/
+
+        An example configuration section for "cpan_mirrors" may look like:
+
+         ---
+         global:
+           cpan_mirrors:
+             - http://ftp.funet.fi/pub/languages/perl/CPAN/
+             - file:///home/dann/minicpan
+
+    *   fix_package_depends
+
+        Correct misspelt package name.
+
+        *   from
+
+            The incorrect module name which you want to fix.
+
+        *   to
+
+            The correct module name.
+
+    *   no_depends
+
+        Suppresses generation of a given required dependency. Sometimes
+        authors create dependencies on modules the packager can't find This
+        allows the packager to arbitrarily supress a given requirement.
+
+        *   module
+
+            The module which you don't want to depend.
+
+    *   skip_name_resolve_modules
+
+        Skip module name resolution.
+
+        *   module
+
+            The module which you want to skip name resolution.
+
+    *   fix_module_name
+
+        Fix incorrect module name.
+
+        *   from
+
+            The incorrect module name which you want to fix.
+
+        *   to
+
+            The correct module name.
+
+  The "modules" configuration section
+    This section defines module-specific configuration entities.
+
+    *   module
+
+        Specifies the module to which this configuration applies. For
+        example: Test::Reporter.
+
+    *   no_depends
+
+        Forcefully removes module dependencies.
+
+        *   module
+
+            Given module is removed from the dependency list of the package
+            being built. For example: Test::Reporter.
+
+    *   depends
+
+        Forcefully adds module dependencies.
+
+        *   module
+
+            Given module is added to the dependency list of the package
+            being built. For example: Test::Reporter.
+
+    *   skip_test
+
+        Causes "make test" to be skipped for given module. This is useful
+        when you don't want a module's failing tests to prevent the module
+        from being built and installed.
+
+    *   force_build
+
+        Build the package forcefully if the package is installed already.
+
+    *   custom
+
+        This is useful if you want to fetch modules from CPAN and use
+        patched CPAN module.
+
+        *   tgz_path
+
+            The file path of gzipped tarball containing CPAN source.
+
+        *   src_dir
+
+            The directory path of CPAN module source direcotry which
+            contains Makefile.PL or Build.PL
+
+        *   version
+
+            The distribution version.
+
+        *   dist_name
+
+            The CPAN module name.
+
+        *   patches
+
+            Allows for specifying patch files to be inserted into the spec
+            file and applied when building the source.
+
+    *   version
+
+        The CPAN module version.
+
+    *   release
+
+        This specifies the release of the package itself (not the module
+        that's being packaged). This is most commonly used when you want to
+        re-package the same version of a given module. You may want to do
+        this, for example, if the original packaging was somehow in error,
+        or perhaps if you want to adjust the package's metadata.
+
+    *   pkg_name
+
+        Ordinarilly, a module like, for example, Test::Reporter would be
+        given a package name of perl-Test-Reporter (RPM) or
+        libtest-reporter-perl (Deb), by default. However, if for some reason
+        you need to define your own package name, this option will allow you
+        to do just that. This can be useful in conjunction with the
+        "obsoletes" option, if you need to forcefully "override" an existing
+        "identical" package on the system.
+
+    *   epoch
+
+        This option specifies the epoch of a package. This is primarily
+        useful in the situation where, for example, RPM's version comparison
+        algorithm isn't doing what you expect. Bumping the epoch integer up
+        will force RPM to consider the package as being newer even if it
+        would ordinarily consider it being older, version-wise.
+
+    *   obsoletes
+
+        Accepts multiple "package" arguments. Causes the package being built
+        to obsolete the given packages.
+
+        *   package
+
+            In the case of RPM, an example package argument may be:
+            perl-Compress-Zlib. For example, since the IO-Compress
+            distribution superceeds and deprecates the Compress-Zlib
+            distribution, the configuration section for the IO::Compress
+            module may obsolete the perl-Compress-Zlib package, as above.
+
+MISCELLANEOUS
+  Using cpan-packager with minicpan
+    You may use CPAN::Packager with minicpan. First, establish your local
+    minicpan mirror:
+
+     minicpan -r http://ftp.funet.fi/pub/languages/perl/CPAN/ -l ~/minicpan
+
+    Then, just set the path to your local minicpan mirror in your
+    configuration file:
+
+     ---
+     global:
+       cpan_mirrors:
+         - file:///home/dann/minicpan
+
+  Applying patches to tarballs for RPM builds
+    Write the module's configuration as such:
+
+      - module: Acme
+        custom:
+          tgz_path: ~/.cpanpackager/custom_module/Acme-1.11111.tar.gz
+          patches: 
+            - ~/.cpanpackager/custom_module/acme_test.patch
+          dist_name: Acme
+          version: 1.11111
+
+    The patch should, for example, look like:
+
+        --- Acme-1.11111/t/acme.t.orig      2010-01-26 22:26:51.000000000 +0900
+        +++ Acme-1.11111/t/acme.t   2010-01-26 22:26:39.000000000 +0900
+        @@ -1,8 +1,10 @@
+         use lib 't', 'lib';
+         use strict;
+         use warnings;
+        -use Test::More tests => 2;
+        +use Test::More tests => 3;
+         use Acme;
+     
+         ok(acme->is_acme);
+         ok(acme->is_perfect);
+        +ok 1;
+
+  Specify installation location (optional)
+    It is possible for a CPAN::Packager user to explicitly specify
+    installation locations for a distribution's libraries, documentation,
+    man pages, binaries, and scripts. Setting both of the below environment
+    variables, for example, will accomplish this.
+
+     PERL_MM_OPT="INSTALLVENDORMAN1DIR=/usr/local/share/man/man1
+     INSTALLVENDORMAN3DIR=/usr/local/share/man/man3
+     INSTALLVENDORBIN=/usr/local/bin INSTALLVENDORSCRIPT=/usr/local/bin"
+
+     PERL_MB_OPT="--config installvendorman1dir=/usr/local/share/man/man1
+     --config installvendorman3dir=/usr/local/share/man/man3 --config
+     installvendorbin=/usr/local/bin --config installvendorscript=/usr/local/bin"
+
+    Additionally, for RPMs, you may specify the directory in which non-man
+    documentation (Changes, README, etc) are installed via adding an entry
+    to your ~/.rpmmacros file:
+
+    %_defaultdocdir /usr/local/share/doc
+
+ENVIRONMENT VARIABLES
+    Environment variable "CPAN_PACKAGER_TEST_LIVE" can be used to execute
+    live tests.
+
+    Environment variable "CPAN_PACKAGER_ENABLE_DUMP" can be used to dump
+    variables.
+
+BUGS
+    Please report any bugs or feature requests to this project's GitHub
+    repository at:
+
+    http://github.com/dann/p5-cpan-packager/issues
+
+    Thank you!
 
 AUTHOR
     Takatoshi Kitano <kitano.tk@gmail.com>
-
-LICENSE
-    This library is free software; you can redistribute it and/or modify it
-    under the same terms as Perl itself.
 

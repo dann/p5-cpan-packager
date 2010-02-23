@@ -1,5 +1,9 @@
 Revision history for Perl extension CPAN::Packager
 
+0.33  FEB 28  03:21:00 2010
+    * Updated the user manual
+    * Updated the config for rpm
+
 0.32  FEB 28  01:40:00 2010
     * Fixed topological sort
     * Added the patch for perl.req to remove needles module dependencies

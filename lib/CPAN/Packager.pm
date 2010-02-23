@@ -11,7 +11,7 @@ use CPAN::Packager::Util;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;
 
-our $VERSION = '0.32';
+our $VERSION = '0.33';
 
 has 'builder' => (
     is       => 'rw',
