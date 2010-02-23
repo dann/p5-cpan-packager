@@ -21,6 +21,7 @@ global:
     - module: File::Spec::OS2
     - module: File::Spec::Unix
     - module: File::Spec::Win32
+    - module: IO::File 
     # other
     - module: 'Filter # brokes?'
     - module: HTTP::Request
