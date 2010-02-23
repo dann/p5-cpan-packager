@@ -302,6 +302,11 @@ to your ~/.rpmmacros file:
 
 %_defaultdocdir /usr/local/share/doc
 
+=head2 Additional setup for redhat users
+
+Apply patches/rpm/perlreq.patch to /usr/lib/rpm/perl.req. 
+Otherwise, perl.req extracts needles module dependencies.
+
 =head2 Additional setup for debian users
 
 Copy conf/debian/rules* to the ~/.dh-make-perl directory. Otherwise, you may
