@@ -25,6 +25,9 @@ sub download {
         $dist->get();
         $archive = $dist->{localfile};   # FIXME: old CPAN does't have method?
         $where   = $dist->dir();
+    }
+    catch {
+        WARN( "Failed fetching $module. Cause" . $_ );
     };
 
     return () unless $archive;
