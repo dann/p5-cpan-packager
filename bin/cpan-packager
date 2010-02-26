@@ -40,7 +40,7 @@ cpan-packager - create redhat/debian packages from CPAN distributions
 
   Usage
     See perldoc cpan-packager
-    See perldoc L<CPAN::Packager::Manual>. 
+    See perldoc CPAN::Packager::Manual. 
 
 =head1 Manual
 
