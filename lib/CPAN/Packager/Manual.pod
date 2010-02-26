@@ -1,3 +1,11 @@
+=encoding utf8
+
+=pod
+
+=head1 NAME
+
+CPAN::Packager::Manual - User manual 
+
 =head1 USER MANUAL
 
 This is the L<CPAN::Packager> users manual. 
@@ -46,7 +54,7 @@ An example configuration section for "cpan_mirrors" may look like:
 
 =item * B<fix_package_depends>
 
-TODO
+Correct misspelt package name.
 
 =over 4
 
@@ -62,7 +70,10 @@ TODO
 
 =item * B<no_depends>
 
-TODO
+Suppresses generation of a given required dependency. Sometimes
+authors create dependencies on modules the packager can't find This
+allows the packager to arbitrarily supress a given requirement. The
+value may be a comma-separated list.
 
 =over 4
 
@@ -74,7 +85,7 @@ TODO
 
 =item * B<skip_name_resolve_modules>
 
-TODO
+Skip module name resolution.
 
 =over 4
 
@@ -157,7 +168,7 @@ TODO
 
 =item * B<tgz_path>
 
-TODO
+The file path of gzipped tarball containing CPAN source.
 
 =item * B<src_dir>
 
@@ -173,7 +184,8 @@ TODO
 
 =item * B<patches>
 
-TODO
+Allows for specifying patch files to be inserted into the spec file
+and applied when building the source.
 
 =back
 
