@@ -72,14 +72,13 @@ TODO
 
 Suppresses generation of a given required dependency. Sometimes
 authors create dependencies on modules the packager can't find This
-allows the packager to arbitrarily supress a given requirement. The
-value may be a comma-separated list.
+allows the packager to arbitrarily supress a given requirement. 
 
 =over 4
 
 =item * B<module>
 
-TODO
+The module which you don't want to depend.
 
 =back
 
@@ -91,13 +90,13 @@ Skip module name resolution.
 
 =item * B<module>
 
-TODO
+The module which you want to skip name resolution.
 
 =back
 
 =item * B<fix_module_name>
 
-TODO
+Fix incorrect module name.
 
 =over 4
 
