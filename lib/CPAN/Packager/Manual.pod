@@ -60,11 +60,11 @@ Correct misspelt package name.
 
 =item * B<from>
 
-TODO
+The incorrect module name which you want to fix.
 
 =item * B<to>
 
-TODO
+The correct module name.
 
 =back
 
@@ -102,11 +102,11 @@ Fix incorrect module name.
 
 =item * B<from>
 
-TODO
+The incorrect module name which you want to fix.
 
 =item * B<to>
 
-TODO
+The correct module name.
 
 =back
 
@@ -157,11 +157,12 @@ and installed.
 
 =item * B<force_build>
 
-TODO
+Build the package forcefully if the package is installed already.
 
 =item * B<custom>
 
-TODO
+This is useful if you want to fetch modules from CPAN and use patched CPAN
+module.
 
 =over 4
 
@@ -171,15 +172,16 @@ The file path of gzipped tarball containing CPAN source.
 
 =item * B<src_dir>
 
-TODO
+The directory path of CPAN module source direcotry which contains Makefile.PL or
+Build.PL
 
 =item * B<version>
 
-TODO
+The distribution version.
 
 =item * B<dist_name>
 
-TODO
+The CPAN module name.
 
 =item * B<patches>
 
@@ -190,7 +192,7 @@ and applied when building the source.
 
 =item * B<version>
 
-TODO
+The CPAN module version.
 
 =item * B<release>
 
