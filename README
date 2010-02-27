@@ -17,7 +17,7 @@ SYNOPSIS
 
       Usage
         See perldoc cpan-packager
-        See perldoc L<CPAN::Packager::Manual>.
+        See perldoc CPAN::Packager::Manual.
 
 Manual
   RPMs
