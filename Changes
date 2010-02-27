@@ -1,9 +1,12 @@
 Revision history for Perl extension CPAN::Packager
 
+0.31  FEB 27  11:49:00 2010
+    * Updated user manual
+
 0.30  FEB 26  21:50:00 2010
-    * Fixed issue3 
-    * Parse metayaml with Parse::CPAN::Meta
-    * removed more module dependencies
+    * Fixed modulelist option (issue3)
+    * Parse META.yml with Parse::CPAN::Meta
+    * Removed more module dependencies to minimize dependencies
 
 0.24  FEB 22  11:50:00 2010
     * Fixed confliction check
