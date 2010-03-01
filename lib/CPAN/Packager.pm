@@ -11,7 +11,7 @@ use CPAN::Packager::Util;
 use Log::Log4perl qw(:easy);
 use Try::Tiny;
 
-our $VERSION = '0.33';
+our $VERSION = '0.34';
 
 has 'builder' => (
     is       => 'rw',
@@ -256,6 +256,8 @@ For full documentation please see the docs for cpan-packager.
 
 Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
 
+Adam J. Foxson became a co-maintainer during the development of 0.33. afoxson [at] pobox.com
+
 walf443 (debian related modules)
 
 =head1 CONTRIBUTORS
@@ -264,7 +266,7 @@ Many people have contributed ideas, inspiration, fixes and features. Their
 efforts continue to be very much appreciated. Please let me know if you think
 anyone is missing from this list.
 
- walf443, fhoxh, toddr
+ toddr, vkgtaro
 
 =head1 For Developers
 

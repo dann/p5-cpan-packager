@@ -17,9 +17,11 @@ module name, cpan-packager will automatically analyze dependencies, download,
 build, test, provision, and install packages.
 
 =head1 SETUP
+
 How to setup cpan-packager
 
 =head2 Installation 
+
 Install CPAN::Packager from CPAN.
 
   cpan CPAN::Packager
@@ -397,6 +399,8 @@ Thank you!
 
 =head1 AUTHOR
 
-Takatoshi Kitano E<lt>kitano.tk@gmail.comE<gt>
+Takatoshi Kitano E<lt>kitano.tk at gmail.comE<gt>
+
+Adam J. Foxson became a co-maintainer during the development of 0.33. afoxson [at] pobox.com
 
 =cut
