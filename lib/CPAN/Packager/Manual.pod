@@ -75,7 +75,7 @@ If you're building Deb's, you'll want the 'config-deb.yaml' configuration file.
 
 The name of the module that you'd like to build. For example: Test::Reporter.
 
-=item * B<--always-build> (optional; default skips builds of installed modules)
+=item * B<--always_build> (optional; default skips builds of installed modules)
 
 Always build CPAN modules even if the module is already installed.
 
