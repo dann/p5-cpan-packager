@@ -8,7 +8,7 @@ with 'MouseX::Getopt';
 has 'dry_run' => (
     is      => 'rw',
     isa     => 'Bool',
-    defalut => 0,
+    default => 0,
 );
 
 has 'module' => (
