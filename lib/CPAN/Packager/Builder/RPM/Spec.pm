@@ -349,7 +349,7 @@ sub build {
         $makefile_pl
             = qq{CFLAGS="\$RPM_OPT_FLAGS" %{__perl} Build.PL destdir=\$RPM_BUILD_ROOT $installdirs < /dev/null};
         $make_install
-            = qq{./Build pure_install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT};
+            = qq{./Build install PERL_INSTALL_ROOT=\$RPM_BUILD_ROOT};
         $make = "./Build OPTIMIZE=\"\$RPM_OPT_FLAGS\"";
     }
     else {
